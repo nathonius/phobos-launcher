@@ -1,0 +1,6 @@
+<nav id="category-list">
+  @for (category of categories(); track category) {
+  <button>{{ category }}</button>
+  }
+</nav>
+<main id="category-view"><router-outlet /></main>

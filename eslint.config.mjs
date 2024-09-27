@@ -41,6 +41,12 @@ export default tseslint.config(
       "@typescript-eslint/no-empty-function": "warn",
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/no-unsafe-function-type": "warn",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: false,
+        },
+      ],
 
       // replaced by 'unused-imports/no-unused-vars'
       "@typescript-eslint/no-unused-vars": "off",

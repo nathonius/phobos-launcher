@@ -2,10 +2,15 @@ import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'categories/:category',
+    path: 'categories',
     loadComponent: () =>
-      import('./views/wad-list/wad-list.component').then(
-        (m) => m.WadListComponent
+      import('./categories/categories/categories.component').then(
+        (m) => m.CategoriesComponent
       ),
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'categories',
   },
 ];

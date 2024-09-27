@@ -1,7 +1,15 @@
-import type { Profile } from '@shared/public-api';
+import type { Channel, Profile } from '@shared/public-api';
 
-export async function getCategory(_name: string): Promise<Profile[]> {
-  const profiles = (await window.api['category.getByName']('a')) as Profile[];
-  // Do stuff with profiles
-  return profiles;
-}
+/**
+ * A wrapper around the window api to type the responses
+ */
+export const Api = {
+  'category.getByName': async (name: string) => {
+    return (await window.api['category.getByName'](name)) as Promise<Profile[]>;
+  },
+  'category.getCategoryList': async () => {
+    return (await window.api['category.getCategoryList']()) as Promise<
+      string[]
+    >;
+  },
+} satisfies Record<Channel, Function>;
