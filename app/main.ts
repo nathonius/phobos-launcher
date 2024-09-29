@@ -1,6 +1,7 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 import { app, BrowserWindow, screen } from 'electron';
+import { attachHandlers, handlers } from './api';
 
 let win: BrowserWindow | null = null;
 const args = process.argv.slice(1),
@@ -16,9 +17,7 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     webPreferences: {
-      nodeIntegration: true,
-      allowRunningInsecureContent: serve,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -58,7 +57,10 @@ function createWindow(): BrowserWindow {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-app.on('ready', () => setTimeout(createWindow, 400));
+app.on('ready', () => {
+  attachHandlers(handlers);
+  createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
