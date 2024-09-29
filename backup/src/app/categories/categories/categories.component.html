@@ -1,0 +1,6 @@
+<nav id="category-list">
+  @for (category of categories(); track category) {
+  <a [routerLink]="category.id">{{ category.displayName }}</a>
+  }
+</nav>
+<main id="category-view"><router-outlet /></main>

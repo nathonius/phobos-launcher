@@ -1,46 +1,77 @@
 {
-  "name": "phobos-launcher",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "watch:server": "tsc -p tsconfig.server.json -w",
-    "build:server": "tsc -p tsconfig.server.json",
-    "start:server": "electron ./dist/server/main.js"
+  "name": "angular-electron",
+  "version": "14.0.1",
+  "description": "Angular 17 with Electron 30 (Typescript + SASS + Hot Reload)",
+  "homepage": "https://github.com/maximegris/angular-electron",
+  "author": {
+    "name": "Maxime GRIS",
+    "email": "maxime.gris@gmail.com"
   },
+  "keywords": [
+    "angular",
+    "angular 17",
+    "electron",
+    "electron 30",
+    "nodejs",
+    "typescript",
+    "jest",
+    "playwright",
+    "eslint",
+    "sass",
+    "windows",
+    "mac",
+    "linux"
+  ],
+  "main": "app/main.js",
   "private": true,
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "ng": "ng",
+    "start": "npm-run-all -p electron:serve ng:serve",
+    "ng:serve": "ng serve -c web -o",
+    "build": "npm run electron:serve-tsc && ng build --base-href ./",
+    "build:dev": "npm run build -- -c dev",
+    "build:prod": "npm run build -- -c production",
+    "web:build": "npm run build -- -c web-production",
+    "electron": "electron",
+    "electron:serve-tsc": "tsc -p tsconfig.serve.json",
+    "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && electron . --serve",
+    "electron:local": "npm run build:prod && electron .",
+    "electron:build": "npm run build:prod && electron-builder build --publish=never"
+  },
   "dependencies": {
-    "@angular/animations": "^18.2.0",
-    "@angular/common": "^18.2.0",
-    "@angular/compiler": "^18.2.0",
-    "@angular/core": "^18.2.0",
-    "@angular/forms": "^18.2.0",
-    "@angular/platform-browser": "^18.2.0",
-    "@angular/platform-browser-dynamic": "^18.2.0",
-    "@angular/router": "^18.2.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "@angular/common": "18.2.6",
+    "@angular/compiler": "18.2.6",
+    "@angular/core": "18.2.6",
+    "@angular/forms": "18.2.6",
+    "@angular/language-service": "18.2.6",
+    "@angular/platform-browser": "18.2.6",
+    "@angular/router": "18.2.6",
+    "rxjs": "7.8.1",
+    "tslib": "2.6.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.6",
-    "@angular/cli": "^18.2.6",
-    "@angular/compiler-cli": "^18.2.0",
-    "@eslint/js": "^9.11.1",
-    "@types/jasmine": "~5.1.0",
-    "electron": "^32.1.2",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-unused-imports": "^4.1.4",
-    "jasmine-core": "~5.2.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.2",
-    "typescript-eslint": "^8.7.0"
-  }
+    "@angular/cli": "18.2.6",
+    "@angular/compiler-cli": "18.2.6",
+    "@eslint/js": "9.11.1",
+    "electron": "30.0.1",
+    "electron-builder": "24.13.3",
+    "electron-debug": "3.2.0",
+    "electron-reloader": "1.2.3",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.30.0",
+    "eslint-plugin-unused-imports": "4.1.4",
+    "npm-run-all": "4.1.5",
+    "ts-node": "10.9.2",
+    "typescript": "5.4.5",
+    "typescript-eslint": "8.7.0",
+    "wait-on": "7.2.0"
+  },
+  "engines": {
+    "node": ">= 16.14.0 || >= 18.10.0"
+  },
+  "browserslist": [
+    "chrome 114"
+  ]
 }

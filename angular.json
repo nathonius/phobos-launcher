@@ -1,95 +1,124 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {},
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "phobos-launcher": {
+    "angular-electron": {
+      "root": "",
+      "sourceRoot": "src",
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "changeDetection": "OnPush",
+        "@schematics/angular:application": {
+          "strict": true,
           "skipTests": true
         },
-        "@schematics/angular:directive": {
+        "@schematics/angular:component": {
+          "style": "css",
           "skipTests": true
         },
         "@schematics/angular:service": {
           "skipTests": true
         }
       },
-      "root": "",
-      "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/server",
+            "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "tsConfig": "src/tsconfig.app.json",
             "polyfills": [],
-            "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+            "inlineStyleLanguage": "css",
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css"],
             "scripts": []
           },
           "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
-                }
-              ],
-              "outputHashing": "all"
-            },
-            "development": {
+            "dev": {
               "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
+              "outputHashing": "none",
+              "sourceMap": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "web": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.ts"
+                }
+              ]
+            },
+            "web-production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.prod.ts"
+                }
+              ]
             }
-          },
-          "defaultConfiguration": "production"
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "phobos-launcher:build:production"
-            },
-            "development": {
-              "buildTarget": "phobos-launcher:build:development"
-            }
+          "options": {
+            "buildTarget": "angular-electron:build"
           },
-          "defaultConfiguration": "development"
+          "configurations": {
+            "dev": {
+              "buildTarget": "angular-electron:build:dev"
+            },
+            "production": {
+              "buildTarget": "angular-electron:build:production"
+            },
+            "web": {
+              "buildTarget": "angular-electron:build:web"
+            },
+            "web-production": {
+              "buildTarget": "angular-electron:build:web-production"
+            }
+          }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:extract-i18n",
           "options": {
-            "polyfills": [],
-            "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": ["src/styles.css"],
-            "scripts": []
+            "buildTarget": "angular-electron:build"
           }
         }
       }
