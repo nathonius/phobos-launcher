@@ -25,14 +25,8 @@ export const handlers: ApiHandlerMap = {
       { displayName: 'Category 2', id: 'category-2' },
     ]),
   'profile.launch': () => {
-    spawn('"D:/Games/GZDoom/GZDoom/gzdoom.exe"', [
-      '-config',
-      '"C:/Users/natha/Documents/My Games/GZDoom/gzdoom.ini"',
-      '-iwad',
-      '"D:/Games/GZDoom/Officialdoom2.wad"',
-      '-file',
-      '"D:/Games/GZDoom/Total Conversions/Space Cats Saga +(Full 1.2)/Space Cats Saga+ (Full 1.2).wad"',
-    ]);
+    const process = spawn('D:\\Games\\GZDoom\\GZDoom\\gzdoom.exe', []);
+    process.stderr.on('data', (d) => console.log(d));
     return Promise.resolve(null);
   },
 };
