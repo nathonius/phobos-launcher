@@ -13,6 +13,6 @@
       "@shared/*": ["./shared/*"]
     }
   },
-  "files": ["app/main.ts"],
+  "files": ["app/main.ts", "app/preload.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -6,6 +6,8 @@ export const clientApi = {
     ipcRenderer.invoke('category.getByName', [name]),
   'category.getCategoryList': () =>
     ipcRenderer.invoke('category.getCategoryList'),
+  'profile.launch': (profile: string) =>
+    ipcRenderer.invoke('profile.launch', [profile]),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

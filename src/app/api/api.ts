@@ -1,5 +1,12 @@
 import type { Category } from '@shared/config';
 import type { Channel, Profile } from '@shared/public-api';
+import type { ClientApi } from '../../../app/preload';
+
+declare global {
+  interface Window {
+    api: ClientApi;
+  }
+}
 
 /**
  * A wrapper around the window api to type the responses
@@ -13,5 +20,7 @@ export const Api = {
       Category[]
     >;
   },
+  'profile.launch': async (profile: string) =>
+    (await window.api['profile.launch'](profile)) as Promise<void>,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
