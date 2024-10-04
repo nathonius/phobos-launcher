@@ -1,15 +1,42 @@
+import type { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Api } from '../api/api';
+import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ReactiveFormsModule, FileInputComponent],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  protected readonly form = new FormGroup({
+    engine: new FormControl<string | null>(null),
+    base: new FormControl<string | null>(null),
+    files: new FormArray<FormControl<string>>([]),
+  });
+
   protected launch() {
     void Api['profile.launch']('space-cats');
+  }
+
+  ngOnInit(): void {}
+
+  addFile() {
+    this.form.controls.files.push(
+      new FormControl<string>('', { nonNullable: true })
+    );
+  }
+
+  handleDrop(event: DragEvent) {
+    const target = event.target as HTMLInputElement;
+    console.log(target.files);
   }
 }

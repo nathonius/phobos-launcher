@@ -1,0 +1,20 @@
+<label [htmlFor]="fileTargetId" class="drop-target-wrapper">
+  <span class="label">{{ label() }}</span>
+  <input
+    #textInput
+    type="text"
+    class="text-display"
+    [value]="filePath()"
+    (focus)="onTouch()"
+    (change)="handleTextChange()"
+  />
+  @if (file()) {
+  <button type="button" (click)="handleSelectFile()">
+    <lucide-icon [img]="icons.FileIcon" />
+  </button>
+  } @if (directory()) {
+  <button type="button" (click)="handleSelectDirectory()">
+    <lucide-icon [img]="icons.FolderIcon" />
+  </button>
+  }
+</label>

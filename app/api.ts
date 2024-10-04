@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import type { Category } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { IpcMainInvokeEvent } from 'electron';
-import { ipcMain } from 'electron';
+import { dialog, ipcMain } from 'electron';
 
 type IpcHandler = (
   event: IpcMainInvokeEvent,
@@ -26,7 +26,11 @@ export const handlers: ApiHandlerMap = {
     ]),
   'profile.launch': () => {
     const process = spawn('D:\\Games\\GZDoom\\GZDoom\\gzdoom.exe', []);
-    process.stderr.on('data', (d) => console.log(d));
     return Promise.resolve(null);
+  },
+  'fileSystem.getPathForFile': () => Promise.resolve(),
+  'fileSystem.showOpenDialog': (_event, ...args) => {
+    const config = (args[0] as Electron.OpenDialogOptions | undefined) ?? {};
+    return dialog.showOpenDialog(config);
   },
 };
