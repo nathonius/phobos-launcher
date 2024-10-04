@@ -14,6 +14,7 @@ export default tseslint.config(
       "esbuild.config.mjs",
       "eslint.config.mjs",
       "jest.config.mjs",
+      "tailwind.config.js",
     ],
   },
   eslint.configs.recommended,

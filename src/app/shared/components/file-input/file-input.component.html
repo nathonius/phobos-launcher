@@ -1,20 +1,30 @@
-<label [htmlFor]="fileTargetId" class="drop-target-wrapper">
-  <span class="label">{{ label() }}</span>
+<label
+  [htmlFor]="fileTargetId"
+  class="input input-bordered inline-flex items-center gap-1 px-1"
+>
+  <!-- <span class="label">{{ label() }}</span> -->
   <input
     #textInput
     type="text"
-    class="text-display"
     [value]="filePath()"
     (focus)="onTouch()"
     (change)="handleTextChange()"
   />
   @if (file()) {
-  <button type="button" (click)="handleSelectFile()">
-    <lucide-icon [img]="icons.FileIcon" />
+  <button
+    type="button"
+    class="btn btn-ghost btn-xs"
+    (click)="handleSelectFile()"
+  >
+    <lucide-icon class="h-4 w-4" [img]="icons.FileIcon" />
   </button>
   } @if (directory()) {
-  <button type="button" (click)="handleSelectDirectory()">
-    <lucide-icon [img]="icons.FolderIcon" />
+  <button
+    type="button"
+    class="btn btn-ghost btn-xs"
+    (click)="handleSelectDirectory()"
+  >
+    <lucide-icon class="h-4 w-4" [img]="icons.FolderIcon" />
   </button>
   }
 </label>
