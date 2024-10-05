@@ -1,11 +1,15 @@
-<form [formGroup]="form" (ngSubmit)="launch()">
+<form class="flex flex-col" [formGroup]="form" (ngSubmit)="launch()">
   <file-input formControlName="engine" label="Engine" />
   <file-input formControlName="base" label="Base" />
   <ul>
     @for (file of form.controls.files.controls; track $index) {
     <li>
       <file-input [formControl]="file" />
-      <button type="button" (click)="form.controls.files.removeAt($index)">
+      <button
+        type="button"
+        class="btn"
+        (click)="form.controls.files.removeAt($index)"
+      >
         X
       </button>
     </li>
@@ -14,3 +18,7 @@
   </ul>
   <button type="submit">Launch</button>
 </form>
+<select data-choose-theme>
+  <option value="">Retro</option>
+  <option value="synthwave">Synthwave</option>
+</select>

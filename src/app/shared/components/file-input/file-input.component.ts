@@ -3,6 +3,7 @@ import type { ElementRef } from '@angular/core';
 import {
   booleanAttribute,
   Component,
+  computed,
   effect,
   forwardRef,
   inject,
@@ -33,8 +34,12 @@ let idCount = 0;
 })
 export class FileInputComponent implements ControlValueAccessor {
   public readonly label = input<string>();
+  public readonly placeholder = input<string>();
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
+  protected readonly _placeholder = computed(
+    () => this.placeholder() ?? this.label() ?? ''
+  );
   protected readonly icons = {
     FileIcon,
     FolderIcon,

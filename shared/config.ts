@@ -24,3 +24,9 @@ export interface Settings {
   profiles: string[];
   categories: Category[];
 }
+
+export interface Profile {
+  engine: string;
+  base: string;
+  files: string[];
+}

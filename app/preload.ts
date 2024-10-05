@@ -1,13 +1,16 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from '@shared/public-api';
+import type { Profile } from '@shared/config';
 
 export const clientApi = {
   'category.getByName': (name: string) =>
-    ipcRenderer.invoke('category.getByName', [name]),
+    ipcRenderer.invoke('category.getByName', name),
   'category.getCategoryList': () =>
     ipcRenderer.invoke('category.getCategoryList'),
   'profile.launch': (profile: string) =>
-    ipcRenderer.invoke('profile.launch', [profile]),
+    ipcRenderer.invoke('profile.launch', profile),
+  'profile.launchCustom': (profile: Profile) =>
+    ipcRenderer.invoke('profile.launchCustom', profile),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),

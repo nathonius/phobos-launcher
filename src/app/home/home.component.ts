@@ -24,7 +24,14 @@ export class HomeComponent implements OnInit {
   });
 
   protected launch() {
-    void Api['profile.launch']('space-cats');
+    const { engine, base, files } = this.form.value;
+    const config = {
+      engine: engine!,
+      base: base!,
+      files: files!,
+    };
+    console.log(config);
+    void Api['profile.launchCustom'](config);
   }
 
   ngOnInit(): void {}

@@ -6,6 +6,7 @@
   <input
     #textInput
     type="text"
+    [placeholder]="_placeholder()"
     [value]="filePath()"
     (focus)="onTouch()"
     (change)="handleTextChange()"
