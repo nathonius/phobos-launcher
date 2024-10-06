@@ -26,6 +26,7 @@ export interface Settings {
 }
 
 export interface Profile {
+  name: string;
   engine: string;
   base: string;
   files: string[];

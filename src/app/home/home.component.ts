@@ -7,6 +7,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+import type { Profile } from '@shared/config';
 import { Api } from '../api/api';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 
@@ -18,20 +19,17 @@ import { FileInputComponent } from '../shared/components/file-input/file-input.c
 })
 export class HomeComponent implements OnInit {
   protected readonly form = new FormGroup({
-    engine: new FormControl<string | null>(null),
-    base: new FormControl<string | null>(null),
+    engine: new FormControl<string>('', { nonNullable: true }),
+    base: new FormControl<string>('', { nonNullable: true }),
     files: new FormArray<FormControl<string>>([]),
   });
 
+  protected save() {
+    void Api['profile.save'](this.getProfile());
+  }
+
   protected launch() {
-    const { engine, base, files } = this.form.value;
-    const config = {
-      engine: engine!,
-      base: base!,
-      files: files!,
-    };
-    console.log(config);
-    void Api['profile.launchCustom'](config);
+    void Api['profile.launchCustom'](this.getProfile());
   }
 
   ngOnInit(): void {}
@@ -43,7 +41,17 @@ export class HomeComponent implements OnInit {
   }
 
   handleDrop(event: DragEvent) {
+    // TODO: Figure this out???
     const target = event.target as HTMLInputElement;
     console.log(target.files);
+  }
+
+  private getProfile(): Profile {
+    const { engine, base, files } = this.form.value;
+    return {
+      engine: engine!,
+      base: base!,
+      files: files!,
+    };
   }
 }
