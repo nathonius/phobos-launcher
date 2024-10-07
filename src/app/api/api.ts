@@ -16,6 +16,8 @@ export const Api = {
     window.api['category.getByName'](name) as Promise<string[]>,
   'category.getCategoryList': () =>
     window.api['category.getCategoryList']() as Promise<Category[]>,
+  'profile.getProfiles': () =>
+    window.api['profile.getProfiles']() as Promise<Profile[]>,
   'profile.launch': (profile: string) =>
     window.api['profile.launch'](profile) as Promise<void>,
   'profile.launchCustom': (profile: Profile) =>

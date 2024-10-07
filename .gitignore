@@ -10,6 +10,7 @@ main.js
 *.js
 src/**/*.js
 *.js.map
+app/config
 
 # dependencies
 node_modules

@@ -7,6 +7,7 @@ export const clientApi = {
     ipcRenderer.invoke('category.getByName', name),
   'category.getCategoryList': () =>
     ipcRenderer.invoke('category.getCategoryList'),
+  'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
   'profile.launch': (profile: string) =>
     ipcRenderer.invoke('profile.launch', profile),
   'profile.launchCustom': (profile: Profile) =>

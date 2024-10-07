@@ -1,4 +1,5 @@
 <form class="flex flex-col" [formGroup]="form" (ngSubmit)="launch()">
+  <input class="input" type="text" placeholder="Name" formControlName="name" />
   <file-input formControlName="engine" label="Engine" />
   <file-input formControlName="base" label="Base" />
   <ul>
@@ -16,9 +17,19 @@
     }
     <button type="button" (click)="addFile()">Add File</button>
   </ul>
-  <button type="submit">Launch</button>
+  <button type="button" class="btn" (click)="save()">Save</button>
+  <button type="submit" class="btn">Launch</button>
 </form>
 <select data-choose-theme>
   <option value="">Retro</option>
   <option value="synthwave">Synthwave</option>
 </select>
+
+<div>
+  <p>Select profile</p>
+  <select class="input" (change)="selectProfile($event)">
+    @for (profile of profiles(); track profile.name) {
+    <option [value]="profile.name">{{ profile.name }}</option>
+    }
+  </select>
+</div>

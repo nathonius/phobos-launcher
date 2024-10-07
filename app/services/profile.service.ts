@@ -1,4 +1,4 @@
-import { writeFile, readFile, readdir } from 'node:fs/promises';
+import { writeFile, readFile, readdir, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Profile } from '@shared/config';
 import slugify from 'slugify';
@@ -18,18 +18,21 @@ export class ProfileService {
       files = await readdir(PROFILE_DIR);
     } catch (_) {
       // No files found
+      await mkdir(PROFILE_DIR, { recursive: true });
     }
 
     // Read all json files from profile dir
-    for (const filePath of files) {
-      if (filePath.toLowerCase().endsWith('.json')) {
-        const jsonContent = await readFile(filePath, { encoding: 'utf-8' });
+    for (const filename of files) {
+      if (filename.toLowerCase().endsWith('.json')) {
+        const jsonContent = await readFile(join(PROFILE_DIR, filename), {
+          encoding: 'utf-8',
+        });
         try {
           const config = JSON.parse(jsonContent) as Profile;
           // TODO: Validate the config first
           this.profiles.push(config);
         } catch {
-          console.error(`Poorly formatted config file: ${filePath}`);
+          console.error(`Poorly formatted config file: ${filename}`);
         }
       }
     }
@@ -45,6 +48,7 @@ export class ProfileService {
   async saveProfile(config: Profile): Promise<void> {
     const profilePath = join(PROFILE_DIR, `${slugify(config.name)}.json`);
     await writeFile(profilePath, JSON.stringify(config));
+    this.profiles.unshift(config);
   }
 
   deleteProfileByName(name: string): Promise<void> {

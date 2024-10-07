@@ -21,6 +21,9 @@ export class PhobosApi {
         { displayName: 'Category 1', id: 'category-1' },
         { displayName: 'Category 2', id: 'category-2' },
       ]),
+    'profile.getProfiles': () => {
+      return Promise.resolve(getPhobos().profileService.getProfiles());
+    },
     'profile.launch': () => {
       const process = spawn('D:\\Games\\GZDoom\\GZDoom\\gzdoom.exe', []);
       return Promise.resolve(null);

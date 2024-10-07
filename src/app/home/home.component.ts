@@ -1,5 +1,4 @@
-import type { OnInit } from '@angular/core';
-import { Component } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   FormArray,
@@ -17,22 +16,40 @@ import { FileInputComponent } from '../shared/components/file-input/file-input.c
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, FileInputComponent],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   protected readonly form = new FormGroup({
+    name: new FormControl<string>('', { nonNullable: true }),
     engine: new FormControl<string>('', { nonNullable: true }),
     base: new FormControl<string>('', { nonNullable: true }),
     files: new FormArray<FormControl<string>>([]),
   });
+  protected readonly profiles = signal<Profile[]>([]);
 
-  protected save() {
-    void Api['profile.save'](this.getProfile());
+  constructor() {
+    effect(
+      async () => {
+        this.profiles.set(await Api['profile.getProfiles']());
+      },
+      { allowSignalWrites: true }
+    );
+  }
+
+  protected selectProfile(event: Event) {
+    const name = (event.target as HTMLSelectElement).value;
+    const profile = this.profiles().find((p) => p.name === name);
+    if (profile) {
+      this.form.setValue({ ...profile });
+    }
+  }
+
+  protected async save() {
+    await Api['profile.save'](this.getProfile());
+    this.profiles.set(await Api['profile.getProfiles']());
   }
 
   protected launch() {
     void Api['profile.launchCustom'](this.getProfile());
   }
-
-  ngOnInit(): void {}
 
   addFile() {
     this.form.controls.files.push(
@@ -47,8 +64,9 @@ export class HomeComponent implements OnInit {
   }
 
   private getProfile(): Profile {
-    const { engine, base, files } = this.form.value;
+    const { engine, base, files, name } = this.form.value;
     return {
+      name: name!,
       engine: engine!,
       base: base!,
       files: files!,
