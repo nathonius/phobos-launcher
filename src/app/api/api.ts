@@ -30,5 +30,7 @@ export const Api = {
     window.api['fileSystem.showOpenDialog'](
       config
     ) as Promise<Electron.OpenDialogReturnValue>,
+  'fileSystem.getBase64Image': (path: string) =>
+    window.api['fileSystem.getBase64Image'](path) as Promise<string>,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;

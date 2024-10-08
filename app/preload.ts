@@ -17,6 +17,8 @@ export const clientApi = {
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),
+  'fileSystem.getBase64Image': (path: string) =>
+    ipcRenderer.invoke('fileSystem.getBase64Image', path),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

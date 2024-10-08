@@ -37,6 +37,7 @@ export class ProfileService {
       }
     }
   }
+
   getProfiles(): Profile[] {
     return this.profiles;
   }

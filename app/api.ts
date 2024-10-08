@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { IpcMainInvokeEvent } from 'electron';
@@ -43,6 +44,13 @@ export class PhobosApi {
     'fileSystem.showOpenDialog': (_event, ...args) => {
       const config = (args[0] as Electron.OpenDialogOptions | undefined) ?? {};
       return dialog.showOpenDialog(config);
+    },
+    'fileSystem.getBase64Image': async (_event, ...args) => {
+      const path = args[0] as string;
+      // TODO: This is probably super unreliable
+      const extension = path.split('.').pop() ?? 'png';
+      const data = await readFile(path);
+      return `data:image/${extension};base64,${data.toString('base64')}`;
     },
   };
 

@@ -2,6 +2,7 @@
 import type { ElementRef } from '@angular/core';
 import {
   booleanAttribute,
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -31,6 +32,7 @@ let idCount = 0;
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInputComponent implements ControlValueAccessor {
   public readonly label = input<string>();

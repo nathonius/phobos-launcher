@@ -6,4 +6,5 @@ export type Channel =
   | 'profile.launchCustom'
   | 'profile.save'
   | 'fileSystem.showOpenDialog'
-  | 'fileSystem.getPathForFile';
+  | 'fileSystem.getPathForFile'
+  | 'fileSystem.getBase64Image';
