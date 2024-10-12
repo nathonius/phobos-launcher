@@ -36,7 +36,4 @@ export interface GridItemEvent {
 export class ItemGridComponent {
   public readonly action = output<GridItemEvent>();
   public readonly items = input.required<GridItem[]>();
-  protected asDataUrl(value: string) {
-    return `url("${value}")`;
-  }
 }

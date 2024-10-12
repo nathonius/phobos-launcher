@@ -47,6 +47,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly file = input(true, { transform: booleanAttribute });
   public readonly removable = input(false, { transform: booleanAttribute });
   public readonly remove = output();
+  public readonly change = output<string>();
   protected readonly _placeholder = computed(
     () => this.placeholder() ?? this.label() ?? ''
   );
@@ -74,6 +75,7 @@ export class FileInputComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       const path = this.filePath();
+      this.change.emit(path);
       this.onChange(path);
     });
   }

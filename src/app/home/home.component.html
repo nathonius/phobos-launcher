@@ -8,5 +8,6 @@
 </button>
 <profile [profile]="selected" />
 } @else {
+<button type="button" class="btn" (click)="newProfile()">New Profile</button>
 <item-grid [items]="profileItems()" (action)="handleAction($event)" />
 }

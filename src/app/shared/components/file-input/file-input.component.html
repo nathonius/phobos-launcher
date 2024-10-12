@@ -1,11 +1,11 @@
-<label
-  [htmlFor]="fileTargetId"
-  class="input input-bordered inline-flex items-center gap-1 px-1"
->
-  <!-- <span class="label">{{ label() }}</span> -->
+<label [htmlFor]="fileTargetId">
+  <span class="label">{{ label() }}</span>
+</label>
+<div class="input input-bordered inline-flex items-center gap-1 px-1">
   <input
     #textInput
     type="text"
+    [id]="fileTargetId"
     [placeholder]="_placeholder()"
     [value]="filePath()"
     (focus)="onTouch()"
@@ -32,4 +32,4 @@
     <lucide-icon class="h-4 w-4" [img]="icons.TrashIcon" />
   </button>
   }
-</label>
+</div>

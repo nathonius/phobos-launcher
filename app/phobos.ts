@@ -11,11 +11,11 @@ import { DEFAULT_WINDOW_SETTINGS } from './main';
 
 export class Phobos {
   public readonly api = new PhobosApi();
-  public readonly profileService = new ProfileService();
   public readonly userDataService = new UserDataService(
     app.getPath('userData')
   );
   public readonly store = new Store();
+  public readonly profileService = new ProfileService(this.store);
   private window: BrowserWindow | null = null;
   private initialized = false;
   private windowSettingsTimeout: NodeJS.Timeout | undefined;
@@ -37,7 +37,6 @@ export class Phobos {
     app.on('ready', () => {
       this.api._attachHandlers();
       this.userDataService.init();
-      void this.profileService.init();
       this.createWindow();
     });
 

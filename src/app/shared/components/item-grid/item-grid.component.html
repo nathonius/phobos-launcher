@@ -6,10 +6,7 @@
       type="button"
       (click)="action.emit({item, action: 'primary'})"
     >
-      <img
-        src="phobos-data://default-item-bg.png"
-        class="block absolute h-full"
-      />
+      <img [src]="item.img" class="block absolute h-full" />
       <span>{{ item.name }}</span>
     </button>
     <div class="item-controls flex gap-1">

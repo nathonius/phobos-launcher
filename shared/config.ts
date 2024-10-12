@@ -26,8 +26,10 @@ export interface Settings {
 }
 
 export interface Profile {
+  id: string;
   name: string;
   engine: string;
   base: string;
+  icon: string;
   files: string[];
 }

@@ -36,13 +36,15 @@ export class PhobosApi {
       const process = spawn(profile.engine, [...base, ...files]);
       return Promise.resolve(null);
     },
-    'profile.save': async (_event, ...args) => {
+    'profile.save': (_event, ...args) => {
       const profile = args[0] as Profile;
-      await getPhobos().profileService.saveProfile(profile);
+      return Promise.resolve(getPhobos().profileService.saveProfile(profile));
     },
-    'profile.delete': async (_event, ...args) => {
+    'profile.delete': (_event, ...args) => {
       const profile = args[0] as Profile;
-      await getPhobos().profileService.deleteProfileByName(profile.name);
+      return Promise.resolve(
+        getPhobos().profileService.deleteProfileById(profile.id)
+      );
     },
     'fileSystem.getPathForFile': () => Promise.resolve(),
     'fileSystem.showOpenDialog': (_event, ...args) => {
@@ -52,9 +54,12 @@ export class PhobosApi {
     'fileSystem.getBase64Image': async (_event, ...args) => {
       const path = args[0] as string;
       // TODO: This is probably super unreliable
-      const extension = path.split('.').pop() ?? 'png';
-      const data = await readFile(path);
-      return `data:image/${extension};base64,${data.toString('base64')}`;
+      if (path) {
+        const extension = path.split('.').pop() ?? 'png';
+        const data = await readFile(path);
+        return `data:image/${extension};base64,${data.toString('base64')}`;
+      }
+      return '';
     },
   };
 

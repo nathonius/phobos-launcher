@@ -1,63 +1,33 @@
-import { writeFile, readFile, readdir, mkdir, rm } from 'node:fs/promises';
-import { join } from 'node:path';
 import type { Profile } from '@shared/config';
-import slugify from 'slugify';
-import { PROFILE_DIR } from '../main';
+import type Store from 'electron-store';
 
 export interface FsError extends Error {
   code: string;
 }
 
 export class ProfileService {
-  private readonly profiles: Profile[] = [];
-
-  async init(): Promise<void> {
-    // Create profile dir if it doesn't already exist
-    let files: string[] = [];
-    try {
-      files = await readdir(PROFILE_DIR);
-    } catch (_) {
-      // No files found
-      await mkdir(PROFILE_DIR, { recursive: true });
-    }
-
-    // Read all json files from profile dir
-    for (const filename of files) {
-      if (filename.toLowerCase().endsWith('.json')) {
-        const jsonContent = await readFile(join(PROFILE_DIR, filename), {
-          encoding: 'utf-8',
-        });
-        try {
-          const config = JSON.parse(jsonContent) as Profile;
-          // TODO: Validate the config first
-          this.profiles.push(config);
-        } catch {
-          console.error(`Poorly formatted config file: ${filename}`);
-        }
-      }
-    }
-  }
+  public constructor(private readonly store: Store) {}
 
   getProfiles(): Profile[] {
-    return this.profiles;
+    return this.store.get('profiles', []) as Profile[];
   }
 
   getProfileByName(name: string): Profile | null {
-    return this.profiles.find((p) => p.name === name) ?? null;
+    return this.getProfiles().find((p) => p.name === name) ?? null;
   }
 
-  async saveProfile(config: Profile): Promise<void> {
-    const profilePath = join(PROFILE_DIR, `${slugify(config.name)}.json`);
-    await writeFile(profilePath, JSON.stringify(config));
-    this.profiles.unshift(config);
+  saveProfile(config: Profile): void {
+    const profiles = this.getProfiles();
+    profiles.unshift(config);
+    this.store.set('profiles', profiles);
   }
 
-  async deleteProfileByName(name: string): Promise<void> {
-    const profileIndex = this.profiles.findIndex((p) => p.name === name);
+  deleteProfileById(id: string): void {
+    const profiles = this.getProfiles();
+    const profileIndex = profiles.findIndex((p) => p.id === id);
     if (profileIndex !== -1) {
-      this.profiles.splice(profileIndex, 1);
-      const profilePath = join(PROFILE_DIR, `${slugify(name)}.json`);
-      await rm(profilePath);
+      profiles.splice(profileIndex, 1);
+      this.store.set('profiles', profiles);
     }
   }
 }

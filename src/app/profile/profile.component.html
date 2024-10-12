@@ -6,7 +6,11 @@
   <input class="input" type="text" placeholder="Name" formControlName="name" />
   <file-input formControlName="engine" label="Engine" />
   <file-input formControlName="base" label="Base" />
-  <input #bgImageInput type="file" (change)="saveImage(bgImageInput)" />
+  <file-input
+    formControlName="icon"
+    label="Icon"
+    (change)="handleIconChange($event)"
+  />
   <ul>
     @for (file of profileForm.controls.files.controls; track $index) {
     <li>
@@ -19,6 +23,7 @@
     }
     <button type="button" (click)="addFile()">Add File</button>
   </ul>
+  <img class="h-full max-w-60" [src]="profileIcon()" />
   <button type="button" class="btn" (click)="handleSave()">Save</button>
   <button type="submit" class="btn">Launch</button>
 </form>

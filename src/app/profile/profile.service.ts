@@ -18,7 +18,7 @@ export class ProfileService {
     this.allProfiles.set(profiles);
     const selectedProfile = this.selectedProfile();
     if (selectedProfile) {
-      const stillExists = profiles.find((p) => p.name === selectedProfile.name);
+      const stillExists = profiles.find((p) => p.id === selectedProfile.id);
       this.selectedProfile.set(stillExists);
     }
     return profiles;
@@ -29,6 +29,7 @@ export class ProfileService {
     if (_profile) {
       await Api['profile.save'](_profile);
     }
+    await this.getAllProfiles();
   }
 
   public async deleteProfile(profile: Profile) {
@@ -38,5 +39,13 @@ export class ProfileService {
 
   public launch(profile: Profile) {
     void Api['profile.launchCustom'](profile);
+  }
+
+  public async getProfileIcon(profile: Profile | string) {
+    const path = typeof profile === 'string' ? profile : profile.icon;
+    if (path) {
+      return await Api['fileSystem.getBase64Image'](path);
+    }
+    return Promise.resolve('');
   }
 }
