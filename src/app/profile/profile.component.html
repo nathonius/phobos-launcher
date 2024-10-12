@@ -1,0 +1,24 @@
+<form
+  class="flex flex-col"
+  [formGroup]="profileForm"
+  (ngSubmit)="handleLaunch()"
+>
+  <input class="input" type="text" placeholder="Name" formControlName="name" />
+  <file-input formControlName="engine" label="Engine" />
+  <file-input formControlName="base" label="Base" />
+  <input #bgImageInput type="file" (change)="saveImage(bgImageInput)" />
+  <ul>
+    @for (file of profileForm.controls.files.controls; track $index) {
+    <li>
+      <file-input
+        removable="true"
+        [formControl]="file"
+        (remove)="profileForm.controls.files.removeAt($index)"
+      />
+    </li>
+    }
+    <button type="button" (click)="addFile()">Add File</button>
+  </ul>
+  <button type="button" class="btn" (click)="handleSave()">Save</button>
+  <button type="submit" class="btn">Launch</button>
+</form>

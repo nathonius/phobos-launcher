@@ -49,6 +49,7 @@ export default tseslint.config(
           checksVoidReturn: false,
         },
       ],
+      "@typescript-eslint/no-floating-promises": "off",
 
       // replaced by 'unused-imports/no-unused-vars'
       "@typescript-eslint/no-unused-vars": "off",
@@ -66,5 +67,6 @@ export default tseslint.config(
       "import/no-duplicates": "error",
     },
   },
+  // @ts-ignore
   PrettierConfig
 );
