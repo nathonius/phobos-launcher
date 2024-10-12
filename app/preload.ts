@@ -14,6 +14,8 @@ export const clientApi = {
     ipcRenderer.invoke('profile.launchCustom', profile),
   'profile.save': (profile: Profile) =>
     ipcRenderer.invoke('profile.save', profile),
+  'profile.delete': (profile: Profile) =>
+    ipcRenderer.invoke('profile.delete', profile),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),

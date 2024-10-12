@@ -4,19 +4,31 @@
     <button
       class="flex relative justify-center items-center grow btn btn-ghost"
       type="button"
-      [style.backgroundImage]="asDataUrl(item.img)"
       (click)="action.emit({item, action: 'primary'})"
     >
+      <img
+        src="phobos-data://default-item-bg.png"
+        class="block absolute h-full"
+      />
       <span>{{ item.name }}</span>
     </button>
     <div class="item-controls flex gap-1">
       @for (itemAction of item.actions; track itemAction.name) {
-      <button
-        class="btn btn-outline"
-        (click)="action.emit({item, action: itemAction.name})"
+      <div
+        [class]="{ tooltip: !!itemAction.icon }"
+        [attr.data-tip]="itemAction.label"
       >
-        {{ itemAction.label }}
-      </button>
+        <button
+          class="btn btn-outline"
+          (click)="action.emit({item, action: itemAction.name})"
+        >
+          @if (itemAction.icon) {
+          <lucide-icon [img]="itemAction.icon" />
+          } @else {
+          {{ itemAction.label }}
+          }
+        </button>
+      </div>
       }
     </div>
   </div>

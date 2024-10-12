@@ -5,6 +5,7 @@ export type Channel =
   | 'profile.launch'
   | 'profile.launchCustom'
   | 'profile.save'
+  | 'profile.delete'
   | 'fileSystem.showOpenDialog'
   | 'fileSystem.getPathForFile'
   | 'fileSystem.getBase64Image';

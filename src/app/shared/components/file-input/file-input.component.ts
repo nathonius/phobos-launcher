@@ -9,11 +9,17 @@ import {
   forwardRef,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
-import { LucideAngularModule, FileIcon, FolderIcon } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  FileIcon,
+  FolderIcon,
+  TrashIcon,
+} from 'lucide-angular';
 import { DOCUMENT } from '@angular/common';
 import { Api } from '../../../api/api';
 
@@ -39,12 +45,15 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly placeholder = input<string>();
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
+  public readonly removable = input(false, { transform: booleanAttribute });
+  public readonly remove = output();
   protected readonly _placeholder = computed(
     () => this.placeholder() ?? this.label() ?? ''
   );
   protected readonly icons = {
     FileIcon,
     FolderIcon,
+    TrashIcon,
   };
   protected readonly fileInput =
     viewChild<ElementRef<HTMLInputElement>>('fileInput');

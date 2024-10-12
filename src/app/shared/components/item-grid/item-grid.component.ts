@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import type { LucideIconData } from 'lucide-angular/icons/types';
 import { AsyncPipe } from '@angular/common';
+import { LucideAngularModule } from 'lucide-angular';
 
 export interface GridItemAction {
   label: string;
@@ -27,7 +28,7 @@ export interface GridItemEvent {
 @Component({
   selector: 'item-grid',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, LucideAngularModule],
   templateUrl: './item-grid.component.html',
   styleUrl: './item-grid.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

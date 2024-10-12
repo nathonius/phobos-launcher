@@ -24,6 +24,8 @@ export const Api = {
     window.api['profile.launchCustom'](profile) as Promise<void>,
   'profile.save': (profile: Profile) =>
     window.api['profile.save'](profile) as Promise<void>,
+  'profile.delete': (profile: Profile) =>
+    window.api['profile.delete'](profile) as Promise<void>,
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>

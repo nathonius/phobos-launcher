@@ -13,7 +13,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import type { Profile } from '@shared/config';
-import { Play } from 'lucide-angular';
+import { Play, Trash, Wrench } from 'lucide-angular';
 import { Api } from '../api/api';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import type { GridItemEvent } from '../shared/components/item-grid/item-grid.component';
@@ -43,9 +43,19 @@ export class HomeComponent {
     this.profiles().map((p) => {
       const actions = [
         {
+          name: 'edit',
+          label: 'Edit',
+          icon: Wrench,
+        },
+        {
           name: 'launch',
           label: 'Launch',
           icon: Play,
+        },
+        {
+          name: 'delete',
+          label: 'Delete',
+          icon: Trash,
         },
       ];
       return { ...p, img: this.fallbackImage, actions };
@@ -70,6 +80,8 @@ export class HomeComponent {
     const profile = this.profiles().find((p) => p.name === event.item.name);
     if (event.action === 'primary') {
       this.selectProfile(profile ?? null);
+    } else if (event.action === 'delete' && profile) {
+      void this.deleteProfile(profile);
     } else if (event.action === 'launch' && profile) {
       this.launch(profile);
     }
@@ -94,8 +106,22 @@ export class HomeComponent {
     this.profiles.set(await Api['profile.getProfiles']());
   }
 
+  protected async deleteProfile(profile: Profile) {
+    await Api['profile.delete'](profile);
+    this.profiles.set(await Api['profile.getProfiles']());
+  }
+
   protected launch(profile = this.getProfile()) {
     void Api['profile.launchCustom'](profile);
+  }
+
+  protected async saveImage(input: HTMLInputElement) {
+    const file = input.files![0];
+    const fileData = await file.arrayBuffer();
+    await fetch(`phobos-data://${file.name}`, {
+      method: 'POST',
+      body: fileData,
+    });
   }
 
   addFile() {

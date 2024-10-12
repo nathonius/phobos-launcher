@@ -4,17 +4,15 @@
   <input class="input" type="text" placeholder="Name" formControlName="name" />
   <file-input formControlName="engine" label="Engine" />
   <file-input formControlName="base" label="Base" />
+  <input #bgImageInput type="file" (change)="saveImage(bgImageInput)" />
   <ul>
     @for (file of form.controls.files.controls; track $index) {
     <li>
-      <file-input [formControl]="file" />
-      <button
-        type="button"
-        class="btn"
-        (click)="form.controls.files.removeAt($index)"
-      >
-        X
-      </button>
+      <file-input
+        removable="true"
+        [formControl]="file"
+        (remove)="form.controls.files.removeAt($index)"
+      />
     </li>
     }
     <button type="button" (click)="addFile()">Add File</button>

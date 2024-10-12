@@ -40,6 +40,10 @@ export class PhobosApi {
       const profile = args[0] as Profile;
       await getPhobos().profileService.saveProfile(profile);
     },
+    'profile.delete': async (_event, ...args) => {
+      const profile = args[0] as Profile;
+      await getPhobos().profileService.deleteProfileByName(profile.name);
+    },
     'fileSystem.getPathForFile': () => Promise.resolve(),
     'fileSystem.showOpenDialog': (_event, ...args) => {
       const config = (args[0] as Electron.OpenDialogOptions | undefined) ?? {};

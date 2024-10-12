@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "phobos-launcher": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -101,27 +101,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "angular-electron:build"
+            "buildTarget": "phobos-launcher:build"
           },
           "configurations": {
             "dev": {
-              "buildTarget": "angular-electron:build:dev"
+              "buildTarget": "phobos-launcher:build:dev"
             },
             "production": {
-              "buildTarget": "angular-electron:build:production"
+              "buildTarget": "phobos-launcher:build:production"
             },
             "web": {
-              "buildTarget": "angular-electron:build:web"
+              "buildTarget": "phobos-launcher:build:web"
             },
             "web-production": {
-              "buildTarget": "angular-electron:build:web-production"
+              "buildTarget": "phobos-launcher:build:web-production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "angular-electron:build"
+            "buildTarget": "phobos-launcher:build"
           }
         }
       }

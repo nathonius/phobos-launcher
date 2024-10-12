@@ -1,4 +1,4 @@
-import { writeFile, readFile, readdir, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, readdir, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Profile } from '@shared/config';
 import slugify from 'slugify';
@@ -52,7 +52,12 @@ export class ProfileService {
     this.profiles.unshift(config);
   }
 
-  deleteProfileByName(name: string): Promise<void> {
-    throw new Error('not implemented');
+  async deleteProfileByName(name: string): Promise<void> {
+    const profileIndex = this.profiles.findIndex((p) => p.name === name);
+    if (profileIndex !== -1) {
+      this.profiles.splice(profileIndex, 1);
+      const profilePath = join(PROFILE_DIR, `${slugify(name)}.json`);
+      await rm(profilePath);
+    }
   }
 }

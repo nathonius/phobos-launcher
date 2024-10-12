@@ -1,15 +1,24 @@
 import { join } from 'node:path';
 import { existsSync } from 'node:fs';
-import { app, BrowserWindow, screen } from 'electron';
+import { setTimeout, clearTimeout } from 'node:timers';
+import { app, BrowserWindow } from 'electron';
+import Store from 'electron-store';
 
 import { ProfileService } from './services/profile.service';
 import { PhobosApi } from './api';
+import { UserDataService } from './services/user-data.service';
+import { DEFAULT_WINDOW_SETTINGS } from './main';
 
 export class Phobos {
   public readonly api = new PhobosApi();
   public readonly profileService = new ProfileService();
+  public readonly userDataService = new UserDataService(
+    app.getPath('userData')
+  );
+  public readonly store = new Store();
   private window: BrowserWindow | null = null;
   private initialized = false;
+  private windowSettingsTimeout: NodeJS.Timeout | undefined;
 
   constructor(
     private readonly basePath: string,
@@ -27,6 +36,7 @@ export class Phobos {
     // Attach API/IPC handlers, create window
     app.on('ready', () => {
       this.api._attachHandlers();
+      this.userDataService.init();
       void this.profileService.init();
       this.createWindow();
     });
@@ -47,15 +57,9 @@ export class Phobos {
   }
 
   public createWindow(): BrowserWindow {
-    // TODO: Store the size and restore to the last used size
-    const size = screen.getPrimaryDisplay().workAreaSize;
-
     // Create the browser window.
     this.window = new BrowserWindow({
-      x: 0,
-      y: 0,
-      width: size.width - 100,
-      height: size.height - 100,
+      ...this.getWindowSettings(),
       webPreferences: {
         preload: join(this.basePath, 'preload.js'),
       },
@@ -90,6 +94,20 @@ export class Phobos {
       this.window = null;
     });
 
+    this.window.on('resized', () => {
+      clearTimeout(this.windowSettingsTimeout);
+      this.windowSettingsTimeout = setTimeout(() => {
+        this.store.set('window', this.window?.getBounds());
+      }, 500);
+    });
+
     return this.window;
+  }
+
+  private getWindowSettings(): Electron.Rectangle {
+    return this.store.get(
+      'window',
+      DEFAULT_WINDOW_SETTINGS()
+    ) as Electron.Rectangle;
   }
 }

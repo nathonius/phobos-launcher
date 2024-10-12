@@ -1,5 +1,5 @@
 {
-  "name": "angular-electron",
+  "name": "phobos-launcher",
   "description": "Angular Electron sample",
   "author": {
     "name": "Maxime GRIS",
@@ -8,6 +8,5 @@
   "version": "14.0.1",
   "main": "main.js",
   "private": true,
-  "dependencies": {
-  }
+  "dependencies": {}
 }
