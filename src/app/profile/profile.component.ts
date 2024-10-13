@@ -15,12 +15,13 @@ import {
 import type { Profile } from '@shared/config';
 import { v4 as uuid } from 'uuid';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
+import { FileListComponent } from '../shared/components/file-list/file-list.component';
 import { ProfileService } from './profile.service';
 
 @Component({
   selector: 'profile',
   standalone: true,
-  imports: [ReactiveFormsModule, FileInputComponent],
+  imports: [ReactiveFormsModule, FileInputComponent, FileListComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

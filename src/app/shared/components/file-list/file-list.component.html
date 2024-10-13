@@ -1,0 +1,15 @@
+<div>
+  @for (path of filePaths().controls; track $index) {
+  <file-input
+    reorder="true"
+    removable="true"
+    [formControl]="path"
+    (reorderUp)="handleReorderUp($index)"
+    (reorderDown)="handleReorderDown($index)"
+    (remove)="handleRemove($index)"
+  />
+  }
+  <button type="button" class="btn btn-primary" (click)="handleAdd()">
+    <lucide-icon [img]="icons.PlusIcon" />
+  </button>
+</div>

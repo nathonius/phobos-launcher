@@ -27,6 +27,17 @@
   >
     <lucide-icon class="h-4 w-4" [img]="icons.FolderIcon" />
   </button>
+  } @if (reorder()) {
+  <button type="button" class="btn btn-ghost btn-xs" (click)="reorderUp.emit()">
+    <lucide-icon class="h-4 w-4" [img]="icons.ArrowUpIcon" />
+  </button>
+  <button
+    type="button"
+    class="btn btn-ghost btn-xs"
+    (click)="reorderDown.emit()"
+  >
+    <lucide-icon class="h-4 w-4" [img]="icons.ArrowDownIcon" />
+  </button>
   } @if (removable()) {
   <button type="button" class="btn btn-ghost btn-xs" (click)="remove.emit()">
     <lucide-icon class="h-4 w-4" [img]="icons.TrashIcon" />

@@ -18,7 +18,13 @@ export class ProfileService {
 
   saveProfile(config: Profile): void {
     const profiles = this.getProfiles();
-    profiles.unshift(config);
+    // Find existing profile
+    const matchingProfileIndex = profiles.findIndex((p) => p.id === config.id);
+    if (matchingProfileIndex !== -1) {
+      profiles[matchingProfileIndex] = config;
+    } else {
+      profiles.unshift(config);
+    }
     this.store.set('profiles', profiles);
   }
 

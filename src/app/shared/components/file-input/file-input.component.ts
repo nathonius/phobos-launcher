@@ -19,6 +19,8 @@ import {
   FileIcon,
   FolderIcon,
   TrashIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from 'lucide-angular';
 import { DOCUMENT } from '@angular/common';
 import { Api } from '../../../api/api';
@@ -46,8 +48,11 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
   public readonly removable = input(false, { transform: booleanAttribute });
+  public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly remove = output();
   public readonly change = output<string>();
+  public readonly reorderUp = output();
+  public readonly reorderDown = output();
   protected readonly _placeholder = computed(
     () => this.placeholder() ?? this.label() ?? ''
   );
@@ -55,9 +60,9 @@ export class FileInputComponent implements ControlValueAccessor {
     FileIcon,
     FolderIcon,
     TrashIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
   };
-  protected readonly fileInput =
-    viewChild<ElementRef<HTMLInputElement>>('fileInput');
   protected readonly textInput =
     viewChild<ElementRef<HTMLInputElement>>('textInput');
   protected readonly fileTargetId = `file-target-${++idCount}`;
@@ -95,13 +100,6 @@ export class FileInputComponent implements ControlValueAccessor {
     });
     if (filePaths.length > 0) {
       this.writeValue(filePaths[0]);
-    }
-  }
-
-  handleFileDrop() {
-    const file = this.fileInput()?.nativeElement.files?.[0];
-    if (file) {
-      this.writeValue(file);
     }
   }
 
