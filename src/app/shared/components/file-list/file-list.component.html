@@ -1,4 +1,9 @@
-<div>
+<div
+  class="px-2 relative border-2 border-primary"
+  (dragover)="handleDragOver($event)"
+  (dragleave)="handleDragOut()"
+  (drop)="handleDrop($event)"
+>
   @for (path of filePaths().controls; track $index) {
   <file-input
     reorder="true"
@@ -12,4 +17,10 @@
   <button type="button" class="btn btn-primary" (click)="handleAdd()">
     <lucide-icon [img]="icons.PlusIcon" />
   </button>
+  <div
+    class="absolute flex justify-center items-center h-full w-full glass top-0 left-0 pointer-events-none transition-all"
+    [class]="{ 'opacity-0': !dragging(), 'opacity-100': dragging() }"
+  >
+    Drop Files
+  </div>
 </div>

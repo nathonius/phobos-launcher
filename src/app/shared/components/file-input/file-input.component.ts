@@ -49,6 +49,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly file = input(true, { transform: booleanAttribute });
   public readonly removable = input(false, { transform: booleanAttribute });
   public readonly reorder = input(false, { transform: booleanAttribute });
+  public readonly droppable = input(false, { transform: booleanAttribute });
   public readonly remove = output();
   public readonly change = output<string>();
   public readonly reorderUp = output();
@@ -67,6 +68,7 @@ export class FileInputComponent implements ControlValueAccessor {
     viewChild<ElementRef<HTMLInputElement>>('textInput');
   protected readonly fileTargetId = `file-target-${++idCount}`;
   protected readonly filePath = signal<string>('');
+  protected readonly dragging = signal(false);
   protected readonly isDisabled = signal<boolean>(false);
   protected readonly _document = inject(DOCUMENT);
 
@@ -76,6 +78,8 @@ export class FileInputComponent implements ControlValueAccessor {
   protected onTouch: () => void = () => {
     // pass
   };
+
+  private dragTimeout: number | undefined = undefined;
 
   constructor() {
     effect(() => {
@@ -115,6 +119,48 @@ export class FileInputComponent implements ControlValueAccessor {
       this.filePath.set(value);
     } else if (value instanceof File) {
       this.filePath.set(Api['fileSystem.getPathForFile'](value));
+    }
+  }
+
+  handleDragOver(event: DragEvent) {
+    if (this.droppable()) {
+      event.preventDefault();
+      window.clearTimeout(this.dragTimeout);
+      this.dragging.set(true);
+    }
+  }
+
+  handleDragOut() {
+    if (this.droppable()) {
+      // Do this on a timeout to help prevent flickering
+      window.clearTimeout(this.dragTimeout);
+      this.dragTimeout = window.setTimeout(() => {
+        this.dragging.set(false);
+      }, 100);
+    }
+  }
+
+  handleDrop(event: DragEvent) {
+    if (this.droppable()) {
+      // Prevent default behavior (Prevent file from being opened)
+      event.preventDefault();
+
+      if (event.dataTransfer?.items.length ?? 0 > 0) {
+        const item = event.dataTransfer!.items[0];
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+          if (file) {
+            const path = Api['fileSystem.getPathForFile'](file);
+            this.writeValue(path);
+          }
+        }
+      } else if (event.dataTransfer?.files.length ?? 0 > 0) {
+        const file = event.dataTransfer!.files[0];
+        // Use DataTransfer interface to access the file(s)
+        const path = Api['fileSystem.getPathForFile'](file);
+        this.writeValue(path);
+      }
+      this.dragging.set(false);
     }
   }
 

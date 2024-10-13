@@ -10,6 +10,9 @@
     [value]="filePath()"
     (focus)="onTouch()"
     (change)="handleTextChange()"
+    (drop)="handleDrop($event)"
+    (dragover)="handleDragOver($event)"
+    (dragleave)="handleDragOut()"
   />
   @if (file()) {
   <button
