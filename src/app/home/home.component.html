@@ -11,14 +11,24 @@
 <button type="button" class="btn" (click)="newProfile()">New Profile</button>
 <item-grid [items]="profileItems()" (action)="handleAction($event)" />
 } -->
-
-@for (category of categories(); track category.id) {
+@if (categoryService.selectedCategory(); as selectedCategory) {
 <button
   type="button"
   class="btn"
+  (click)="categoryService.selectedCategory.set(undefined)"
+>
+  Back
+</button>
+<category [category]="selectedCategory" />
+} @else { @for (category of categories(); track category.id) {
+<button
+  type="button"
+  class="btn tooltip tooltip-right"
+  [attr.data-tip]="category.name"
   (click)="categoryService.selectedCategory.set(category)"
 >
   <img [src]="category.img" />
 </button>
 }
 <button type="button" class="btn" (click)="newCategory()">New Category</button>
+}

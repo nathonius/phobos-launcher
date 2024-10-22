@@ -16,8 +16,8 @@ import type { Profile } from '@shared/config';
 import { v4 as uuid } from 'uuid';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { FileListComponent } from '../shared/components/file-list/file-list.component';
+import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { ProfileService } from './profile.service';
-import { ProfileSectionComponent } from './profile-section/profile-section.component';
 
 @Component({
   selector: 'profile',
@@ -26,10 +26,9 @@ import { ProfileSectionComponent } from './profile-section/profile-section.compo
     ReactiveFormsModule,
     FileInputComponent,
     FileListComponent,
-    ProfileSectionComponent,
+    FormSectionComponent,
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
@@ -109,6 +108,7 @@ export class ProfileComponent {
       base: base!,
       files: files!,
       icon: icon!,
+      categories: [],
     };
   }
 }

@@ -19,6 +19,7 @@ import { ItemGridComponent } from '../shared/components/item-grid/item-grid.comp
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { CategoryService } from '../category/category.service';
+import { CategoryComponent } from '../category/category.component';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +31,7 @@ import { CategoryService } from '../category/category.service';
     FileInputComponent,
     ItemGridComponent,
     ProfileComponent,
+    CategoryComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

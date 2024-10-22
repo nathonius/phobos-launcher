@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
-  selector: 'profile-section',
+  selector: 'form-section',
   standalone: true,
   imports: [],
-  templateUrl: './profile-section.component.html',
+  templateUrl: './form-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileSectionComponent {
+export class FormSectionComponent {
   public readonly label = input<string>();
 }

@@ -1,0 +1,26 @@
+<form
+  class="flex flex-wrap gap-2"
+  [formGroup]="categoryForm"
+  (ngSubmit)="handleSave()"
+>
+  <form-section>
+    <div class="flex flex-wrap justify-between gap-2">
+      <label>Name</label>
+      <input
+        class="input flex-grow"
+        type="text"
+        placeholder="Category name"
+        formControlName="name"
+      />
+    </div>
+    <file-input
+      formControlName="icon"
+      label="Icon"
+      droppable="true"
+      directory="false"
+      (change)="handleIconChange($event)"
+    />
+  </form-section>
+  <img class="h-full max-w-60" [src]="categoryIcon()" />
+  <button type="submit" class="btn">Save</button>
+</form>

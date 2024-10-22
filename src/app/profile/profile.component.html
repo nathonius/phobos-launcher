@@ -3,7 +3,7 @@
   [formGroup]="profileForm"
   (ngSubmit)="handleLaunch()"
 >
-  <profile-section>
+  <form-section>
     <div class="flex flex-wrap justify-between gap-2">
       <label>Name</label>
       <input
@@ -32,10 +32,10 @@
       directory="false"
       (change)="handleIconChange($event)"
     />
-  </profile-section>
-  <profile-section label="Profile Resources">
+  </form-section>
+  <form-section label="Profile Resources">
     <file-list [filePaths]="profileForm.controls.files" />
-  </profile-section>
+  </form-section>
   <img class="h-full max-w-60" [src]="profileIcon()" />
   <button type="button" class="btn" (click)="handleSave()">Save</button>
   <button type="submit" class="btn">Launch</button>
