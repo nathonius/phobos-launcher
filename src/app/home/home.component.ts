@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Play, Trash, Wrench } from 'lucide-angular';
 import { v4 as uuid } from 'uuid';
-import { Api } from '../api/api';
+import type { Category } from '@shared/config';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import type {
   GridItem,
@@ -18,6 +18,7 @@ import type {
 import { ItemGridComponent } from '../shared/components/item-grid/item-grid.component';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
+import { CategoryService } from '../category/category.service';
 
 @Component({
   selector: 'app-home',
@@ -34,17 +35,30 @@ import { ProfileComponent } from '../profile/profile.component';
 })
 export class HomeComponent {
   protected readonly profileService = inject(ProfileService);
+  protected readonly categoryService = inject(CategoryService);
+  protected readonly categories = signal<(Category & { img: string })[]>([]);
   protected readonly profileItems = signal<GridItem[]>([]);
 
   constructor() {
     effect(
       async () => {
+        const allCategories = this.categoryService.allCategories();
+        const categories: (Category & { img: string })[] = [];
+        for (const c of allCategories) {
+          const img = await this.categoryService.getCategoryIcon(c);
+          categories.push({ ...c, img });
+        }
+        categories.unshift({ id: 'all', name: 'All', icon: '', img: '' });
+        this.categories.set(categories);
+      },
+      { allowSignalWrites: true }
+    );
+    effect(
+      async () => {
         const allProfiles = this.profileService.allProfiles();
         const itemGridItems: GridItem[] = [];
         for (const profile of allProfiles) {
-          const img = profile.icon
-            ? await Api['fileSystem.getBase64Image'](profile.icon)
-            : '';
+          const img = await this.profileService.getProfileIcon(profile);
           itemGridItems.push({
             ...profile,
             img,
@@ -81,6 +95,15 @@ export class HomeComponent {
       icon: '',
       name: '',
       files: [],
+      categories: [],
+    });
+  }
+
+  protected newCategory() {
+    this.categoryService.selectedCategory.set({
+      id: uuid(),
+      name: '',
+      icon: '',
     });
   }
 

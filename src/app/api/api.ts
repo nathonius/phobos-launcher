@@ -14,8 +14,12 @@ declare global {
 export const Api = {
   'category.getByName': (name: string) =>
     window.api['category.getByName'](name) as Promise<string[]>,
-  'category.getCategoryList': () =>
-    window.api['category.getCategoryList']() as Promise<Category[]>,
+  'category.getCategories': () =>
+    window.api['category.getCategories']() as Promise<Category[]>,
+  'category.save': (category: Category) =>
+    window.api['category.save'](category) as Promise<void>,
+  'category.delete': (category: Category) =>
+    window.api['category.delete'](category) as Promise<void>,
   'profile.getProfiles': () =>
     window.api['profile.getProfiles']() as Promise<Profile[]>,
   'profile.launch': (profile: string) =>

@@ -1,6 +1,8 @@
 export type Channel =
   | 'category.getByName'
-  | 'category.getCategoryList'
+  | 'category.getCategories'
+  | 'category.save'
+  | 'category.delete'
   | 'profile.getProfiles'
   | 'profile.launch'
   | 'profile.launchCustom'

@@ -1,12 +1,15 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from '@shared/public-api';
-import type { Profile } from '@shared/config';
+import type { Category, Profile } from '@shared/config';
 
 export const clientApi = {
   'category.getByName': (name: string) =>
     ipcRenderer.invoke('category.getByName', name),
-  'category.getCategoryList': () =>
-    ipcRenderer.invoke('category.getCategoryList'),
+  'category.getCategories': () => ipcRenderer.invoke('category.getCategories'),
+  'category.save': (category: Category) =>
+    ipcRenderer.invoke('category.save', category),
+  'category.delete': (category: Category) =>
+    ipcRenderer.invoke('category.delete', category),
   'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
   'profile.launch': (profile: string) =>
     ipcRenderer.invoke('profile.launch', profile),

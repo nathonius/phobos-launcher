@@ -14,8 +14,9 @@ export interface Engine extends FileRecord {
 }
 
 export interface Category {
-  displayName: string;
   id: string;
+  name: string;
+  icon: string;
 }
 
 export interface Settings {
@@ -32,4 +33,5 @@ export interface Profile {
   base: string;
   icon: string;
   files: string[];
+  categories: string[];
 }

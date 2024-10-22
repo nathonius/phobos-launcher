@@ -8,6 +8,7 @@ import { ProfileService } from './services/profile.service';
 import { PhobosApi } from './api';
 import { UserDataService } from './services/user-data.service';
 import { DEFAULT_WINDOW_SETTINGS } from './main';
+import { CategoryService } from './services/category.service';
 
 export class Phobos {
   public readonly api = new PhobosApi();
@@ -16,6 +17,7 @@ export class Phobos {
   );
   public readonly store = new Store();
   public readonly profileService = new ProfileService(this.store);
+  public readonly categoryService = new CategoryService(this.store);
   private window: BrowserWindow | null = null;
   private initialized = false;
   private windowSettingsTimeout: NodeJS.Timeout | undefined;

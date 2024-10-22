@@ -1,4 +1,4 @@
-@if (profileService.selectedProfile(); as selected) {
+<!-- @if (profileService.selectedProfile(); as selected) {
 <button
   type="button"
   class="btn"
@@ -10,4 +10,15 @@
 } @else {
 <button type="button" class="btn" (click)="newProfile()">New Profile</button>
 <item-grid [items]="profileItems()" (action)="handleAction($event)" />
+} -->
+
+@for (category of categories(); track category.id) {
+<button
+  type="button"
+  class="btn"
+  (click)="categoryService.selectedCategory.set(category)"
+>
+  <img [src]="category.img" />
+</button>
 }
+<button type="button" class="btn" (click)="newCategory()">New Category</button>
