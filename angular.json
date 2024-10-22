@@ -18,7 +18,8 @@
         "@schematics/angular:component": {
           "style": "css",
           "skipTests": true,
-          "changeDetection": "OnPush"
+          "changeDetection": "OnPush",
+          "inlineStyle": true
         },
         "@schematics/angular:service": {
           "skipTests": true

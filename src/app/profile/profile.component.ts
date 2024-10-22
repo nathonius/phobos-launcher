@@ -17,11 +17,17 @@ import { v4 as uuid } from 'uuid';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { FileListComponent } from '../shared/components/file-list/file-list.component';
 import { ProfileService } from './profile.service';
+import { ProfileSectionComponent } from './profile-section/profile-section.component';
 
 @Component({
   selector: 'profile',
   standalone: true,
-  imports: [ReactiveFormsModule, FileInputComponent, FileListComponent],
+  imports: [
+    ReactiveFormsModule,
+    FileInputComponent,
+    FileListComponent,
+    ProfileSectionComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

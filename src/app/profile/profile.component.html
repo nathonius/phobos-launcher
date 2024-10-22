@@ -1,18 +1,41 @@
 <form
-  class="flex flex-col"
+  class="flex flex-wrap gap-2"
   [formGroup]="profileForm"
   (ngSubmit)="handleLaunch()"
 >
-  <input class="input" type="text" placeholder="Name" formControlName="name" />
-  <file-input formControlName="engine" label="Engine" droppable="true" />
-  <file-input formControlName="base" label="Base" droppable="true" />
-  <file-input
-    formControlName="icon"
-    label="Icon"
-    droppable="true"
-    (change)="handleIconChange($event)"
-  />
-  <file-list [filePaths]="profileForm.controls.files" />
+  <profile-section>
+    <div class="flex flex-wrap justify-between gap-2">
+      <label>Name</label>
+      <input
+        class="input flex-grow"
+        type="text"
+        placeholder="Profile name"
+        formControlName="name"
+      />
+    </div>
+    <file-input
+      formControlName="engine"
+      label="Engine"
+      droppable="true"
+      directory="false"
+    />
+    <file-input
+      formControlName="base"
+      label="Base"
+      droppable="true"
+      directory="false"
+    />
+    <file-input
+      formControlName="icon"
+      label="Icon"
+      droppable="true"
+      directory="false"
+      (change)="handleIconChange($event)"
+    />
+  </profile-section>
+  <profile-section label="Profile Resources">
+    <file-list [filePaths]="profileForm.controls.files" />
+  </profile-section>
   <img class="h-full max-w-60" [src]="profileIcon()" />
   <button type="button" class="btn" (click)="handleSave()">Save</button>
   <button type="submit" class="btn">Launch</button>
