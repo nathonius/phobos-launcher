@@ -83,13 +83,15 @@ export class HomeComponent implements OnInit {
   constructor() {
     effect(
       async () => {
-        const allCategories = this.categoryService.allCategories();
+        const allCategories = [
+          { id: 'all', name: 'All', icon: '' },
+          ...this.categoryService.allCategories(),
+        ];
         const categories: (Category & { img: string })[] = [];
         for (const c of allCategories) {
           const img = await this.categoryService.getCategoryIcon(c);
           categories.push({ ...c, img });
         }
-        categories.unshift({ id: 'all', name: 'All', icon: '', img: '' });
         this.categories.set(categories);
       },
       { allowSignalWrites: true }

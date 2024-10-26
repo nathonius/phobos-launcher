@@ -38,6 +38,10 @@ export class CategoryService {
   }
 
   public async getCategoryIcon(category: Category | string) {
+    // Special handling for 'all' profile
+    if (typeof category !== 'string' && category.id === 'all') {
+      return Promise.resolve('assets/phobos-simplified-200.png');
+    }
     const path = typeof category === 'string' ? category : category.icon;
     if (path) {
       return await Api['fileSystem.getBase64Image'](path);
