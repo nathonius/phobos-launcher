@@ -1,3 +1,4 @@
+import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,8 +10,10 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { Category } from '@shared/config';
 import { v4 as uuid } from 'uuid';
+import { Save, Trash } from 'lucide-angular';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
+import { NavbarService } from '../shared/services/navbar.service';
 import { CategoryService } from './category.service';
 
 @Component({
@@ -21,7 +24,7 @@ import { CategoryService } from './category.service';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
   public readonly category = input<Category | null>();
   protected readonly categoryForm = new FormGroup({
     name: new FormControl<string>('', { nonNullable: true }),
@@ -29,6 +32,7 @@ export class CategoryComponent {
   });
   protected readonly categoryIcon = signal<string>('');
   private readonly categoryService = inject(CategoryService);
+  private readonly navbarService = inject(NavbarService);
 
   constructor() {
     effect(
@@ -45,6 +49,22 @@ export class CategoryComponent {
       },
       { allowSignalWrites: true }
     );
+  }
+
+  public ngOnInit(): void {
+    this.navbarService.items.set([
+      {
+        label: 'Delete',
+        icon: Trash,
+        callback: () => {},
+      },
+      {
+        label: 'Save',
+        icon: Save,
+        callback: this.handleSave.bind(this),
+        style: 'primary',
+      },
+    ]);
   }
 
   protected async handleIconChange(iconPath: string) {

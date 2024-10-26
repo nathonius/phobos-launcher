@@ -1,8 +1,13 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from '@shared/public-api';
 import type { Category, Profile } from '@shared/config';
+import type { JSONValue } from '@shared/json';
 
 export const clientApi = {
+  'settings.getAll': () => ipcRenderer.invoke('settings.getAll'),
+  'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
+  'settings.set': (key: string, value: JSONValue) =>
+    ipcRenderer.invoke('settings.set', key, value),
   'category.getByName': (name: string) =>
     ipcRenderer.invoke('category.getByName', name),
   'category.getCategories': () => ipcRenderer.invoke('category.getCategories'),

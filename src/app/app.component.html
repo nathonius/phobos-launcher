@@ -1,1 +1,64 @@
-<router-outlet></router-outlet>
+@let state = viewState();
+<div class="flex-grow">
+  @switch (state) { @case (AppViewState.Home) {
+  <app-home />
+  } @case (AppViewState.Settings) {
+  <app-settings />
+  } @case (AppViewState.Engines) {
+  <app-engines />
+  } @case (AppViewState.Bases) {
+  <app-bases />
+  } }
+</div>
+<div class="navbar justify-between bg-base-300">
+  <div class="flex gap-2">
+    <button
+      class="btn tooltip"
+      data-tip="Home"
+      [ngClass]="state === AppViewState.Home ? 'btn-primary' : 'btn-ghost'"
+      (click)="viewState.set(AppViewState.Home)"
+    >
+      <lucide-angular [img]="icons.Home" />
+    </button>
+    <button
+      class="btn tooltip"
+      data-tip="Settings"
+      [ngClass]="state === AppViewState.Settings ? 'btn-primary' : 'btn-ghost'"
+      (click)="viewState.set(AppViewState.Settings)"
+    >
+      <lucide-angular [img]="icons.Settings" />
+    </button>
+    <button
+      class="btn tooltip"
+      data-tip="Engines"
+      [ngClass]="state === AppViewState.Engines ? 'btn-primary' : 'btn-ghost'"
+      (click)="viewState.set(AppViewState.Engines)"
+    >
+      <lucide-angular [img]="icons.Cog" />
+    </button>
+    <button
+      class="btn tooltip"
+      data-tip="Base WADs"
+      [ngClass]="state === AppViewState.Bases ? 'btn-primary' : 'btn-ghost'"
+      (click)="viewState.set(AppViewState.Bases)"
+    >
+      <lucide-angular [img]="icons.Package" />
+    </button>
+  </div>
+  <div class="flex gap-2">
+    @for (item of navbarService.items(); track item.label) {
+    <button
+      class="btn"
+      [ngClass]="{
+        'btn-ghost': item.style === undefined,
+        'btn-primary': item.style === 'primary',
+        'btn-secondary': item.style === 'secondary',
+        'btn-accent': item.style === 'accent'
+      }"
+      (click)="item.callback($event)"
+    >
+      <lucide-angular [img]="item.icon" /> {{ item.label }}
+    </button>
+    }
+  </div>
+</div>

@@ -4,6 +4,7 @@ import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { IpcMainInvokeEvent } from 'electron';
 import { dialog, ipcMain } from 'electron';
+import type { JSONValue } from '@shared/json';
 import { getPhobos } from './main';
 
 type IpcHandler = (
@@ -16,6 +17,19 @@ type ApiHandlerMap = Record<Channel, IpcHandler>;
 export class PhobosApi {
   // TODO: Figure out a better way to do this. It's ugly.
   public readonly handlers: ApiHandlerMap = {
+    'settings.getAll': () =>
+      Promise.resolve(getPhobos().settingsService.getSettings()),
+    'settings.get': (_event, ...args) => {
+      const key = args[0] as string;
+      return Promise.resolve(getPhobos().settingsService.getSetting(key));
+    },
+    'settings.set': (_event, ...args) => {
+      const key = args[0] as string;
+      const value = args[1] as JSONValue;
+      return Promise.resolve(
+        getPhobos().settingsService.saveSetting(key, value)
+      );
+    },
     'category.getByName': () => Promise.resolve(['wad1', 'wad2']),
     'category.getCategories': (): Promise<Category[]> => {
       return Promise.resolve(getPhobos().categoryService.getCategories());

@@ -8,6 +8,7 @@
 /release
 main.js
 *.js
+!tailwind.config.js
 src/**/*.js
 *.js.map
 app/config

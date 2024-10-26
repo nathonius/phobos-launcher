@@ -1,15 +1,17 @@
+import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Play, Trash, Wrench } from 'lucide-angular';
+import { LucideAngularModule, Play, Plus, Trash, Wrench } from 'lucide-angular';
 import { v4 as uuid } from 'uuid';
-import type { Category } from '@shared/config';
+import type { Category, Profile } from '@shared/config';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import type {
   GridItem,
@@ -20,6 +22,14 @@ import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { CategoryService } from '../category/category.service';
 import { CategoryComponent } from '../category/category.component';
+import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
+import { NavbarService } from '../shared/services/navbar.service';
+
+enum HomeViewState {
+  CategoryEdit,
+  ProfileList,
+  ProfileEdit,
+}
 
 @Component({
   selector: 'app-home',
@@ -32,14 +42,43 @@ import { CategoryComponent } from '../category/category.component';
     ItemGridComponent,
     ProfileComponent,
     CategoryComponent,
+    LucideAngularModule,
+    FormSectionComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex-grow',
+  },
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  protected readonly HomeViewState = HomeViewState;
+  protected readonly viewState = signal<HomeViewState>(
+    HomeViewState.ProfileList
+  );
+  protected readonly showCategoryList = computed(() => {
+    return true;
+  });
+  protected readonly icons = {
+    Plus,
+  };
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
-  protected readonly profileItems = signal<GridItem[]>([]);
+  protected readonly allProfileItems = signal<GridItem[]>([]);
+  protected readonly profileItems = computed(() => {
+    const allItems = this.allProfileItems();
+    const selectedCategory = this.categoryService.selectedCategory();
+    if (selectedCategory === undefined || selectedCategory.id === 'all') {
+      return allItems;
+    } else {
+      return allItems.filter((p) =>
+        ((p as unknown as Profile).categories ?? []).includes(
+          selectedCategory.id
+        )
+      );
+    }
+  });
+  private readonly navbarService = inject(NavbarService);
 
   constructor() {
     effect(
@@ -83,10 +122,14 @@ export class HomeComponent {
             ],
           });
         }
-        this.profileItems.set(itemGridItems);
+        this.allProfileItems.set(itemGridItems);
       },
       { allowSignalWrites: true }
     );
+  }
+
+  public ngOnInit() {
+    this.handleSelectCategory({ id: 'all' } as Category);
   }
 
   protected newProfile() {
@@ -99,6 +142,7 @@ export class HomeComponent {
       files: [],
       categories: [],
     });
+    this.viewState.set(HomeViewState.ProfileEdit);
   }
 
   protected newCategory() {
@@ -107,6 +151,7 @@ export class HomeComponent {
       name: '',
       icon: '',
     });
+    this.editCategory();
   }
 
   protected handleAction(event: GridItemEvent) {
@@ -114,11 +159,58 @@ export class HomeComponent {
       .allProfiles()
       .find((p) => p.name === event.item.name);
     if (event.action === 'primary' || event.action === 'edit') {
-      this.profileService.selectedProfile.set(profile);
+      this.selectProfile(profile);
     } else if (event.action === 'delete' && profile) {
       this.profileService.deleteProfile(profile);
     } else if (event.action === 'launch' && profile) {
       this.profileService.launch(profile);
     }
+  }
+
+  protected handleSelectCategory(category: Category) {
+    if (category.id === 'all') {
+      this.categoryService.selectedCategory.set(undefined);
+      this.navbarService.items.set([
+        {
+          label: 'New profile',
+          icon: Plus,
+          callback: this.newProfile.bind(this),
+          style: 'secondary',
+        },
+      ]);
+    } else {
+      this.categoryService.selectedCategory.set(category);
+      this.navbarService.items.set([
+        {
+          label: 'Edit category',
+          icon: Wrench,
+          callback: this.editCategory.bind(this),
+          style: 'primary',
+        },
+        {
+          label: 'New profile',
+          icon: Plus,
+          callback: this.newProfile.bind(this),
+          style: 'secondary',
+        },
+      ]);
+    }
+    this.profileService.selectedProfile.set(undefined);
+    this.viewState.set(HomeViewState.ProfileList);
+  }
+
+  private selectProfile(profile: Profile | undefined) {
+    this.profileService.selectedProfile.set(profile);
+    this.viewState.set(HomeViewState.ProfileEdit);
+  }
+
+  private editCategory() {
+    const category = this.categoryService.selectedCategory();
+    if (!category || category.id === 'all') {
+      return;
+    }
+    this.categoryService.selectedCategory.set(category);
+    this.profileService.selectedProfile.set(undefined);
+    this.viewState.set(HomeViewState.CategoryEdit);
   }
 }

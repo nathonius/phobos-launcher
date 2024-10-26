@@ -1,5 +1,6 @@
 import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
+import type { JSONValue } from '@shared/json';
 import type { ClientApi } from '../../../app/preload';
 
 declare global {
@@ -12,6 +13,11 @@ declare global {
  * A wrapper around the window api to type the responses
  */
 export const Api = {
+  'settings.getAll': () => window.api['settings.getAll']() as Promise<unknown>,
+  'settings.get': (key: string) =>
+    window.api['settings.get'](key) as Promise<unknown>,
+  'settings.set': (key: string, value: JSONValue) =>
+    window.api['settings.set'](key, value) as Promise<void>,
   'category.getByName': (name: string) =>
     window.api['category.getByName'](name) as Promise<string[]>,
   'category.getCategories': () =>

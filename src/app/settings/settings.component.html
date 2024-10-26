@@ -1,0 +1,12 @@
+<form [formGroup]="settingsForm">
+  <label class="form-control">
+    <div class="label">
+      <span class="label-text">Theme</span>
+    </div>
+    <select class="select select-bordered" formControlName="theme">
+      <option [ngValue]="null">Default</option>
+      <option [ngValue]="'retro'">Retro</option>
+      <option [ngValue]="'synthwave'">Synthwave</option>
+    </select>
+  </label>
+</form>

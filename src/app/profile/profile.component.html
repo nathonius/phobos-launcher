@@ -1,8 +1,4 @@
-<form
-  class="flex flex-wrap gap-2"
-  [formGroup]="profileForm"
-  (ngSubmit)="handleLaunch()"
->
+<form class="flex flex-wrap gap-2" [formGroup]="profileForm">
   <form-section>
     <div class="flex flex-wrap justify-between gap-2">
       <label>Name</label>
@@ -32,11 +28,16 @@
       directory="false"
       (change)="handleIconChange($event)"
     />
+    <img class="h-full max-w-60" [src]="profileIcon()" />
   </form-section>
   <form-section label="Profile Resources">
     <file-list [filePaths]="profileForm.controls.files" />
   </form-section>
-  <img class="h-full max-w-60" [src]="profileIcon()" />
-  <button type="button" class="btn" (click)="handleSave()">Save</button>
-  <button type="submit" class="btn">Launch</button>
+  <form-section label="Categories">
+    <select-list
+      [options]="categoryOptions()"
+      [values]="profileForm.controls.categories.value"
+      (change)="handleCategoriesChange($event)"
+    />
+  </form-section>
 </form>

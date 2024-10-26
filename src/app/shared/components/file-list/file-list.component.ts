@@ -30,7 +30,6 @@ import { Api } from '../../../api/api';
   standalone: true,
   imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
   templateUrl: './file-list.component.html',
-  styleUrl: './file-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListComponent {

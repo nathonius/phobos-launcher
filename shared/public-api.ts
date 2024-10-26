@@ -1,4 +1,7 @@
 export type Channel =
+  | 'settings.getAll'
+  | 'settings.get'
+  | 'settings.set'
   | 'category.getByName'
   | 'category.getCategories'
   | 'category.save'

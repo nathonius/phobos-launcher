@@ -32,7 +32,6 @@ let idCount = 0;
   standalone: true,
   imports: [LucideAngularModule],
   templateUrl: './file-input.component.html',
-  styleUrl: './file-input.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
