@@ -21,7 +21,12 @@
     </button>
   </div>
   } @if (viewState() === HomeViewState.ProfileList) {
-  <item-grid [items]="profileItems()" (action)="handleAction($event)" />
+  <div class="flex flex-col gap-2">
+    <h2 class="text-4xl">
+      {{ categoryService.selectedCategory()?.name ?? "All" }}
+    </h2>
+    <item-grid [items]="profileItems()" (action)="handleAction($event)" />
+  </div>
   } @else if (viewState() === HomeViewState.ProfileEdit) {
   <profile [profile]="profileService.selectedProfile()" />
   } @else if (viewState() === HomeViewState.CategoryEdit) {

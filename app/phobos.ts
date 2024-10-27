@@ -63,6 +63,7 @@ export class Phobos {
     // Create the browser window.
     this.window = new BrowserWindow({
       ...this.getWindowSettings(),
+      title: 'Phobos Launcher',
       webPreferences: {
         preload: join(this.basePath, 'preload.js'),
       },
