@@ -57,7 +57,8 @@ export class PhobosApi {
       const profile = args[0] as Profile;
       const base = ['-iwad', profile.base];
       const files = profile.files.flatMap((f) => ['-file', f]);
-      const process = spawn(profile.engine, [...base, ...files]);
+      const cvars = profile.cvars.flatMap((v) => ['+set', v.var, v.value]);
+      const process = spawn(profile.engine, [...base, ...files, ...cvars]);
       return Promise.resolve(null);
     },
     'profile.save': (_event, ...args) => {
