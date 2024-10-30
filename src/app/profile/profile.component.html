@@ -26,7 +26,7 @@
       label="Icon"
       droppable="true"
       directory="false"
-      (change)="handleIconChange($event)"
+      (valueChange)="handleIconChange($event)"
     />
     <img class="h-full max-w-60" [src]="profileIcon()" />
   </form-section>
@@ -37,7 +37,14 @@
     <select-list
       [options]="categoryOptions()"
       [values]="profileForm.controls.categories.value"
-      (change)="handleCategoriesChange($event)"
+      (valueChange)="handleCategoriesChange($event)"
+    />
+  </form-section>
+  <form-section label="CVARs">
+    <key-value-list
+      key="var"
+      [values]="profileForm.controls.cvars.value"
+      (valueChange)="handleCvarsChange($event)"
     />
   </form-section>
 </form>

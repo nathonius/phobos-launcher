@@ -9,6 +9,11 @@ export interface FileRecord {
   path: string;
 }
 
+export interface Cvar {
+  var: string;
+  value: string;
+}
+
 export interface Engine extends FileRecord {
   config: string;
 }
@@ -34,4 +39,5 @@ export interface Profile {
   icon: string;
   files: string[];
   categories: string[];
+  cvars: Cvar[];
 }

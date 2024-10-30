@@ -143,6 +143,7 @@ export class HomeComponent implements OnInit {
       name: '',
       files: [],
       categories: [],
+      cvars: [],
     });
     this.viewState.set(HomeViewState.ProfileEdit);
   }

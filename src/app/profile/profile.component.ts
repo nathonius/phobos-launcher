@@ -15,7 +15,8 @@ import {
   FormArray,
   ReactiveFormsModule,
 } from '@angular/forms';
-import type { Profile } from '@shared/config';
+import type { Cvar, Profile } from '@shared/config';
+
 import { v4 as uuid } from 'uuid';
 import { Rocket, Save, Trash } from 'lucide-angular';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -24,6 +25,7 @@ import { FormSectionComponent } from '../shared/components/form-section/form-sec
 import { NavbarService } from '../shared/services/navbar.service';
 import { SelectListComponent } from '../shared/components/select-list/select-list.component';
 import { CategoryService } from '../category/category.service';
+import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -35,6 +37,7 @@ import { ProfileService } from './profile.service';
     FileListComponent,
     FormSectionComponent,
     SelectListComponent,
+    KeyValueListComponent,
   ],
   templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +54,7 @@ export class ProfileComponent implements OnInit {
     icon: new FormControl<string>('', { nonNullable: true }),
     files: new FormArray<FormControl<string>>([]),
     categories: new FormControl<string[]>([], { nonNullable: true }),
+    cvars: new FormControl<Cvar[]>([], { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -73,6 +77,7 @@ export class ProfileComponent implements OnInit {
             icon: profile.icon,
             files: [],
             categories: profile.categories,
+            cvars: profile.cvars,
           });
           for (const file of profile.files) {
             this.profileForm.controls.files.push(
@@ -87,6 +92,7 @@ export class ProfileComponent implements OnInit {
             engine: '',
             files: [],
             categories: [],
+            cvars: [],
           });
         }
       },
@@ -127,6 +133,10 @@ export class ProfileComponent implements OnInit {
     this.profileForm.controls.categories.setValue(values);
   }
 
+  protected handleCvarsChange(values: Cvar[]): void {
+    this.profileForm.controls.cvars.setValue(values);
+  }
+
   protected handleSave() {
     const profile = this.getProfile();
     void this.profileService.save(profile);
@@ -152,7 +162,7 @@ export class ProfileComponent implements OnInit {
   private getProfile(): Profile {
     // TODO: Validate profile
     const profileId = this.profile()?.id ?? uuid();
-    const { engine, base, files, name, icon, categories } =
+    const { engine, base, files, name, icon, categories, cvars } =
       this.profileForm.value;
     return {
       id: profileId,
@@ -162,6 +172,7 @@ export class ProfileComponent implements OnInit {
       files: files!,
       icon: icon!,
       categories: categories!,
+      cvars: cvars!,
     };
   }
 }

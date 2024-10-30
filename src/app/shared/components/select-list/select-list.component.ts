@@ -30,7 +30,7 @@ export interface SelectOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectListComponent {
-  public readonly change = output<string[]>();
+  public readonly valueChange = output<string[]>();
   public readonly removable = input(true, { transform: booleanAttribute });
   public readonly reorder = input(true, { transform: booleanAttribute });
   public readonly values = input.required<string[]>();
@@ -53,16 +53,15 @@ export class SelectListComponent {
   };
 
   handleAdd(event: Event): void {
-    event.stopPropagation();
     const value = (event.target as HTMLSelectElement).value;
     const newValues = [...this.values(), value];
-    this.change.emit(newValues);
+    this.valueChange.emit(newValues);
   }
 
   handleRemove(index: number): void {
     const newValues = [...this.values()];
     newValues.splice(index, 1);
-    this.change.emit(newValues);
+    this.valueChange.emit(newValues);
   }
 
   handleReorderUp(index: number): void {
@@ -71,7 +70,7 @@ export class SelectListComponent {
       const temp = newValues[index - 1];
       newValues[index - 1] = newValues[index];
       newValues[index] = temp;
-      this.change.emit(newValues);
+      this.valueChange.emit(newValues);
     }
   }
 
@@ -81,7 +80,7 @@ export class SelectListComponent {
       const temp = newValues[index + 1];
       newValues[index + 1] = newValues[index];
       newValues[index] = temp;
-      this.change.emit(newValues);
+      this.valueChange.emit(newValues);
     }
   }
 }

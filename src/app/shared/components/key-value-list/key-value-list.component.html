@@ -1,0 +1,51 @@
+<div class="relative flex flex-col items-end gap-1">
+  @let k = key(); @let v = value(); @for (pair of templateValues(); track
+  $index) {
+  <div class="input inline-flex items-center gap-1 px-1 flex-grow">
+    <input
+      class="font-mono"
+      [placeholder]="keyPlaceholder()"
+      [value]="pair[k]"
+      (change)="handleKeyChange($index, $any($event.target).value)"
+    />
+    <input
+      class="font-mono"
+      [placeholder]="valuePlaceholder()"
+      [value]="pair[v]"
+      (change)="handleValueChange($index, $any($event.target).value)"
+    />
+    @if (reorder()) {
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      (click)="handleReorderUp($index)"
+    >
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowUpIcon" />
+    </button>
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      (click)="handleReorderDown($index)"
+    >
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowDownIcon" />
+    </button>
+    } @if (removable()) {
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      (click)="handleRemove($index)"
+    >
+      <lucide-icon class="h-4 w-4" [img]="icons.TrashIcon" />
+    </button>
+    }
+  </div>
+  }
+  <button
+    type="button"
+    class="btn btn-primary btn-sm tooltip"
+    (click)="handleAdd()"
+    data-tip="Add var"
+  >
+    <lucide-icon [img]="icons.PlusIcon" />
+  </button>
+</div>

@@ -50,7 +50,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
   public readonly remove = output();
-  public readonly change = output<string>();
+  public readonly valueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();
   protected readonly _placeholder = computed(
@@ -83,7 +83,7 @@ export class FileInputComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       const path = this.filePath();
-      this.change.emit(path);
+      this.valueChange.emit(path);
       this.onChange(path);
     });
   }
