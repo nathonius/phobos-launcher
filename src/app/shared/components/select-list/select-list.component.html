@@ -1,7 +1,7 @@
 <div class="relative flex flex-col items-end gap-1">
   <select class="select flex-grow" (change)="handleAdd($event)">
     <option disabled selected>Select category</option>
-    @for (option of availableOptions(); track option.value) {
+    @for (option of availableOptions(); track option) {
     <option value="{{ option.value }}">{{ option.label }}</option>
     }
   </select>

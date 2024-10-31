@@ -9,12 +9,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormArray,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import type { Cvar, Profile } from '@shared/config';
 
 import { v4 as uuid } from 'uuid';
@@ -52,7 +47,7 @@ export class ProfileComponent implements OnInit {
     engine: new FormControl<string>('', { nonNullable: true }),
     base: new FormControl<string>('', { nonNullable: true }),
     icon: new FormControl<string>('', { nonNullable: true }),
-    files: new FormArray<FormControl<string>>([]),
+    files: new FormControl<string[]>([], { nonNullable: true }),
     categories: new FormControl<string[]>([], { nonNullable: true }),
     cvars: new FormControl<Cvar[]>([], { nonNullable: true }),
   });
@@ -69,23 +64,16 @@ export class ProfileComponent implements OnInit {
       () => {
         const profile = this.profile();
         if (profile) {
-          this.profileForm.controls.files.clear();
           this.profileForm.reset({
             name: profile.name,
             base: profile.base,
             engine: profile.engine,
             icon: profile.icon,
-            files: [],
+            files: profile.files,
             categories: profile.categories,
             cvars: profile.cvars,
           });
-          for (const file of profile.files) {
-            this.profileForm.controls.files.push(
-              new FormControl<string>(file, { nonNullable: true })
-            );
-          }
         } else {
-          this.profileForm.controls.files.clear();
           this.profileForm.reset({
             name: '',
             base: '',
@@ -129,7 +117,12 @@ export class ProfileComponent implements OnInit {
     this.profileIcon.set(icon);
   }
 
+  protected handleResourcesChange(values: string[]) {
+    this.profileForm.controls.files.setValue(values);
+  }
+
   protected handleCategoriesChange(values: string[]) {
+    console.log(values);
     this.profileForm.controls.categories.setValue(values);
   }
 
@@ -145,12 +138,6 @@ export class ProfileComponent implements OnInit {
   protected handleLaunch() {
     const profile = this.getProfile();
     void this.profileService.launch(profile);
-  }
-
-  addFile() {
-    this.profileForm.controls.files.push(
-      new FormControl<string>('', { nonNullable: true })
-    );
   }
 
   handleDrop(event: DragEvent) {

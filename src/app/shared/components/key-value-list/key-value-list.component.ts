@@ -9,14 +9,9 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import {
-  LucideAngularModule,
-  TrashIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  PlusIcon,
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { FileInputComponent } from '../file-input/file-input.component';
+import { ListComponentBase } from '../../classes/ListComponentBase';
 
 @Component({
   selector: 'key-value-list',
@@ -25,8 +20,9 @@ import { FileInputComponent } from '../file-input/file-input.component';
   templateUrl: './key-value-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KeyValueListComponent<T extends Record<string, string>> {
-  public readonly remove = output<number>();
+export class KeyValueListComponent<
+  T extends Record<string, string>
+> extends ListComponentBase<T> {
   public readonly valueChange = output<T[]>();
   public readonly values = input.required<T[]>();
   public readonly removable = input(true, { transform: booleanAttribute });
@@ -35,63 +31,26 @@ export class KeyValueListComponent<T extends Record<string, string>> {
   public readonly keyPlaceholder = input('Key');
   public readonly value = input('value');
   public readonly valuePlaceholder = input('Value');
+  public readonly valueType = input<'text' | 'file'>('text');
   protected readonly templateValues = computed(
     () => this.values() as Record<string, string>[]
   );
-  protected readonly icons = {
-    TrashIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
-    PlusIcon,
-  };
-
-  handleChange(values: Record<string, string>[]): void {
-    this.valueChange.emit(values as T[]);
-  }
 
   handleAdd(): void {
     const newValues: Record<string, string>[] = [...this.values()];
     newValues.push({ [this.key()]: '', [this.value()]: '' });
-    this.handleChange(newValues);
+    this.valueChange.emit(newValues as T[]);
   }
 
   handleValueChange(index: number, value: string): void {
-    this.updatePair(index, value, this.value());
+    const pair = this.values()[index] as Record<string, string>;
+    pair[this.value()] = value;
+    this.handleChange(index, pair as T);
   }
 
   handleKeyChange(index: number, value: string): void {
-    this.updatePair(index, value, this.key());
-  }
-
-  handleRemove(index: number): void {
-    const newValues = [...this.values()];
-    newValues.splice(index, 1);
-    this.valueChange.emit(newValues);
-  }
-
-  handleReorderUp(index: number): void {
-    if (index !== 0) {
-      const newValues = [...this.values()];
-      const temp = newValues[index - 1];
-      newValues[index - 1] = newValues[index];
-      newValues[index] = temp;
-      this.valueChange.emit(newValues);
-    }
-  }
-
-  handleReorderDown(index: number): void {
-    const newValues = this.values();
-    if (index !== newValues.length - 1) {
-      const temp = newValues[index + 1];
-      newValues[index + 1] = newValues[index];
-      newValues[index] = temp;
-      this.valueChange.emit(newValues);
-    }
-  }
-
-  private updatePair(index: number, value: string, accessor: string): void {
-    const newValues = [...this.values()];
-    (newValues as Record<string, string>[])[index][accessor] = value;
-    this.handleChange(newValues);
+    const pair = this.values()[index] as Record<string, string>;
+    pair[this.key()] = value;
+    this.handleChange(index, pair as T);
   }
 }

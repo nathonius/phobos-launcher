@@ -4,14 +4,15 @@
   (dragleave)="handleDragOut()"
   (drop)="handleDrop($event)"
 >
-  @for (path of filePaths().controls; track $index) {
+  @for (path of values(); track path) {
   <file-input
     reorder="true"
     removable="true"
-    [formControl]="path"
+    [value]="path"
     (reorderUp)="handleReorderUp($index)"
     (reorderDown)="handleReorderDown($index)"
     (remove)="handleRemove($index)"
+    (valueChange)="handleChange($index, $event)"
   />
   }
   <button

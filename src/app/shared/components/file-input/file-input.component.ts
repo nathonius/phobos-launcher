@@ -22,7 +22,7 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
 } from 'lucide-angular';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass } from '@angular/common';
 import { Api } from '../../../api/api';
 
 let idCount = 0;
@@ -30,7 +30,7 @@ let idCount = 0;
 @Component({
   selector: 'file-input',
   standalone: true,
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, NgClass],
   templateUrl: './file-input.component.html',
   providers: [
     {
@@ -42,6 +42,7 @@ let idCount = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInputComponent implements ControlValueAccessor {
+  public readonly value = input<string>();
   public readonly label = input<string>();
   public readonly placeholder = input<string>();
   public readonly directory = input(true, { transform: booleanAttribute });
@@ -49,6 +50,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly removable = input(false, { transform: booleanAttribute });
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
+  public readonly styleInput = input(true, { transform: booleanAttribute });
   public readonly remove = output();
   public readonly valueChange = output<string>();
   public readonly reorderUp = output();
@@ -81,6 +83,15 @@ export class FileInputComponent implements ControlValueAccessor {
   private dragTimeout: number | undefined = undefined;
 
   constructor() {
+    effect(
+      () => {
+        const value = this.value();
+        if (value) {
+          this.filePath.set(value);
+        }
+      },
+      { allowSignalWrites: true }
+    );
     effect(() => {
       const path = this.filePath();
       this.valueChange.emit(path);

@@ -31,7 +31,10 @@
     <img class="h-full max-w-60" [src]="profileIcon()" />
   </form-section>
   <form-section label="Profile Resources">
-    <file-list [filePaths]="profileForm.controls.files" />
+    <file-list
+      [values]="profileForm.controls.files.value"
+      (valueChange)="handleResourcesChange($event)"
+    />
   </form-section>
   <form-section label="Categories">
     <select-list

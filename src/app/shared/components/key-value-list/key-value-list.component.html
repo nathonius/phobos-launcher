@@ -1,6 +1,6 @@
 <div class="relative flex flex-col items-end gap-1">
-  @let k = key(); @let v = value(); @for (pair of templateValues(); track
-  $index) {
+  @let k = key(); @let v = value(); @for (pair of templateValues(); track pair)
+  {
   <div class="input inline-flex items-center gap-1 px-1 flex-grow">
     <input
       class="font-mono"
@@ -8,13 +8,21 @@
       [value]="pair[k]"
       (change)="handleKeyChange($index, $any($event.target).value)"
     />
+    @if (valueType() === 'text') {
     <input
       class="font-mono"
       [placeholder]="valuePlaceholder()"
       [value]="pair[v]"
       (change)="handleValueChange($index, $any($event.target).value)"
     />
-    @if (reorder()) {
+    } @else {
+    <file-input
+      styleInput="false"
+      [placeholder]="valuePlaceholder()"
+      [value]="pair[v]"
+      (valueChange)="handleValueChange($index, $event)"
+    />
+    } @if (reorder()) {
     <button
       type="button"
       class="btn btn-ghost btn-xs"

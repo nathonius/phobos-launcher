@@ -9,13 +9,8 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import {
-  LucideAngularModule,
-  TrashIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  PlusIcon,
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ListComponentBase } from '../../classes/ListComponentBase';
 
 export interface SelectOption {
   label: string;
@@ -29,7 +24,7 @@ export interface SelectOption {
   templateUrl: './select-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectListComponent {
+export class SelectListComponent extends ListComponentBase {
   public readonly valueChange = output<string[]>();
   public readonly removable = input(true, { transform: booleanAttribute });
   public readonly reorder = input(true, { transform: booleanAttribute });
@@ -45,42 +40,10 @@ export class SelectListComponent {
     const values = this.values();
     return values.map((v) => allOptions.find((o) => o.value === v)?.label ?? v);
   });
-  protected readonly icons = {
-    TrashIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
-    PlusIcon,
-  };
 
   handleAdd(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     const newValues = [...this.values(), value];
     this.valueChange.emit(newValues);
-  }
-
-  handleRemove(index: number): void {
-    const newValues = [...this.values()];
-    newValues.splice(index, 1);
-    this.valueChange.emit(newValues);
-  }
-
-  handleReorderUp(index: number): void {
-    if (index !== 0) {
-      const newValues = [...this.values()];
-      const temp = newValues[index - 1];
-      newValues[index - 1] = newValues[index];
-      newValues[index] = temp;
-      this.valueChange.emit(newValues);
-    }
-  }
-
-  handleReorderDown(index: number): void {
-    const newValues = this.values();
-    if (index !== newValues.length - 1) {
-      const temp = newValues[index + 1];
-      newValues[index + 1] = newValues[index];
-      newValues[index] = temp;
-      this.valueChange.emit(newValues);
-    }
   }
 }

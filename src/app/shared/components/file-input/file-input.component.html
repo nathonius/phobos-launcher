@@ -3,7 +3,8 @@
     <span class="label">{{ label() }}</span>
   </label>
   <div
-    class="input input-bordered inline-flex items-center gap-1 px-1 flex-grow"
+    class="inline-flex items-center gap-1 px-1 flex-grow"
+    [ngClass]="{ 'input input-bordered': styleInput() }"
   >
     <input
       #textInput
