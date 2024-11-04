@@ -1,1 +1,11 @@
-<p>engines works!</p>
+<form-section label="Doom Engines">
+  <key-value-list
+    key="name"
+    keyPlaceholder="Engine"
+    value="path"
+    valuePlaceholder="Path"
+    valueType="file"
+    [values]="engines()"
+    (valueChange)="handleChange($event)"
+  />
+</form-section>
