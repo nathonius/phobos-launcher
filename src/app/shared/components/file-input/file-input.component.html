@@ -35,6 +35,14 @@
     >
       <lucide-icon class="h-4 w-4" [img]="icons.FolderIcon" />
     </button>
+    } @if (web()) {
+    <button
+      type="button"
+      class="btn btn-ghost btn-xs"
+      (click)="webClick.emit()"
+    >
+      <lucide-icon class="h-4 w-4" [img]="icons.GlobeIcon" />
+    </button>
     } @if (reorder()) {
     <button
       type="button"

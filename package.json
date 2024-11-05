@@ -52,7 +52,6 @@
     "lucide-angular": "^0.447.0",
     "rxjs": "7.8.1",
     "slugify": "^1.6.6",
-    "steamgriddb": "^2.2.0",
     "theme-change": "^2.5.0",
     "tslib": "2.6.2",
     "uuid": "^10.0.0"

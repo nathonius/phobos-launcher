@@ -39,10 +39,8 @@ export class AutocompleteComponent<T extends Record<string, string>>
   public readonly inputId = input<string>();
   public readonly labelKey = input('label');
   public readonly valueChange = output<T | null>();
+  public readonly query = output<string>();
   protected readonly value = signal<T | null>(null);
-  protected readonly displayValue = computed(() => {
-    return this.value()?.[this.labelKey()] ?? '';
-  });
   protected readonly listboxValue = computed(() => {
     const value = this.value();
     if (value === null) {
@@ -51,7 +49,6 @@ export class AutocompleteComponent<T extends Record<string, string>>
     return [value];
   });
   protected readonly isDisabled = signal<boolean>(false);
-  protected readonly showMenu = signal<boolean>(false);
   protected onChange: (value: T | null) => void = () => {
     // pass
   };

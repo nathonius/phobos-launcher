@@ -1,10 +1,10 @@
-import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { IpcMainInvokeEvent } from 'electron';
 import { dialog, ipcMain } from 'electron';
 import type { JSONValue } from '@shared/json';
+import type { SGDBGame } from '@shared/lib/SGDB';
 import { getPhobos } from './main';
 
 type IpcHandler = (
@@ -50,15 +50,12 @@ export class PhobosApi {
       return Promise.resolve(getPhobos().profileService.getProfiles());
     },
     'profile.launch': () => {
-      const process = spawn('D:\\Games\\GZDoom\\GZDoom\\gzdoom.exe', []);
       return Promise.resolve(null);
     },
+    // TODO: This should be launchProfile, the other launch api should be removed
     'profile.launchCustom': (_event, ...args) => {
       const profile = args[0] as Profile;
-      const base = ['-iwad', profile.base];
-      const files = profile.files.flatMap((f) => ['-file', f]);
-      const cvars = profile.cvars.flatMap((v) => ['+set', v.var, v.value]);
-      const process = spawn(profile.engine, [...base, ...files, ...cvars]);
+      getPhobos().profileService.launchProfile(profile);
       return Promise.resolve(null);
     },
     'profile.save': (_event, ...args) => {
@@ -85,6 +82,17 @@ export class PhobosApi {
         return `data:image/${extension};base64,${data.toString('base64')}`;
       }
       return '';
+    },
+    'sgdb.queryGames': async (_event, ...args) => {
+      const query = args[0] as string;
+      return await getPhobos().steamGridService.searchGames(query);
+    },
+    'sgdb.getGrids': async (_event, ...args) => {
+      const game = args[0] as SGDBGame;
+      return await getPhobos().steamGridService.getGrids(game);
+    },
+    'sgdb.downloadGrid': (_event, ...args) => {
+      throw new Error('Not implemented');
     },
   };
 

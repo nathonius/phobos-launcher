@@ -41,6 +41,8 @@
         label="Icon"
         droppable="true"
         directory="false"
+        [web]="steamGridService.apiKey() !== null"
+        (webClick)="openSgdbDialog()"
         (valueChange)="handleIconChange($event)"
       />
       <img class="h-full max-w-60" [src]="profileIcon()" />
@@ -68,3 +70,27 @@
     />
   </form-section>
 </form>
+
+<!-- SteamGrid Dialog -->
+<!-- TODO: Move this to its own component -->
+<dialog #sgdbDialog id="steam-grid-dialog" class="modal">
+  <div class="modal-box">
+    @if (!selectedGame()) {
+    <app-autocomplete
+      labelKey="name"
+      [options]="steamGridGames()"
+      (query)="steamGridGameQuery($event)"
+      (valueChange)="steamGridSelectGame($event)"
+    />
+    } @else {
+    <app-autocomplete
+      labelKey="id"
+      [options]="steamGridGrids()"
+      (valueChange)="steamGridSelectGrid($event)"
+    />
+    }
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

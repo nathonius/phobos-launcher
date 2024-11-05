@@ -1,4 +1,4 @@
-import type { OnInit } from '@angular/core';
+import type { OnInit, ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,12 +8,14 @@ import {
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import type { UniqueFileRecord, Cvar, Engine, Profile } from '@shared/config';
 
 import { v4 as uuid } from 'uuid';
 import { Rocket, Save, Trash } from 'lucide-angular';
+import type { SGDBGame, SGDBImage } from '@shared/lib/SGDB';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { FileListComponent } from '../shared/components/file-list/file-list.component';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
@@ -23,6 +25,7 @@ import { CategoryService } from '../category/category.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
 import { Api } from '../api/api';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
+import { SteamGridService } from '../shared/services/steam-grid.service';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -45,6 +48,7 @@ export class ProfileComponent implements OnInit {
   public readonly deleteProfile = output();
   protected readonly profileService = inject(ProfileService);
   protected readonly navbarService = inject(NavbarService);
+  protected readonly steamGridService = inject(SteamGridService);
   protected readonly profileForm = new FormGroup({
     name: new FormControl<string>('', { nonNullable: true }),
     engine: new FormControl<string>('', { nonNullable: true }),
@@ -62,7 +66,13 @@ export class ProfileComponent implements OnInit {
   );
   protected readonly engineOptions = signal<Engine[]>([]);
   protected readonly baseOptions = signal<UniqueFileRecord[]>([]);
+  protected readonly steamGridGames = signal<SGDBGame[]>([]);
+  protected readonly selectedGame = signal<SGDBGame | null>(null);
+  protected readonly steamGridGrids = signal<SGDBImage[]>([]);
+  protected readonly sgdbDialog =
+    viewChild<ElementRef<HTMLDialogElement>>('sgdbDialog');
   private readonly categoryService = inject(CategoryService);
+  private steamGridTimeout: number | undefined;
 
   constructor() {
     effect(
@@ -155,10 +165,44 @@ export class ProfileComponent implements OnInit {
     void this.profileService.launch(profile);
   }
 
-  handleDrop(event: DragEvent) {
+  protected handleDrop(event: DragEvent) {
     // TODO: Figure this out???
     const target = event.target as HTMLInputElement;
     console.log(target.files);
+  }
+
+  protected openSgdbDialog() {
+    this.sgdbDialog()?.nativeElement.showModal();
+  }
+
+  protected steamGridGameQuery(val: string) {
+    console.log(`Querying with ${val}`);
+    window.clearTimeout(this.steamGridTimeout);
+    if (!val || val.length < 3) {
+      this.steamGridGames.set([]);
+      return;
+    }
+    window.setTimeout(async () => {
+      const games = await Api['sgdb.queryGames'](val);
+      this.steamGridGames.set(games);
+    }, 500);
+  }
+
+  protected async steamGridSelectGame(game: SGDBGame) {
+    if (!game) {
+      return;
+    }
+    this.selectedGame.set(game);
+    const grids = await Api['sgdb.getGrids'](game);
+    this.steamGridGrids.set(grids);
+  }
+  protected steamGridSelectGrid(grid: SGDBImage) {
+    console.log(grid);
+    if (!grid) {
+      return;
+    }
+    this.profileIcon.set(grid.url);
+    this.sgdbDialog()?.nativeElement.close();
   }
 
   private getProfile(): Profile {

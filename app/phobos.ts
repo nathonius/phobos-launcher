@@ -10,6 +10,7 @@ import { UserDataService } from './services/user-data.service';
 import { DEFAULT_WINDOW_SETTINGS } from './main';
 import { CategoryService } from './services/category.service';
 import { SettingsService } from './services/settings.service';
+import { SGDBService } from './services/sgdb.service';
 
 export class Phobos {
   public readonly api = new PhobosApi();
@@ -20,6 +21,7 @@ export class Phobos {
   public readonly profileService = new ProfileService(this.store);
   public readonly categoryService = new CategoryService(this.store);
   public readonly settingsService = new SettingsService(this.store);
+  public readonly steamGridService = new SGDBService();
   private window: BrowserWindow | null = null;
   private initialized = false;
   private windowSettingsTimeout: NodeJS.Timeout | undefined;

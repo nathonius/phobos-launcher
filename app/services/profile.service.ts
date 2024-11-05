@@ -1,5 +1,7 @@
-import type { Profile } from '@shared/config';
+import { spawn } from 'node:child_process';
+import type { Engine, Profile, UniqueFileRecord } from '@shared/config';
 import type Store from 'electron-store';
+import { getPhobos } from '../main';
 
 export interface FsError extends Error {
   code: string;
@@ -35,5 +37,36 @@ export class ProfileService {
       profiles.splice(profileIndex, 1);
       this.store.set('profiles', profiles);
     }
+  }
+
+  launchProfile(config: Profile | string) {
+    // Get the matching profile for this ID or profile
+    let profile: Profile;
+    if (typeof config === 'string') {
+      const matchingProfile = this.getProfiles().find((p) => p.id === config);
+      if (!matchingProfile) {
+        return;
+      }
+      profile = matchingProfile;
+    } else {
+      profile = config;
+    }
+
+    // Prepare args
+    // TODO: Logic to actually parse these settings should live elsewhere
+    const engines = (getPhobos().settingsService.getSetting('engines') ??
+      []) as Engine[];
+    const bases = (getPhobos().settingsService.getSetting('bases') ??
+      []) as UniqueFileRecord[];
+    const base = bases.find((b) => b.id === profile.base);
+    const engine = engines.find((e) => e.id === profile.engine);
+    if (!base || !engine) {
+      // TODO: Handle this error condition
+      return;
+    }
+    const baseArg = ['-iwad', base.path];
+    const files = profile.files.flatMap((f) => ['-file', f]);
+    const cvars = profile.cvars.flatMap((v) => ['+set', v.var, v.value]);
+    const process = spawn(engine.path, [...baseArg, ...files, ...cvars]);
   }
 }

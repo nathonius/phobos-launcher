@@ -1,18 +1,24 @@
-<form [formGroup]="settingsForm">
-  <label class="form-control">
-    <div class="label">
-      <span class="label-text">Theme</span>
-    </div>
-    <select class="select select-bordered" formControlName="theme">
-      <option [ngValue]="null">Default</option>
-      <option [ngValue]="'retro'">Retro</option>
-      <option [ngValue]="'synthwave'">Synthwave</option>
-    </select>
-  </label>
-  <label class="form-control">
-    <div class="label">
-      <span class="label-text">Theme</span>
-    </div>
-    <input class="input" type="text" formControlName="SteamGridDB API Key" />
-  </label>
-</form>
+<form-section label="Settings">
+  <form class="min-w-[30rem]" [formGroup]="settingsForm">
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Theme</span>
+      </div>
+      <select class="select select-bordered" formControlName="theme">
+        <option [ngValue]="null">Default</option>
+        <option [ngValue]="'retro'">Retro</option>
+        <option [ngValue]="'synthwave'">Synthwave</option>
+      </select>
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">SteamGridDB API Key</span>
+      </div>
+      <input
+        class="input input-bordered"
+        type="text"
+        formControlName="steamGridApiKey"
+      />
+    </label>
+  </form>
+</form-section>

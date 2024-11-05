@@ -21,6 +21,7 @@ import {
   TrashIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  GlobeIcon,
 } from 'lucide-angular';
 import { DOCUMENT, NgClass } from '@angular/common';
 import { Api } from '../../../api/api';
@@ -47,6 +48,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly placeholder = input<string>();
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
+  public readonly web = input(false, { transform: booleanAttribute });
   public readonly removable = input(false, { transform: booleanAttribute });
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
@@ -55,6 +57,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly valueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();
+  public readonly webClick = output();
   protected readonly _placeholder = computed(
     () => this.placeholder() ?? this.label() ?? ''
   );
@@ -64,6 +67,7 @@ export class FileInputComponent implements ControlValueAccessor {
     TrashIcon,
     ArrowUpIcon,
     ArrowDownIcon,
+    GlobeIcon,
   };
   protected readonly textInput =
     viewChild<ElementRef<HTMLInputElement>>('textInput');
