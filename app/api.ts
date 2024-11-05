@@ -92,5 +92,8 @@ export class PhobosApi {
     for (const [channel, handler] of Object.entries(this.handlers)) {
       ipcMain.handle(channel, handler);
     }
+    ipcMain.handle('settings.openConfig', () => {
+      getPhobos().settingsService.openConfig();
+    });
   }
 }

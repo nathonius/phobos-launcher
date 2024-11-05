@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   Cog,
   Home,
@@ -13,13 +13,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { EnginesComponent } from './engines/engines.component';
 import { BasesComponent } from './bases/bases.component';
 import { ThemeService } from './shared/services/theme.service';
-
-enum AppViewState {
-  Home,
-  Settings,
-  Engines,
-  Bases,
-}
+import { AppViewState } from './shared/constants';
+import { ViewService } from './shared/services/view.service';
 
 @Component({
   selector: 'app-root',
@@ -39,9 +34,9 @@ enum AppViewState {
 })
 export class AppComponent {
   protected readonly AppViewState = AppViewState;
-  protected readonly viewState = signal<AppViewState>(AppViewState.Home);
   protected readonly navbarService = inject(NavbarService);
   protected readonly themeService = inject(ThemeService);
+  protected readonly viewService = inject(ViewService);
   protected readonly icons = {
     Settings,
     Cog,

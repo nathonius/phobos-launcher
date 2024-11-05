@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import type { Cvar, Profile } from '@shared/config';
+import type { UniqueFileRecord, Cvar, Engine, Profile } from '@shared/config';
 
 import { v4 as uuid } from 'uuid';
 import { Rocket, Save, Trash } from 'lucide-angular';
@@ -21,6 +21,8 @@ import { NavbarService } from '../shared/services/navbar.service';
 import { SelectListComponent } from '../shared/components/select-list/select-list.component';
 import { CategoryService } from '../category/category.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
+import { Api } from '../api/api';
+import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -33,6 +35,7 @@ import { ProfileService } from './profile.service';
     FormSectionComponent,
     SelectListComponent,
     KeyValueListComponent,
+    AutocompleteComponent,
   ],
   templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,9 +60,20 @@ export class ProfileComponent implements OnInit {
       .allCategories()
       .map((c) => ({ label: c.name, value: c.id }))
   );
+  protected readonly engineOptions = signal<Engine[]>([]);
+  protected readonly baseOptions = signal<UniqueFileRecord[]>([]);
   private readonly categoryService = inject(CategoryService);
 
   constructor() {
+    effect(
+      async () => {
+        const engines = await Api['settings.get']('engines');
+        const bases = await Api['settings.get']('bases');
+        this.engineOptions.set((engines ?? []) as Engine[]);
+        this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
+      },
+      { allowSignalWrites: true }
+    );
     effect(
       () => {
         const profile = this.profile();
@@ -94,6 +108,7 @@ export class ProfileComponent implements OnInit {
         label: 'Delete',
         icon: Trash,
         callback: () => {
+          // TODO: Handle profile deletion
           this.deleteProfile.emit();
         },
       },

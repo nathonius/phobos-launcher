@@ -24,12 +24,8 @@ import { CategoryService } from '../category/category.service';
 import { CategoryComponent } from '../category/category.component';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { NavbarService } from '../shared/services/navbar.service';
-
-enum HomeViewState {
-  CategoryEdit,
-  ProfileList,
-  ProfileEdit,
-}
+import { HomeViewState } from '../shared/constants';
+import { ViewService } from '../shared/services/view.service';
 
 @Component({
   selector: 'app-home',
@@ -52,15 +48,13 @@ enum HomeViewState {
 })
 export class HomeComponent implements OnInit {
   protected readonly HomeViewState = HomeViewState;
-  protected readonly viewState = signal<HomeViewState>(
-    HomeViewState.ProfileList
-  );
   protected readonly showCategoryList = computed(() => {
     return true;
   });
   protected readonly icons = {
     Plus,
   };
+  protected readonly viewService = inject(ViewService);
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
@@ -135,6 +129,8 @@ export class HomeComponent implements OnInit {
   }
 
   protected newProfile() {
+    const selectedCategory = this.categoryService.selectedCategory();
+    const newCategories = selectedCategory ? [selectedCategory.id] : [];
     this.profileService.selectedProfile.set({
       id: uuid(),
       base: '',
@@ -142,10 +138,10 @@ export class HomeComponent implements OnInit {
       icon: '',
       name: '',
       files: [],
-      categories: [],
+      categories: newCategories,
       cvars: [],
     });
-    this.viewState.set(HomeViewState.ProfileEdit);
+    this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }
 
   protected newCategory() {
@@ -199,12 +195,12 @@ export class HomeComponent implements OnInit {
       ]);
     }
     this.profileService.selectedProfile.set(undefined);
-    this.viewState.set(HomeViewState.ProfileList);
+    this.viewService.homeState.set(HomeViewState.ProfileList);
   }
 
   private selectProfile(profile: Profile | undefined) {
     this.profileService.selectedProfile.set(profile);
-    this.viewState.set(HomeViewState.ProfileEdit);
+    this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }
 
   private editCategory() {
@@ -214,6 +210,6 @@ export class HomeComponent implements OnInit {
     }
     this.categoryService.selectedCategory.set(category);
     this.profileService.selectedProfile.set(undefined);
-    this.viewState.set(HomeViewState.CategoryEdit);
+    this.viewService.homeState.set(HomeViewState.CategoryEdit);
   }
 }

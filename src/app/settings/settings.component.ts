@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit {
   protected readonly themeService = inject(ThemeService);
   protected readonly settingsForm = new FormGroup({
     theme: new FormControl<string | null>(null),
+    steamGridApiKey: new FormControl<string | null>(null),
   });
 
   public ngOnInit(): void {

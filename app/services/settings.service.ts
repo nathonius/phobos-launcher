@@ -12,4 +12,7 @@ export class SettingsService {
   public saveSetting(key: string, value: JSONValue) {
     this.store.set(`settings.${key}`, value);
   }
+  public openConfig() {
+    this.store.openInEditor();
+  }
 }

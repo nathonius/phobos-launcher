@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { v4 as uuid } from 'uuid';
 
 import { LucideAngularModule } from 'lucide-angular';
 import { FileInputComponent } from '../file-input/file-input.component';
@@ -27,6 +28,7 @@ export class KeyValueListComponent<
   public readonly values = input.required<T[]>();
   public readonly removable = input(true, { transform: booleanAttribute });
   public readonly reorder = input(true, { transform: booleanAttribute });
+  public readonly withId = input(true, { transform: booleanAttribute });
   public readonly key = input('key');
   public readonly keyPlaceholder = input('Key');
   public readonly value = input('value');
@@ -38,7 +40,11 @@ export class KeyValueListComponent<
 
   handleAdd(): void {
     const newValues: Record<string, string>[] = [...this.values()];
-    newValues.push({ [this.key()]: '', [this.value()]: '' });
+    const newValue = { [this.key()]: '', [this.value()]: '' };
+    if (this.withId()) {
+      newValue['id'] = uuid();
+    }
+    newValues.push(newValue);
     this.valueChange.emit(newValues as T[]);
   }
 

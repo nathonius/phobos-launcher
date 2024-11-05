@@ -34,3 +34,6 @@ export const clientApi = {
 export type ClientApi = typeof clientApi;
 
 contextBridge.exposeInMainWorld('api', clientApi);
+contextBridge.exposeInMainWorld('openConfig', () =>
+  ipcRenderer.invoke('settings.openConfig')
+);

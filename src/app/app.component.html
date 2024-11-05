@@ -1,4 +1,4 @@
-@let state = viewState();
+@let state = viewService.appState();
 <div class="flex-grow">
   @switch (state) { @case (AppViewState.Home) {
   <app-home />
@@ -16,7 +16,7 @@
       class="btn tooltip"
       data-tip="Home"
       [ngClass]="state === AppViewState.Home ? 'btn-primary' : 'btn-ghost'"
-      (click)="viewState.set(AppViewState.Home)"
+      (click)="viewService.appState.set(AppViewState.Home)"
     >
       <lucide-angular [img]="icons.Home" />
     </button>
@@ -24,7 +24,7 @@
       class="btn tooltip"
       data-tip="Settings"
       [ngClass]="state === AppViewState.Settings ? 'btn-primary' : 'btn-ghost'"
-      (click)="viewState.set(AppViewState.Settings)"
+      (click)="viewService.appState.set(AppViewState.Settings)"
     >
       <lucide-angular [img]="icons.Settings" />
     </button>
@@ -32,7 +32,7 @@
       class="btn tooltip"
       data-tip="Engines"
       [ngClass]="state === AppViewState.Engines ? 'btn-primary' : 'btn-ghost'"
-      (click)="viewState.set(AppViewState.Engines)"
+      (click)="viewService.appState.set(AppViewState.Engines)"
     >
       <lucide-angular [img]="icons.Cog" />
     </button>
@@ -40,7 +40,7 @@
       class="btn tooltip"
       data-tip="Base WADs"
       [ngClass]="state === AppViewState.Bases ? 'btn-primary' : 'btn-ghost'"
-      (click)="viewState.set(AppViewState.Bases)"
+      (click)="viewService.appState.set(AppViewState.Bases)"
     >
       <lucide-angular [img]="icons.Package" />
     </button>

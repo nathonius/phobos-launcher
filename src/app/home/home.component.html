@@ -20,16 +20,20 @@
       <lucide-angular [img]="icons.Plus" />
     </button>
   </div>
-  } @if (viewState() === HomeViewState.ProfileList) {
+  } @if (viewService.homeState() === HomeViewState.ProfileList) {
   <div class="flex flex-col gap-2">
     <h2 class="text-4xl">
       {{ categoryService.selectedCategory()?.name ?? "All" }}
     </h2>
-    <item-grid [items]="profileItems()" (action)="handleAction($event)" />
+    @let items = profileItems(); @if (items.length > 0) {
+    <item-grid [items]="items" (action)="handleAction($event)" />
+    } @else {
+    <p>No profiles.</p>
+    }
   </div>
-  } @else if (viewState() === HomeViewState.ProfileEdit) {
+  } @else if (viewService.homeState() === HomeViewState.ProfileEdit) {
   <profile [profile]="profileService.selectedProfile()" />
-  } @else if (viewState() === HomeViewState.CategoryEdit) {
+  } @else if (viewService.homeState() === HomeViewState.CategoryEdit) {
   <category [category]="categoryService.selectedCategory()" />
   }
 </div>

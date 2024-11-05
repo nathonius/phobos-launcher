@@ -9,12 +9,19 @@ export interface FileRecord {
   path: string;
 }
 
+export interface UniqueFileRecord extends FileRecord {
+  /**
+   * Unique identifier to store when linking from another entity
+   */
+  id: string;
+}
+
 export interface Cvar {
   var: string;
   value: string;
 }
 
-export interface Engine extends FileRecord {
+export interface Engine extends UniqueFileRecord {
   config: string;
 }
 

@@ -1,34 +1,50 @@
 <form class="flex flex-wrap gap-2" [formGroup]="profileForm">
   <form-section>
-    <div class="flex flex-wrap justify-between gap-2">
-      <label>Name</label>
-      <input
-        class="input flex-grow"
-        type="text"
-        placeholder="Profile name"
-        formControlName="name"
+    <div class="flex flex-col gap-2">
+      <div class="flex flex-wrap justify-between items-center gap-2">
+        <label>Name</label>
+        <input
+          class="input flex-grow"
+          type="text"
+          placeholder="Profile name"
+          formControlName="name"
+        />
+      </div>
+      <div class="flex gap-2 items-center">
+        <label for="engine-select">Engine</label>
+        <select
+          id="engine-select"
+          class="select flex-grow"
+          formControlName="engine"
+        >
+          <option [ngValue]="''" disabled>Select engine</option>
+          @for (option of engineOptions(); track option.id) {
+          <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="flex gap-2 items-center">
+        <label for="base-select">Base</label>
+        <select
+          id="base-select"
+          class="select flex-grow"
+          formControlName="base"
+        >
+          <option [ngValue]="''" disabled>Select base</option>
+          @for (option of baseOptions(); track option.id) {
+          <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </div>
+      <file-input
+        formControlName="icon"
+        label="Icon"
+        droppable="true"
+        directory="false"
+        (valueChange)="handleIconChange($event)"
       />
+      <img class="h-full max-w-60" [src]="profileIcon()" />
     </div>
-    <file-input
-      formControlName="engine"
-      label="Engine"
-      droppable="true"
-      directory="false"
-    />
-    <file-input
-      formControlName="base"
-      label="Base"
-      droppable="true"
-      directory="false"
-    />
-    <file-input
-      formControlName="icon"
-      label="Icon"
-      droppable="true"
-      directory="false"
-      (valueChange)="handleIconChange($event)"
-    />
-    <img class="h-full max-w-60" [src]="profileIcon()" />
   </form-section>
   <form-section label="Profile Resources">
     <file-list
@@ -46,6 +62,7 @@
   <form-section label="CVARs">
     <key-value-list
       key="var"
+      withId="false"
       [values]="profileForm.controls.cvars.value"
       (valueChange)="handleCvarsChange($event)"
     />

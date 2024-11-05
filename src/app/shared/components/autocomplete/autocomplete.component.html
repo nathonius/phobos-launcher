@@ -1,0 +1,37 @@
+<!-- <details class="dropdown flex-grow">
+  <summary class="input w-full">
+    <input
+      type="text"
+      placeholder="Type here"
+      [id]="inputId()"
+      [value]="displayValue()"
+    />
+  </summary>
+  <ul
+    class="dropdown-content menu bg-base-300 w-full rounded-box z-[1] p-2 shadow"
+  >
+    @for (option of options(); track $index) {
+    <li>
+      <button type="button" (click)="writeValue(option)">
+        {{ option[labelKey()] }}
+      </button>
+    </li>
+    }
+  </ul>
+</details> -->
+<input
+  class="input w-full"
+  [value]="displayValue()"
+  (focus)="showMenu.set(true)"
+/>
+<ul
+  cdkListbox
+  class="menu p-0 w-full"
+  [ngClass]="{ hidden: !showMenu() }"
+  [cdkListboxValue]="listboxValue()"
+  (cdkListboxValueChange)="value.set($event.value[0] ?? null)"
+>
+  @let _labelKey = labelKey(); @for (option of options(); track $index) {
+  <li class="btn btn-ghost" [cdkOption]="option">{{ option[_labelKey] }}</li>
+  }
+</ul>
