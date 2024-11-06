@@ -1,7 +1,7 @@
 import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { JSONValue } from '@shared/json';
-import type { SGDBGame, SGDBImage } from '@shared/lib/SGDB';
+import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
 import type { ClientApi } from '../../../app/preload';
 
 declare global {
@@ -47,8 +47,9 @@ export const Api = {
     window.api['fileSystem.getBase64Image'](path) as Promise<string>,
   'sgdb.queryGames': (query: string) =>
     window.api['sgdb.queryGames'](query) as Promise<SGDBGame[]>,
-  'sgdb.getGrids': (game: SGDBGame) =>
-    window.api['sgdb.getGrids'](game) as Promise<SGDBImage[]>,
-  'sgdb.downloadGrid': () => window.api['sgdb.downloadGrid'](),
+  'sgdb.getImages': (game: SGDBGame, categories: SGDBImageCategory[]) =>
+    window.api['sgdb.getImages'](game, categories) as Promise<SGDBImage[]>,
+  'sgdb.downloadImage': (image: SGDBImage) =>
+    window.api['sgdb.downloadImage'](image) as Promise<string>,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;

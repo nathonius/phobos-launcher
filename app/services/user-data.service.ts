@@ -25,7 +25,19 @@ export class UserDataService {
     return readFile(resolve(this.dataPath, path));
   }
 
-  writeDataFile(path: string, value: ArrayBuffer) {
-    return writeFile(resolve(this.dataPath, path), Buffer.from(value));
+  async getBase64Image(path: string) {
+    // TODO: This is probably super unreliable
+    if (path) {
+      const extension = path.split('.').pop() ?? 'png';
+      const data = await readFile(path);
+      return `data:image/${extension};base64,${data.toString('base64')}`;
+    }
+    return '';
+  }
+
+  async writeDataFile(path: string, value: ArrayBuffer) {
+    const fullPath = resolve(this.dataPath, path);
+    await writeFile(resolve(this.dataPath, path), Buffer.from(value));
+    return fullPath;
   }
 }

@@ -78,6 +78,7 @@
     @if (!selectedGame()) {
     <app-autocomplete
       labelKey="name"
+      [loading]="sgdbLoading()"
       [options]="steamGridGames()"
       (query)="steamGridGameQuery($event)"
       (valueChange)="steamGridSelectGame($event)"
@@ -85,9 +86,20 @@
     } @else {
     <app-autocomplete
       labelKey="id"
+      orientation="horizontal"
+      [loading]="sgdbLoading()"
       [options]="steamGridGrids()"
+      [itemTemplate]="gridOption"
       (valueChange)="steamGridSelectGrid($event)"
     />
+    <ng-template #gridOption let-option>
+      <div class="flex items-center justify-center w-36 h-36 p-0 m-0">
+        <img
+          class="p-0 m-0 max-h-full max-w-full h-auto"
+          [src]="option ? option.url : ''"
+        />
+      </div>
+    </ng-template>
     }
   </div>
   <form method="dialog" class="modal-backdrop">

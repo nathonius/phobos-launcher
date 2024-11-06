@@ -16,6 +16,7 @@ import type { UniqueFileRecord, Cvar, Engine, Profile } from '@shared/config';
 import { v4 as uuid } from 'uuid';
 import { Rocket, Save, Trash } from 'lucide-angular';
 import type { SGDBGame, SGDBImage } from '@shared/lib/SGDB';
+import { CdkListboxModule } from '@angular/cdk/listbox';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { FileListComponent } from '../shared/components/file-list/file-list.component';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
@@ -26,6 +27,7 @@ import { KeyValueListComponent } from '../shared/components/key-value-list/key-v
 import { Api } from '../api/api';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import { SteamGridService } from '../shared/services/steam-grid.service';
+import { ConsolePipe } from '../shared/pipes/console.pipe';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -39,6 +41,8 @@ import { ProfileService } from './profile.service';
     SelectListComponent,
     KeyValueListComponent,
     AutocompleteComponent,
+    ConsolePipe,
+    CdkListboxModule,
   ],
   templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,6 +70,7 @@ export class ProfileComponent implements OnInit {
   );
   protected readonly engineOptions = signal<Engine[]>([]);
   protected readonly baseOptions = signal<UniqueFileRecord[]>([]);
+  protected readonly sgdbLoading = signal<boolean>(false);
   protected readonly steamGridGames = signal<SGDBGame[]>([]);
   protected readonly selectedGame = signal<SGDBGame | null>(null);
   protected readonly steamGridGrids = signal<SGDBImage[]>([]);
@@ -147,7 +152,6 @@ export class ProfileComponent implements OnInit {
   }
 
   protected handleCategoriesChange(values: string[]) {
-    console.log(values);
     this.profileForm.controls.categories.setValue(values);
   }
 
@@ -168,7 +172,6 @@ export class ProfileComponent implements OnInit {
   protected handleDrop(event: DragEvent) {
     // TODO: Figure this out???
     const target = event.target as HTMLInputElement;
-    console.log(target.files);
   }
 
   protected openSgdbDialog() {
@@ -176,7 +179,7 @@ export class ProfileComponent implements OnInit {
   }
 
   protected steamGridGameQuery(val: string) {
-    console.log(`Querying with ${val}`);
+    this.sgdbLoading.set(true);
     window.clearTimeout(this.steamGridTimeout);
     if (!val || val.length < 3) {
       this.steamGridGames.set([]);
@@ -185,6 +188,7 @@ export class ProfileComponent implements OnInit {
     window.setTimeout(async () => {
       const games = await Api['sgdb.queryGames'](val);
       this.steamGridGames.set(games);
+      this.sgdbLoading.set(false);
     }, 500);
   }
 
@@ -193,15 +197,18 @@ export class ProfileComponent implements OnInit {
       return;
     }
     this.selectedGame.set(game);
-    const grids = await Api['sgdb.getGrids'](game);
+    this.sgdbLoading.set(true);
+    const grids = await Api['sgdb.getImages'](game, ['grid', 'icon', 'logo']);
     this.steamGridGrids.set(grids);
+    this.sgdbLoading.set(false);
   }
-  protected steamGridSelectGrid(grid: SGDBImage) {
-    console.log(grid);
+  protected async steamGridSelectGrid(grid: SGDBImage) {
     if (!grid) {
       return;
     }
-    this.profileIcon.set(grid.url);
+    const path = await Api['sgdb.downloadImage'](grid);
+    this.profileForm.controls.icon.setValue(path);
+    this.selectedGame.set(null);
     this.sgdbDialog()?.nativeElement.close();
   }
 

@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from '@shared/public-api';
 import type { Category, Profile } from '@shared/config';
 import type { JSONValue } from '@shared/json';
-import type { SGDBGame } from '@shared/lib/SGDB';
+import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
 
 export const clientApi = {
   'settings.getAll': () => ipcRenderer.invoke('settings.getAll'),
@@ -32,9 +32,10 @@ export const clientApi = {
     ipcRenderer.invoke('fileSystem.getBase64Image', path),
   'sgdb.queryGames': (query: string) =>
     ipcRenderer.invoke('sgdb.queryGames', query),
-  'sgdb.getGrids': (game: SGDBGame) =>
-    ipcRenderer.invoke('sgdb.getGrids', game),
-  'sgdb.downloadGrid': () => ipcRenderer.invoke('sgdb.downloadGrid'),
+  'sgdb.getImages': (game: SGDBGame, categories: SGDBImageCategory[]) =>
+    ipcRenderer.invoke('sgdb.getImages', game, categories),
+  'sgdb.downloadImage': (image: SGDBImage) =>
+    ipcRenderer.invoke('sgdb.downloadImage', image),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

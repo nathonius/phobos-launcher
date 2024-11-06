@@ -1,10 +1,9 @@
-import { readFile } from 'node:fs/promises';
 import type { Category, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { IpcMainInvokeEvent } from 'electron';
 import { dialog, ipcMain } from 'electron';
 import type { JSONValue } from '@shared/json';
-import type { SGDBGame } from '@shared/lib/SGDB';
+import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
 import { getPhobos } from './main';
 
 type IpcHandler = (
@@ -75,24 +74,20 @@ export class PhobosApi {
     },
     'fileSystem.getBase64Image': async (_event, ...args) => {
       const path = args[0] as string;
-      // TODO: This is probably super unreliable
-      if (path) {
-        const extension = path.split('.').pop() ?? 'png';
-        const data = await readFile(path);
-        return `data:image/${extension};base64,${data.toString('base64')}`;
-      }
-      return '';
+      return await getPhobos().userDataService.getBase64Image(path);
     },
     'sgdb.queryGames': async (_event, ...args) => {
       const query = args[0] as string;
       return await getPhobos().steamGridService.searchGames(query);
     },
-    'sgdb.getGrids': async (_event, ...args) => {
+    'sgdb.getImages': async (_event, ...args) => {
       const game = args[0] as SGDBGame;
-      return await getPhobos().steamGridService.getGrids(game);
+      const categories = args[1] as SGDBImageCategory[];
+      return await getPhobos().steamGridService.getImages(game, categories);
     },
-    'sgdb.downloadGrid': (_event, ...args) => {
-      throw new Error('Not implemented');
+    'sgdb.downloadImage': async (_event, ...args) => {
+      const image = args[0] as SGDBImage;
+      return await getPhobos().steamGridService.downloadImage(image);
     },
   };
 

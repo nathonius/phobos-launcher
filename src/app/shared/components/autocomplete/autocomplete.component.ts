@@ -1,3 +1,4 @@
+import type { TemplateRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,14 +11,14 @@ import {
 } from '@angular/core';
 import { CdkListboxModule } from '@angular/cdk/listbox';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 let idCount = 0;
 
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
-  imports: [CdkListboxModule, NgClass],
+  imports: [CdkListboxModule, NgClass, NgTemplateOutlet],
   templateUrl: './autocomplete.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,9 @@ export class AutocompleteComponent<T extends Record<string, string>>
   public readonly labelKey = input('label');
   public readonly valueChange = output<T | null>();
   public readonly query = output<string>();
+  public readonly loading = input<boolean>(false);
+  public readonly itemTemplate = input<TemplateRef<unknown>>();
+  public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
   protected readonly value = signal<T | null>(null);
   protected readonly listboxValue = computed(() => {
     const value = this.value();

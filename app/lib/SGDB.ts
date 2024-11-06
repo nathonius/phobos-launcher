@@ -8,7 +8,23 @@
 
 import { URLSearchParams } from 'node:url';
 import { net } from 'electron';
-import type { SGDBGame, SGDBImage } from '@shared/lib/SGDB';
+import type {
+  SGDBGame,
+  SGDBImage,
+  SGDBImageBooleanOption,
+  SGDBGridDimension,
+  SGDBGridMime,
+  SGDBGridStyle,
+  SGDBImageType,
+  SGDBHeroDimension,
+  SGDBHeroMime,
+  SGDBHeroStyle,
+  SGDBLogoStyle,
+  SGDBIconStyle,
+  SGDBIconDimension,
+  SGDBLogoMime,
+  SGDBIconMime,
+} from '@shared/lib/SGDB';
 
 export interface SGDBOptions {
   key?: string;
@@ -19,13 +35,13 @@ export interface SGDBOptions {
 export interface SGDBImageOptions {
   id: number;
   type: string;
-  styles?: string[];
-  dimensions?: string[];
-  mimes?: string[];
-  types?: string[];
-  nsfw?: string;
-  epilepsy?: string;
-  humor?: string;
+  styles?: (SGDBGridStyle | SGDBHeroStyle | SGDBLogoStyle | SGDBIconStyle)[];
+  dimensions?: (SGDBGridDimension | SGDBHeroDimension | SGDBIconDimension)[];
+  mimes?: (SGDBGridMime | SGDBHeroMime | SGDBLogoMime | SGDBIconMime)[];
+  types?: SGDBImageType[];
+  nsfw?: SGDBImageBooleanOption;
+  epilepsy?: SGDBImageBooleanOption;
+  humor?: SGDBImageBooleanOption;
   oneoftag?: string;
   page?: number;
 }
@@ -220,12 +236,12 @@ export default class SGDB {
    */
   async getGridsById(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBGridStyle[],
+    dimensions?: SGDBGridDimension[],
+    mimes?: SGDBGridMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getGrids({
       type: 'game',
@@ -252,12 +268,12 @@ export default class SGDB {
    */
   async getGridsBySteamAppId(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBGridStyle[],
+    dimensions?: SGDBGridDimension[],
+    mimes?: SGDBGridMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getGrids({
       type: 'steam',
@@ -297,12 +313,12 @@ export default class SGDB {
    */
   async getHeroesById(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBHeroStyle[],
+    dimensions?: SGDBHeroDimension[],
+    mimes?: SGDBHeroMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getHeroes({
       type: 'game',
@@ -329,12 +345,12 @@ export default class SGDB {
    */
   async getHeroesBySteamAppId(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBHeroStyle[],
+    dimensions?: SGDBHeroDimension[],
+    mimes?: SGDBHeroMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getHeroes({
       type: 'steam',
@@ -374,12 +390,12 @@ export default class SGDB {
    */
   async getIconsById(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBIconStyle[],
+    dimensions?: SGDBIconDimension[],
+    mimes?: SGDBIconMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getIcons({
       type: 'game',
@@ -406,12 +422,12 @@ export default class SGDB {
    */
   async getIconsBySteamAppId(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBIconStyle[],
+    dimensions?: SGDBIconDimension[],
+    mimes?: SGDBIconMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getIcons({
       type: 'steam',
@@ -442,7 +458,6 @@ export default class SGDB {
    * Gets a list of logos based on the provided game id and filters.
    * @param id The game's id.
    * @param styles List of styles to include.
-   * @param dimensions List of dimensions to include.
    * @param mimes List of mimes to include.
    * @param types List of types to include.
    * @param nsfw Whether the result should include nsfw images.
@@ -451,18 +466,16 @@ export default class SGDB {
    */
   async getLogosById(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBLogoStyle[],
+    mimes?: SGDBLogoMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getLogos({
       type: 'game',
       id: id,
       styles: styles,
-      dimensions: dimensions,
       mimes: mimes,
       types: types,
       nsfw: nsfw,
@@ -474,7 +487,6 @@ export default class SGDB {
    * Gets a list of logos based on the provided steam game id and filters.
    * @param id The game's id.
    * @param styles List of styles to include.
-   * @param dimensions List of dimensions to include.
    * @param mimes List of mimes to include.
    * @param types List of types to include.
    * @param nsfw Whether the result should include nsfw images.
@@ -483,36 +495,20 @@ export default class SGDB {
    */
   async getLogosBySteamAppId(
     id: number,
-    styles?: string[],
-    dimensions?: string[],
-    mimes?: string[],
-    types?: string[],
-    nsfw?: string,
-    humor?: string
+    styles?: SGDBLogoStyle[],
+    mimes?: SGDBLogoMime[],
+    types?: SGDBImageType[],
+    nsfw?: SGDBImageBooleanOption,
+    humor?: SGDBImageBooleanOption
   ): Promise<SGDBImage[]> {
     return this.getLogos({
       type: 'steam',
       id: id,
       styles: styles,
-      dimensions: dimensions,
       mimes: mimes,
       types: types,
       nsfw: nsfw,
       humor: humor,
     });
-  }
-
-  /**
-   * Deletes the provided grids from SteamGridDB.
-   * @param ids Id or list of ids of grids to delete.
-   * @returns A promise resolving to true if the operation succeeded.
-   */
-  async deleteGrids(ids: number | number[]): Promise<boolean> {
-    const gridIds = Array.isArray(ids) ? ids.join(',') : ids.toString();
-
-    return await this.handleRequest(
-      'delete',
-      `/grids/${Array.isArray(gridIds) ? gridIds.join(',') : gridIds}`
-    );
   }
 }
