@@ -21,9 +21,7 @@ import { ListComponentBase } from '../../classes/ListComponentBase';
   templateUrl: './key-value-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KeyValueListComponent<
-  T extends Record<string, string>
-> extends ListComponentBase<T> {
+export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly valueChange = output<T[]>();
   public readonly values = input.required<T[]>();
   public readonly removable = input(true, { transform: booleanAttribute });
@@ -39,7 +37,9 @@ export class KeyValueListComponent<
   );
 
   handleAdd(): void {
-    const newValues: Record<string, string>[] = [...this.values()];
+    const newValues: Record<string, string>[] = [
+      ...(this.values() as Record<string, string>[]),
+    ];
     const newValue = { [this.key()]: '', [this.value()]: '' };
     if (this.withId()) {
       newValue['id'] = uuid();

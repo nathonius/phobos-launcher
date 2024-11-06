@@ -33,9 +33,7 @@ let idCount = 0;
     class: 'flex flex-col w-full gap-2 items-center',
   },
 })
-export class AutocompleteComponent<T extends Record<string, string>>
-  implements ControlValueAccessor
-{
+export class AutocompleteComponent<T> implements ControlValueAccessor {
   public readonly options = input.required<T[]>();
   public readonly inputId = input<string>();
   public readonly labelKey = input('label');

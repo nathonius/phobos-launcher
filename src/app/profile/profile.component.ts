@@ -192,7 +192,7 @@ export class ProfileComponent implements OnInit {
     }, 500);
   }
 
-  protected async steamGridSelectGame(game: SGDBGame) {
+  protected async steamGridSelectGame(game: SGDBGame | null) {
     if (!game) {
       return;
     }
@@ -202,7 +202,7 @@ export class ProfileComponent implements OnInit {
     this.steamGridGrids.set(grids);
     this.sgdbLoading.set(false);
   }
-  protected async steamGridSelectGrid(grid: SGDBImage) {
+  protected async steamGridSelectGrid(grid: SGDBImage | null) {
     if (!grid) {
       return;
     }
