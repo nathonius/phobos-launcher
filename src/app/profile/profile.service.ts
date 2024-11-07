@@ -33,7 +33,7 @@ export class ProfileService {
   }
 
   public async deleteProfile(profile: Profile) {
-    await Api['profile.delete'](profile);
+    await Api['profile.delete'](profile.id);
     await this.getAllProfiles();
   }
 

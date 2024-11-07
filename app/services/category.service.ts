@@ -1,17 +1,23 @@
 import type { Category } from '@shared/config';
 import type Store from 'electron-store';
+import { ipcHandler, PhobosApi } from '../api';
 
-export class CategoryService {
-  public constructor(private readonly store: Store) {}
+export class CategoryService extends PhobosApi {
+  public constructor(private readonly store: Store) {
+    super();
+  }
 
+  @ipcHandler('category.getCategories')
   getCategories(): Category[] {
     return this.store.get('categories', []) as Category[];
   }
 
+  @ipcHandler('category.getByName')
   getCategoryByName(name: string): Category | null {
     return this.getCategories().find((p) => p.name === name) ?? null;
   }
 
+  @ipcHandler('category.save')
   saveCategory(config: Category): void {
     const categories = this.getCategories();
     // Find existing category
@@ -26,6 +32,7 @@ export class CategoryService {
     this.store.set('categories', categories);
   }
 
+  @ipcHandler('category.delete')
   deleteCategoryById(id: string): void {
     const categories = this.getCategories();
     const categoryIndex = categories.findIndex((p) => p.id === id);

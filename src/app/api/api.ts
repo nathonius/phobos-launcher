@@ -19,6 +19,7 @@ export const Api = {
     window.api['settings.get'](key) as Promise<unknown>,
   'settings.set': (key: string, value: JSONValue) =>
     window.api['settings.set'](key, value) as Promise<void>,
+  'settings.openConfig': () => window.api['settings.openConfig'](),
   'category.getByName': (name: string) =>
     window.api['category.getByName'](name) as Promise<string[]>,
   'category.getCategories': () =>
@@ -29,14 +30,12 @@ export const Api = {
     window.api['category.delete'](category) as Promise<void>,
   'profile.getProfiles': () =>
     window.api['profile.getProfiles']() as Promise<Profile[]>,
-  'profile.launch': (profile: string) =>
-    window.api['profile.launch'](profile) as Promise<void>,
   'profile.launchCustom': (profile: Profile) =>
     window.api['profile.launchCustom'](profile) as Promise<void>,
   'profile.save': (profile: Profile) =>
     window.api['profile.save'](profile) as Promise<void>,
-  'profile.delete': (profile: Profile) =>
-    window.api['profile.delete'](profile) as Promise<void>,
+  'profile.delete': (profileId: string) =>
+    window.api['profile.delete'](profileId) as Promise<void>,
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>

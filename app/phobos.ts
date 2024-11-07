@@ -4,8 +4,8 @@ import { setTimeout, clearTimeout } from 'node:timers';
 import { app, BrowserWindow } from 'electron';
 import Store from 'electron-store';
 
+import { ALL_CHANNELS, type Channel } from '../shared/public-api'; // This import MUST be relative
 import { ProfileService } from './services/profile.service';
-import { PhobosApi } from './api';
 import { UserDataService } from './services/user-data.service';
 import { DEFAULT_WINDOW_SETTINGS } from './main';
 import { CategoryService } from './services/category.service';
@@ -13,15 +13,13 @@ import { SettingsService } from './services/settings.service';
 import { SGDBService } from './services/sgdb.service';
 
 export class Phobos {
-  public readonly api = new PhobosApi();
-  public readonly userDataService = new UserDataService(
-    app.getPath('userData')
-  );
   public readonly store = new Store();
-  public readonly profileService = new ProfileService(this.store);
-  public readonly categoryService = new CategoryService(this.store);
-  public readonly settingsService = new SettingsService(this.store);
-  public readonly steamGridService = new SGDBService();
+  public userDataService!: UserDataService;
+  public profileService!: ProfileService;
+  public categoryService!: CategoryService;
+  public settingsService!: SettingsService;
+  public steamGridService!: SGDBService;
+  public readonly attachedHandlers: Channel[] = [];
   private window: BrowserWindow | null = null;
   private initialized = false;
   private windowSettingsTimeout: NodeJS.Timeout | undefined;
@@ -41,8 +39,19 @@ export class Phobos {
 
     // Attach API/IPC handlers, create window
     app.on('ready', () => {
-      this.api._attachHandlers();
-      this.userDataService.init();
+      // Init services
+      this.profileService = new ProfileService(this.store);
+      this.categoryService = new CategoryService(this.store);
+      this.settingsService = new SettingsService(this.store);
+      this.steamGridService = new SGDBService();
+      this.userDataService = new UserDataService(app.getPath('userData'));
+
+      // Log in case some channels were missed
+      for (const c of ALL_CHANNELS) {
+        if (!this.attachedHandlers.includes(c)) {
+          console.warn(`Missing handler for channel ${c}`);
+        }
+      }
       this.createWindow();
     });
 

@@ -9,6 +9,7 @@ export const clientApi = {
   'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
   'settings.set': (key: string, value: JSONValue) =>
     ipcRenderer.invoke('settings.set', key, value),
+  'settings.openConfig': () => ipcRenderer.invoke('settings.openConfig'),
   'category.getByName': (name: string) =>
     ipcRenderer.invoke('category.getByName', name),
   'category.getCategories': () => ipcRenderer.invoke('category.getCategories'),
@@ -17,14 +18,12 @@ export const clientApi = {
   'category.delete': (category: Category) =>
     ipcRenderer.invoke('category.delete', category),
   'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
-  'profile.launch': (profile: string) =>
-    ipcRenderer.invoke('profile.launch', profile),
   'profile.launchCustom': (profile: Profile) =>
     ipcRenderer.invoke('profile.launchCustom', profile),
   'profile.save': (profile: Profile) =>
     ipcRenderer.invoke('profile.save', profile),
-  'profile.delete': (profile: Profile) =>
-    ipcRenderer.invoke('profile.delete', profile),
+  'profile.delete': (profileId: string) =>
+    ipcRenderer.invoke('profile.delete', profileId),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),

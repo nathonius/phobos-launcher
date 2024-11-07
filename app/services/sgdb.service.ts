@@ -2,8 +2,10 @@ import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
 import { net } from 'electron';
 import SGDB from '../lib/SGDB';
 import { getPhobos } from '../main';
+import { ipcHandler, PhobosApi } from '../api';
 
-export class SGDBService {
+export class SGDBService extends PhobosApi {
+  @ipcHandler('sgdb.queryGames')
   public async searchGames(query: string) {
     const games = await this.client.searchGame(query);
     if (!games || games.length === 0) {
@@ -12,6 +14,7 @@ export class SGDBService {
     return games;
   }
 
+  @ipcHandler('sgdb.getImages')
   public async getImages(game: SGDBGame, categories: SGDBImageCategory[]) {
     const results: SGDBImage[] = [];
     for (const category of categories) {
@@ -81,6 +84,7 @@ export class SGDBService {
     return icons;
   }
 
+  @ipcHandler('sgdb.downloadImage')
   public async downloadImage(image: SGDBImage) {
     const request = new Request(image.url, { method: 'get' });
     const filename = image.url.split('/').pop();

@@ -2,14 +2,18 @@ import { spawn } from 'node:child_process';
 import type { Engine, Profile, UniqueFileRecord } from '@shared/config';
 import type Store from 'electron-store';
 import { getPhobos } from '../main';
+import { ipcHandler, PhobosApi } from '../api';
 
 export interface FsError extends Error {
   code: string;
 }
 
-export class ProfileService {
-  public constructor(private readonly store: Store) {}
+export class ProfileService extends PhobosApi {
+  public constructor(private readonly store: Store) {
+    super();
+  }
 
+  @ipcHandler('profile.getProfiles')
   getProfiles(): Profile[] {
     return this.store.get('profiles', []) as Profile[];
   }
@@ -18,6 +22,7 @@ export class ProfileService {
     return this.getProfiles().find((p) => p.name === name) ?? null;
   }
 
+  @ipcHandler('profile.save')
   saveProfile(config: Profile): void {
     const profiles = this.getProfiles();
     // Find existing profile
@@ -30,6 +35,7 @@ export class ProfileService {
     this.store.set('profiles', profiles);
   }
 
+  @ipcHandler('profile.delete')
   deleteProfileById(id: string): void {
     const profiles = this.getProfiles();
     const profileIndex = profiles.findIndex((p) => p.id === id);
@@ -39,6 +45,7 @@ export class ProfileService {
     }
   }
 
+  @ipcHandler('profile.launchCustom')
   launchProfile(config: Profile | string) {
     // Get the matching profile for this ID or profile
     let profile: Profile;

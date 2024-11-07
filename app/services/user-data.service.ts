@@ -1,10 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { protocol } from 'electron';
+import { dialog, protocol } from 'electron';
+import { ipcHandler, PhobosApi } from '../api';
 
-export class UserDataService {
-  constructor(private readonly dataPath: string) {}
-  init() {
+export class UserDataService extends PhobosApi {
+  constructor(private readonly dataPath: string) {
+    super();
     protocol.handle('phobos-data', async (req) => {
       if (req.method === 'GET') {
         const filePath = req.url.slice('phobos-data://'.length);
@@ -25,6 +26,7 @@ export class UserDataService {
     return readFile(resolve(this.dataPath, path));
   }
 
+  @ipcHandler('fileSystem.getBase64Image')
   async getBase64Image(path: string) {
     // TODO: This is probably super unreliable
     if (path) {
@@ -33,6 +35,11 @@ export class UserDataService {
       return `data:image/${extension};base64,${data.toString('base64')}`;
     }
     return '';
+  }
+
+  @ipcHandler('fileSystem.showOpenDialog')
+  showOpenDialog(args?: Electron.OpenDialogOptions) {
+    return dialog.showOpenDialog(args ?? {});
   }
 
   async writeDataFile(path: string, value: ArrayBuffer) {
