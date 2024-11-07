@@ -47,10 +47,11 @@ export class ProfileService extends PhobosApi {
 
   @ipcHandler('profile.launchCustom')
   launchProfile(config: Profile | string) {
+    const allProfiles = this.getProfiles();
     // Get the matching profile for this ID or profile
     let profile: Profile;
     if (typeof config === 'string') {
-      const matchingProfile = this.getProfiles().find((p) => p.id === config);
+      const matchingProfile = allProfiles.find((p) => p.id === config);
       if (!matchingProfile) {
         return;
       }
@@ -72,8 +73,30 @@ export class ProfileService extends PhobosApi {
       return;
     }
     const baseArg = ['-iwad', base.path];
-    const files = profile.files.flatMap((f) => ['-file', f]);
-    const cvars = profile.cvars.flatMap((v) => ['+set', v.var, v.value]);
-    const process = spawn(engine.path, [...baseArg, ...files, ...cvars]);
+
+    // TODO: Probably worth deduplicating these files
+    const files: string[] = [];
+    const cvars: string[] = [];
+    for (const parentId of profile.parents) {
+      const parent = this.getProfileById(parentId);
+      files.push(...this.getProfileFiles(parent));
+      cvars.push(...this.getProfileCvars(parent));
+    }
+    files.push(...this.getProfileFiles(profile));
+    cvars.push(...this.getProfileCvars(profile));
+
+    const _process = spawn(engine.path, [...baseArg, ...files, ...cvars]);
+  }
+
+  private getProfileById(id: string) {
+    return this.getProfiles().find((p) => p.id === id);
+  }
+
+  private getProfileFiles(profile: Profile | undefined): string[] {
+    return profile?.files.flatMap((f) => ['-file', f]) ?? [];
+  }
+
+  private getProfileCvars(profile: Profile | undefined): string[] {
+    return profile?.cvars.flatMap((v) => ['+set', v.var, v.value]) ?? [];
   }
 }

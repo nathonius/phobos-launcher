@@ -47,4 +47,5 @@ export interface Profile {
   files: string[];
   categories: string[];
   cvars: Cvar[];
+  parents: string[];
 }

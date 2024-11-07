@@ -61,6 +61,7 @@ export class ProfileComponent implements OnInit {
     files: new FormControl<string[]>([], { nonNullable: true }),
     categories: new FormControl<string[]>([], { nonNullable: true }),
     cvars: new FormControl<Cvar[]>([], { nonNullable: true }),
+    parents: new FormControl<string[]>([], { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -76,16 +77,25 @@ export class ProfileComponent implements OnInit {
   protected readonly steamGridGrids = signal<SGDBImage[]>([]);
   protected readonly sgdbDialog =
     viewChild<ElementRef<HTMLDialogElement>>('sgdbDialog');
+  protected readonly allParentProfileOptions = signal<Profile[]>([]);
+  protected readonly parentProfileOptions = computed(() =>
+    this.allParentProfileOptions().map((p) => ({ value: p.id, label: p.name }))
+  );
   private readonly categoryService = inject(CategoryService);
   private steamGridTimeout: number | undefined;
 
   constructor() {
     effect(
       async () => {
+        const currentProfile = this.profile();
         const engines = await Api['settings.get']('engines');
         const bases = await Api['settings.get']('bases');
+        const profiles = (await Api['profile.getProfiles']()).filter(
+          (p) => p.id !== currentProfile?.id
+        );
         this.engineOptions.set((engines ?? []) as Engine[]);
         this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
+        this.allParentProfileOptions.set(profiles);
       },
       { allowSignalWrites: true }
     );
@@ -101,6 +111,7 @@ export class ProfileComponent implements OnInit {
             files: profile.files,
             categories: profile.categories,
             cvars: profile.cvars,
+            parents: profile.parents,
           });
         } else {
           this.profileForm.reset({
@@ -110,6 +121,7 @@ export class ProfileComponent implements OnInit {
             files: [],
             categories: [],
             cvars: [],
+            parents: [],
           });
         }
       },
@@ -153,6 +165,10 @@ export class ProfileComponent implements OnInit {
 
   protected handleCategoriesChange(values: string[]) {
     this.profileForm.controls.categories.setValue(values);
+  }
+
+  protected handleParentChange(values: string[]) {
+    this.profileForm.controls.parents.setValue(values);
   }
 
   protected handleCvarsChange(values: Cvar[]): void {
@@ -215,7 +231,7 @@ export class ProfileComponent implements OnInit {
   private getProfile(): Profile {
     // TODO: Validate profile
     const profileId = this.profile()?.id ?? uuid();
-    const { engine, base, files, name, icon, categories, cvars } =
+    const { engine, base, files, name, icon, categories, cvars, parents } =
       this.profileForm.value;
     return {
       id: profileId,
@@ -226,6 +242,7 @@ export class ProfileComponent implements OnInit {
       icon: icon!,
       categories: categories!,
       cvars: cvars!,
+      parents: parents!,
     };
   }
 }

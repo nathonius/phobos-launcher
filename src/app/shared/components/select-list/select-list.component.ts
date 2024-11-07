@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ElementRef } from '@angular/core';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -6,6 +7,7 @@ import {
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -30,6 +32,7 @@ export class SelectListComponent extends ListComponentBase {
   public readonly reorder = input(true, { transform: booleanAttribute });
   public readonly values = input.required<string[]>();
   public readonly options = input.required<SelectOption[]>();
+  public readonly placeholderOption = input.required<string>();
   protected readonly availableOptions = computed(() => {
     const allOptions = this.options();
     const values = this.values();
@@ -40,10 +43,17 @@ export class SelectListComponent extends ListComponentBase {
     const values = this.values();
     return values.map((v) => allOptions.find((o) => o.value === v)?.label ?? v);
   });
+  protected readonly placeholder =
+    viewChild<ElementRef<HTMLOptionElement>>('placeholder');
 
   handleAdd(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
+    const target = event.target as HTMLSelectElement;
+    const value = target.value;
     const newValues = [...this.values(), value];
     this.valueChange.emit(newValues);
+    const placeholder = this.placeholder();
+    if (placeholder) {
+      placeholder.nativeElement.selected = true;
+    }
   }
 }

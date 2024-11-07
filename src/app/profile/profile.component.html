@@ -48,6 +48,14 @@
       <img class="h-full max-w-60" [src]="profileIcon()" />
     </div>
   </form-section>
+  <form-section label="Inherit from profile">
+    <select-list
+      placeholderOption="Select a profile"
+      [options]="parentProfileOptions()"
+      [values]="profileForm.controls.parents.value"
+      (valueChange)="handleParentChange($event)"
+    />
+  </form-section>
   <form-section label="Profile Resources">
     <file-list
       [values]="profileForm.controls.files.value"
@@ -56,6 +64,7 @@
   </form-section>
   <form-section label="Categories">
     <select-list
+      placeholderOption="Select a category"
       [options]="categoryOptions()"
       [values]="profileForm.controls.categories.value"
       (valueChange)="handleCategoriesChange($event)"

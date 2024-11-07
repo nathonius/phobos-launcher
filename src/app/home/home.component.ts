@@ -140,6 +140,7 @@ export class HomeComponent implements OnInit {
       files: [],
       categories: newCategories,
       cvars: [],
+      parents: [],
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }

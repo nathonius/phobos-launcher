@@ -1,6 +1,6 @@
 <div class="relative flex flex-col items-end gap-1">
   <select class="select flex-grow" (change)="handleAdd($event)">
-    <option disabled selected>Select category</option>
+    <option #placeholder disabled selected>{{ placeholderOption() }}</option>
     @for (option of availableOptions(); track option) {
     <option value="{{ option.value }}">{{ option.label }}</option>
     }
