@@ -17,6 +17,7 @@ export const ALL_CHANNELS = [
   'fileSystem.showOpenDialog',
   'fileSystem.getPathForFile',
   'fileSystem.getBase64Image',
+  'import.arachnotron',
 ] as const;
 
 export type Channel = (typeof ALL_CHANNELS)[number];

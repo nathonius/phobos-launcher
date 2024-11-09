@@ -20,5 +20,18 @@
         formControlName="steamGridApiKey"
       />
     </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Arachnotron Path</span>
+      </div>
+      <file-input
+        formControlName="importPath"
+        file="false"
+        directory="true"
+        reorder="false"
+        removable="false"
+      />
+      <button type="button" class="btn" (click)="startImport()">Import</button>
+    </label>
   </form>
 </form-section>

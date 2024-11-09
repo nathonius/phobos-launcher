@@ -50,5 +50,7 @@ export const Api = {
     window.api['sgdb.getImages'](game, categories) as Promise<SGDBImage[]>,
   'sgdb.downloadImage': (image: SGDBImage) =>
     window.api['sgdb.downloadImage'](image) as Promise<string>,
+  'import.arachnotron': (basepath: string) =>
+    window.api['import.arachnotron'](basepath),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
