@@ -10,29 +10,23 @@
     "!package.json",
     "!package-lock.json",
     {
-      "from": "../dist",
+      "from": "../dist/",
       "filter": ["**/*"]
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "portable"
-    ]
+    "icon": "dist/browser/assets/icons",
+    "target": ["portable"]
   },
   "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
+    "splashImage": "dist/browser/assets/icons/electron.bmp"
   },
   "mac": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "dmg"
-    ]
+    "icon": "dist/browser/assets/icons",
+    "target": ["dmg"]
   },
   "linux": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "AppImage"
-    ]
+    "icon": "dist/browser/assets/icons",
+    "target": ["AppImage"]
   }
 }
