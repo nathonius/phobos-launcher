@@ -1,11 +1,12 @@
 <div
-  class="relative flex flex-col items-end gap-1"
+  class="relative w-full flex flex-col items-end gap-1"
   (dragover)="handleDragOver($event)"
   (dragleave)="handleDragOut()"
   (drop)="handleDrop($event)"
 >
   @for (path of values(); track path) {
   <file-input
+    class="w-full"
     reorder="true"
     removable="true"
     [value]="path"

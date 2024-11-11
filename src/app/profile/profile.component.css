@@ -1,0 +1,6 @@
+:host {
+  max-width: calc(1500px + 1rem);
+}
+#wrapper-form {
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+}

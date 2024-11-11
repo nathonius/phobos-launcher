@@ -45,7 +45,11 @@ import { ProfileService } from './profile.service';
     CdkListboxModule,
   ],
   templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block flex-grow',
+  },
 })
 export class ProfileComponent implements OnInit {
   public readonly profile = input<Profile>();
