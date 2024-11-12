@@ -6,5 +6,5 @@ await build({
   bundle: true,
   tsconfig: "./tsconfig.serve.json",
   platform: "node",
-  external: ["electron"],
+  external: ["electron", "fsevents"],
 });
