@@ -1,0 +1,35 @@
+name: Draft Release
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  build-windows:
+    uses: "./.github/workflows/windows.yml"
+  build-macos:
+    uses: "./.github/workflows/macos.yml"
+  build-linux:
+    uses: "./.github/workflows/ubuntu.yml"
+  draft:
+    needs:
+      - build-windows
+      - build-macos
+      - build-linux
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: Create Draft
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+
+          gh release create "$tag" \
+            --title="Release v$tag" \
+            --draft \
+            *.AppImage *.exe *.dmg
