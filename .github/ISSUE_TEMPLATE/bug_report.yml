@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please make sure to [search for existing issues](https://github.com/maximegris/phobos-launcher/issues) before filing a new one!
+        Please make sure to [search for existing issues](https://github.com/nathonius/phobos-launcher/issues) before filing a new one!
 
   - type: textarea
     attributes:

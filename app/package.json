@@ -1,14 +1,12 @@
 {
   "name": "phobos-launcher",
-  "description": "Angular Electron sample",
+  "description": "A modern launcher for Doom",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Nathonius",
+    "url": "https://nathan-smith.org/"
   },
-  "version": "14.0.1",
+  "version": "0.0.1",
   "main": "main.js",
   "private": true,
-  "dependencies": {
-    "electron-store": "^8.2.0"
-  }
+  "dependencies": {}
 }

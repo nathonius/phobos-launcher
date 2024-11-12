@@ -1,27 +1,13 @@
 {
   "name": "phobos-launcher",
-  "version": "14.0.1",
-  "description": "Angular 17 with Electron 30 (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/phobos-launcher",
+  "version": "0.0.1",
+  "description": "A modern launcher for Doom",
+  "homepage": "https://github.com/nathonius/phobos-launcher",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Nathonius",
+    "url": "https://nathan-smith.org/"
   },
-  "keywords": [
-    "angular",
-    "angular 17",
-    "electron",
-    "electron 30",
-    "nodejs",
-    "typescript",
-    "jest",
-    "playwright",
-    "eslint",
-    "sass",
-    "windows",
-    "mac",
-    "linux"
-  ],
+  "keywords": [],
   "main": "app/main.js",
   "private": true,
   "scripts": {
