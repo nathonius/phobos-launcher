@@ -4,7 +4,7 @@
     "output": "release/"
   },
   "files": [
-    "**/*",
+    "dist/**/*",
     "!**/*.ts",
     "!*.map",
     "!package.json",

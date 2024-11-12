@@ -93,11 +93,11 @@ export class Phobos {
       void this.window.loadURL('http://localhost:4200');
     } else {
       // Path when running electron executable
-      let pathIndex = './index.html';
+      let pathIndex = './browser/index.html';
 
-      if (existsSync(join(this.basePath, '../dist/index.html'))) {
+      if (existsSync(join(this.basePath, '../dist/browser/index.html'))) {
         // Path when running electron in local folder
-        pathIndex = '../dist/index.html';
+        pathIndex = '../dist/browser/index.html';
       }
 
       const url = new URL(join('file:', this.basePath, pathIndex));
