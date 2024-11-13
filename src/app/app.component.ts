@@ -29,7 +29,7 @@ import { ViewService } from './shared/services/view.service';
   ],
   standalone: true,
   host: {
-    class: 'flex flex-col h-full w-full',
+    class: 'flex flex-col h-screen w-screen overflow-hidden',
   },
 })
 export class AppComponent {

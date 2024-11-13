@@ -1,0 +1,29 @@
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  width: 100%;
+}
+
+.item-target {
+  min-height: 100px;
+  max-height: 200px;
+}
+
+.item-image {
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.item-wrapper {
+  .item-controls {
+    transition: opacity 100ms;
+    opacity: 0;
+    pointer-events: none;
+  }
+  &:hover {
+    .item-controls {
+      opacity: 1;
+      pointer-events: unset;
+    }
+  }
+}

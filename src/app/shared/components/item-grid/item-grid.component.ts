@@ -32,6 +32,9 @@ export interface GridItemEvent {
   templateUrl: './item-grid.component.html',
   styleUrl: './item-grid.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'h-full overflow-y-auto p-2',
+  },
 })
 export class ItemGridComponent {
   public readonly action = output<GridItemEvent>();
