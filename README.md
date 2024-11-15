@@ -1,0 +1,13 @@
+# Phobos Launcher
+
+## A fancy, cross platform launcher for Doom and its descendants
+
+*Heavily inspired by the [Arachnotron Doom Launcher](https://nephrite.uk/arachnotron) ❤️*
+
+## Features
+
+- Define multiple engines (GZdoom, Zandronum, etc.)
+- Configure multiple base iwads
+- Create profiles which can have any number of resource files (wads, pk3s etc)
+- Profiles can inherit resources and cvars from other profiles
+- Pull cover images for profiles from [SteamGridDB](https://www.steamgriddb.com/projects/grid-and-tear) within the application
