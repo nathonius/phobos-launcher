@@ -11,3 +11,8 @@
 - Create profiles which can have any number of resource files (wads, pk3s etc)
 - Profiles can inherit resources and cvars from other profiles
 - Pull cover images for profiles from [SteamGridDB](https://www.steamgriddb.com/projects/grid-and-tear) within the application
+
+## Credits
+
+- Lycanite, author of [Arachnotron](https://nephrite.uk/arachnotron)
+- European Space Agency, [hi-res photo of Phobos](https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Martian_moon_Phobos_in_detail)
