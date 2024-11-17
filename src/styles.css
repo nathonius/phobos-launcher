@@ -2,6 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "DooM";
+  src: local("DooM"), url("fonts/DooM.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Oxanium";
+  src: local("Oxanium"), url("fonts/Oxanium-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Xolonium";
+  src: local("Xolonium"), url("fonts/Xolonium-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "XoloniumBold";
+  src: local("Xolonium Bold"), url("fonts/Xolonium-Bold.woff2") format("woff2");
+}
+
+:root {
+  --text-shadow-3d-fg-1: color-mix(
+    in srgb,
+    oklch(var(--nc)) 70%,
+    oklch(var(--n))
+  );
+  --text-shadow-3d-fg-2: color-mix(
+    in srgb,
+    oklch(var(--nc)) 60%,
+    oklch(var(--n))
+  );
+  --text-shadow-3d-fg-3: color-mix(
+    in srgb,
+    oklch(var(--nc)) 50%,
+    oklch(var(--n))
+  );
+  --text-shadow-3d-fg-4: color-mix(
+    in srgb,
+    oklch(var(--nc)) 45%,
+    oklch(var(--n))
+  );
+  --text-shadow-3d-fg-5: color-mix(
+    in srgb,
+    oklch(var(--nc)) 40%,
+    oklch(var(--n))
+  );
+  --text-shadow-3d-bg-1: color-mix(in srgb, oklch(var(--n)) 10%, transparent);
+  --text-shadow-3d-bg-2: color-mix(in srgb, oklch(var(--n)) 10%, transparent);
+  --text-shadow-3d-bg-3: color-mix(in srgb, oklch(var(--n)) 30%, transparent);
+  --text-shadow-3d-bg-4: color-mix(in srgb, oklch(var(--n)) 20%, transparent);
+  --text-shadow-3d-bg-5: color-mix(in srgb, oklch(var(--n)) 25%, transparent);
+  --text-shadow-3d-bg-6: color-mix(in srgb, oklch(var(--n)) 20%, transparent);
+  --text-shadow-3d-bg-7: color-mix(in srgb, oklch(var(--n)) 15%, transparent);
+}
+
+.text-shadow-3d {
+  text-shadow: 0 1px 0 var(--text-shadow-3d-fg-1),
+    0 2px 0 var(--text-shadow-3d-fg-2), 0 3px 0 var(--text-shadow-3d-fg-3),
+    0 4px 0 var(--text-shadow-3d-fg-4), 0 5px 0 var(--text-shadow-3d-fg-5),
+    0 6px 1px var(--text-shadow-3d-bg-1), 0 0 5px var(--text-shadow-3d-bg-2),
+    0 1px 3px var(--text-shadow-3d-bg-3), 0 3px 5px var(--text-shadow-3d-bg-4),
+    0 5px 10px var(--text-shadow-3d-bg-5),
+    0 10px 10px var(--text-shadow-3d-bg-6),
+    0 20px 20px var(--text-shadow-3d-bg-7);
+}
+
 html,
 body {
   height: 100%;

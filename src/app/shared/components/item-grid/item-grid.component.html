@@ -9,7 +9,17 @@
         type="button"
         (click)="action.emit({item, action: 'primary'})"
       >
+        @if (item.img) {
         <img class="item-image" [src]="item.img" />
+        } @else {
+        <div
+          class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d"
+          fittext
+          [compressor]="1"
+        >
+          {{ item.name }}
+        </div>
+        }
       </button>
       <div class="item-controls absolute bottom-0 item-controls flex gap-1">
         @for (itemAction of item.actions; track itemAction.name) {
