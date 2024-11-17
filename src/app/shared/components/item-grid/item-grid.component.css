@@ -14,6 +14,15 @@
   object-fit: contain;
 }
 
+.item-image-placeholder {
+  font-family: "XoloniumBold";
+  font-weight: 700;
+  height: 100%;
+  width: 100%;
+  color: oklch(var(--nc));
+  background-image: url("/assets/rock-wall-bg.png");
+}
+
 .item-wrapper {
   .item-controls {
     transition: opacity 100ms;
