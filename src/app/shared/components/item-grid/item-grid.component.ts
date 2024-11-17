@@ -33,7 +33,7 @@ export interface GridItemEvent {
   styleUrl: './item-grid.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'h-full overflow-y-auto p-2',
+    class: 'h-full overflow-y-auto',
   },
 })
 export class ItemGridComponent {

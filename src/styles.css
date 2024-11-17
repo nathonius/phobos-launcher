@@ -8,16 +8,8 @@
 }
 
 @font-face {
-  font-family: "Oxanium";
-  src: local("Oxanium"), url("fonts/Oxanium-Regular.woff2") format("woff2");
-}
-@font-face {
   font-family: "Xolonium";
   src: local("Xolonium"), url("fonts/Xolonium-Regular.woff2") format("woff2");
-}
-@font-face {
-  font-family: "XoloniumBold";
-  src: local("Xolonium Bold"), url("fonts/Xolonium-Bold.woff2") format("woff2");
 }
 
 :root {
@@ -56,6 +48,7 @@
 }
 
 .text-shadow-3d {
+  color: oklch(var(--nc));
   text-shadow: 0 1px 0 var(--text-shadow-3d-fg-1),
     0 2px 0 var(--text-shadow-3d-fg-2), 0 3px 0 var(--text-shadow-3d-fg-3),
     0 4px 0 var(--text-shadow-3d-fg-4), 0 5px 0 var(--text-shadow-3d-fg-5),

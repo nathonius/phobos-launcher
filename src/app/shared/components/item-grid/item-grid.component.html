@@ -2,7 +2,7 @@
   @for (item of items(); track item.name) {
   <div class="item-wrapper flex flex-col gap-2 items-center">
     <div
-      class="item-content w-full relative flex-grow flex flex-col hover:bg-neutral rounded"
+      class="item-content w-full relative flex-grow flex flex-col bg-base-200 hover:bg-base-300 rounded"
     >
       <button
         class="item-target relative w-full flex-grow flex flex-col items-center justify-center border-0 p-0 m-0"
@@ -13,7 +13,7 @@
         <img class="item-image" [src]="item.img" />
         } @else {
         <div
-          class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d"
+          class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
           fittext
           [compressor]="1"
         >
