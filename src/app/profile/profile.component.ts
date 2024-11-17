@@ -14,7 +14,6 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import type { UniqueFileRecord, Cvar, Engine, Profile } from '@shared/config';
 
 import { v4 as uuid } from 'uuid';
-import { Rocket, Save, Trash } from 'lucide-angular';
 import type { SGDBGame, SGDBImage } from '@shared/lib/SGDB';
 import { CdkListboxModule } from '@angular/cdk/listbox';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -134,28 +133,11 @@ export class ProfileComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.navbarService.items.set([
-      {
-        label: 'Delete',
-        icon: Trash,
-        callback: () => {
-          // TODO: Handle profile deletion
-          this.deleteProfile.emit();
-        },
-      },
-      {
-        icon: Save,
-        label: 'Save',
-        callback: this.handleSave.bind(this),
-        style: 'primary',
-      },
-      {
-        icon: Rocket,
-        label: 'Launch',
-        callback: this.handleLaunch.bind(this),
-        style: 'secondary',
-      },
-    ]);
+    this.navbarService.setCallbacks({
+      delete: { cb: () => {}, label: 'Delete Profile' },
+      save: { cb: this.handleSave.bind(this), label: 'Save' },
+      launch: { cb: this.handleLaunch.bind(this), label: 'Launch' },
+    });
   }
 
   protected async handleIconChange(iconPath: string) {

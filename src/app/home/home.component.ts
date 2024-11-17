@@ -170,30 +170,15 @@ export class HomeComponent implements OnInit {
   protected handleSelectCategory(category: Category) {
     if (category.id === 'all') {
       this.categoryService.selectedCategory.set(undefined);
-      this.navbarService.items.set([
-        {
-          label: 'New profile',
-          icon: Plus,
-          callback: this.newProfile.bind(this),
-          style: 'secondary',
-        },
-      ]);
+      this.navbarService.setCallbacks({
+        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
+      });
     } else {
       this.categoryService.selectedCategory.set(category);
-      this.navbarService.items.set([
-        {
-          label: 'Edit category',
-          icon: Wrench,
-          callback: this.editCategory.bind(this),
-          style: 'primary',
-        },
-        {
-          label: 'New profile',
-          icon: Plus,
-          callback: this.newProfile.bind(this),
-          style: 'secondary',
-        },
-      ]);
+      this.navbarService.setCallbacks({
+        edit: { cb: this.editCategory.bind(this), label: 'Edit Category' },
+        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
+      });
     }
     this.profileService.selectedProfile.set(undefined);
     this.viewService.homeState.set(HomeViewState.ProfileList);
