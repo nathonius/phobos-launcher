@@ -16,3 +16,4 @@
 
 - Lycanite, author of [Arachnotron](https://nephrite.uk/arachnotron)
 - European Space Agency, [hi-res photo of Phobos](https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Martian_moon_Phobos_in_detail)
+- [sevmeyer](https://github.com/sevmeyer), [Oxanium and Xolonium fonts](https://sev.dev/fonts/)
