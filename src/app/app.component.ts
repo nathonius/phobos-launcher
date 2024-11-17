@@ -1,10 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
+  Check,
   Cog,
   Home,
   LucideAngularModule,
   Package,
+  Plus,
+  Rocket,
+  RotateCcw,
+  Save,
   Settings,
+  Trash,
+  Wrench,
 } from 'lucide-angular';
 import { NgClass } from '@angular/common';
 import { HomeComponent } from './home/home.component';
@@ -42,5 +49,12 @@ export class AppComponent {
     Cog,
     Package,
     Home,
+    Trash,
+    Plus,
+    Save,
+    Wrench,
+    Check,
+    Rocket,
+    RotateCcw,
   };
 }

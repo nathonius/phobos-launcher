@@ -10,7 +10,6 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { Category } from '@shared/config';
 import { v4 as uuid } from 'uuid';
-import { Save, Trash } from 'lucide-angular';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { NavbarService } from '../shared/services/navbar.service';
@@ -49,22 +48,16 @@ export class CategoryComponent implements OnInit {
       },
       { allowSignalWrites: true }
     );
+    this.categoryForm.controls.icon.valueChanges.subscribe((v) => {
+      this.handleIconChange(v);
+    });
   }
 
   public ngOnInit(): void {
-    this.navbarService.items.set([
-      {
-        label: 'Delete',
-        icon: Trash,
-        callback: () => {},
-      },
-      {
-        label: 'Save',
-        icon: Save,
-        callback: this.handleSave.bind(this),
-        style: 'primary',
-      },
-    ]);
+    this.navbarService.setCallbacks({
+      delete: { cb: () => {}, label: 'Delete Category' },
+      save: { cb: this.handleSave.bind(this), label: 'Save' },
+    });
   }
 
   protected async handleIconChange(iconPath: string) {
@@ -72,9 +65,9 @@ export class CategoryComponent implements OnInit {
     this.categoryIcon.set(icon);
   }
 
-  protected handleSave() {
+  protected async handleSave() {
     const category = this.getCategory();
-    void this.categoryService.save(category);
+    await this.categoryService.save(category);
   }
 
   private getCategory(): Category {
