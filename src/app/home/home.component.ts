@@ -141,6 +141,7 @@ export class HomeComponent implements OnInit {
       categories: newCategories,
       cvars: [],
       parents: [],
+      tags: [],
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }

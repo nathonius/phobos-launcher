@@ -42,6 +42,7 @@ node_modules
 npm-debug.log
 testem.log
 /typings
+/game-icons
 
 # e2e
 /e2e/*.js

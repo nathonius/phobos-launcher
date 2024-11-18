@@ -70,6 +70,12 @@
       (valueChange)="handleCategoriesChange($event)"
     />
   </form-section>
+  <form-section label="Tags">
+    <tag-list
+      [values]="profileForm.controls.tags.value"
+      (valueChange)="handleTagsChange($event)"
+    />
+  </form-section>
   <form-section label="CVARs">
     <key-value-list
       key="var"

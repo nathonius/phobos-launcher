@@ -27,6 +27,7 @@ import { Api } from '../api/api';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { ConsolePipe } from '../shared/pipes/console.pipe';
+import { TagListComponent } from '../shared/components/tag-list/tag-list.component';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -42,6 +43,7 @@ import { ProfileService } from './profile.service';
     AutocompleteComponent,
     ConsolePipe,
     CdkListboxModule,
+    TagListComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
@@ -65,6 +67,7 @@ export class ProfileComponent implements OnInit {
     categories: new FormControl<string[]>([], { nonNullable: true }),
     cvars: new FormControl<Cvar[]>([], { nonNullable: true }),
     parents: new FormControl<string[]>([], { nonNullable: true }),
+    tags: new FormControl<string[]>([], { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -115,6 +118,7 @@ export class ProfileComponent implements OnInit {
             categories: profile.categories,
             cvars: profile.cvars,
             parents: profile.parents,
+            tags: profile.tags,
           });
         } else {
           this.profileForm.reset({
@@ -125,6 +129,7 @@ export class ProfileComponent implements OnInit {
             categories: [],
             cvars: [],
             parents: [],
+            tags: [],
           });
         }
       },
@@ -159,6 +164,10 @@ export class ProfileComponent implements OnInit {
 
   protected handleCvarsChange(values: Cvar[]): void {
     this.profileForm.controls.cvars.setValue(values);
+  }
+
+  protected handleTagsChange(values: string[]): void {
+    this.profileForm.controls.tags.setValue(values);
   }
 
   protected handleSave() {
@@ -217,8 +226,17 @@ export class ProfileComponent implements OnInit {
   private getProfile(): Profile {
     // TODO: Validate profile
     const profileId = this.profile()?.id ?? uuid();
-    const { engine, base, files, name, icon, categories, cvars, parents } =
-      this.profileForm.value;
+    const {
+      engine,
+      base,
+      files,
+      name,
+      icon,
+      categories,
+      cvars,
+      parents,
+      tags,
+    } = this.profileForm.value;
     return {
       id: profileId,
       name: name!,
@@ -229,6 +247,7 @@ export class ProfileComponent implements OnInit {
       categories: categories!,
       cvars: cvars!,
       parents: parents!,
+      tags: tags!,
     };
   }
 }

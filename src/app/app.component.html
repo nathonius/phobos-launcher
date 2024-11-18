@@ -18,7 +18,7 @@
       [ngClass]="state === AppViewState.Home ? 'btn-primary' : 'btn-ghost'"
       (click)="viewService.appState.set(AppViewState.Home)"
     >
-      <lucide-angular [img]="icons.Home" />
+      <lucide-icon [img]="icons.Home" />
     </button>
     <button
       class="btn tooltip"
@@ -26,7 +26,7 @@
       [ngClass]="state === AppViewState.Settings ? 'btn-primary' : 'btn-ghost'"
       (click)="viewService.appState.set(AppViewState.Settings)"
     >
-      <lucide-angular [img]="icons.Settings" />
+      <lucide-icon [img]="icons.Settings" />
     </button>
     <button
       class="btn tooltip"
@@ -34,7 +34,7 @@
       [ngClass]="state === AppViewState.Engines ? 'btn-primary' : 'btn-ghost'"
       (click)="viewService.appState.set(AppViewState.Engines)"
     >
-      <lucide-angular [img]="icons.Cog" />
+      <lucide-icon [img]="icons.Cog" />
     </button>
     <button
       class="btn tooltip"
@@ -42,7 +42,7 @@
       [ngClass]="state === AppViewState.Bases ? 'btn-primary' : 'btn-ghost'"
       (click)="viewService.appState.set(AppViewState.Bases)"
     >
-      <lucide-angular [img]="icons.Package" />
+      <lucide-icon [img]="icons.Package" />
     </button>
   </div>
   <div class="flex gap-2">
@@ -57,11 +57,11 @@
       (click)="callbacks.reset.cb()"
       [disabled]="!unsavedChanges"
     >
-      <lucide-angular [img]="icons.RotateCcw" /> {{ callbacks.reset.label }}
+      <lucide-icon [img]="icons.RotateCcw" /> {{ callbacks.reset.label }}
     </button>
     } @if (callbacks.delete) {
     <button type="button" class="btn btn-ghost" (click)="callbacks.delete.cb()">
-      <lucide-angular [img]="icons.Trash" /> {{ callbacks.delete.label }}
+      <lucide-icon [img]="icons.Trash" /> {{ callbacks.delete.label }}
     </button>
     } @if (callbacks.save) { @let saved = navbarService.saved();
     <button
@@ -70,12 +70,12 @@
       (click)="callbacks.save.cb()"
       [ngClass]="{ 'btn-primary': !saved, 'btn-success': saved }"
     >
-      <lucide-angular [img]="saved ? icons.Check : icons.Save" />
+      <lucide-icon [img]="saved ? icons.Check : icons.Save" />
       {{ callbacks.save.label }}
     </button>
     } @if(callbacks.edit) {
     <button type="button" class="btn btn-primary" (click)="callbacks.edit.cb()">
-      <lucide-angular [img]="icons.Wrench" /> {{ callbacks.edit.label }}
+      <lucide-icon [img]="icons.Wrench" /> {{ callbacks.edit.label }}
     </button>
     } @if(callbacks.new) {
     <button
@@ -83,7 +83,7 @@
       class="btn btn-secondary"
       (click)="callbacks.new.cb()"
     >
-      <lucide-angular [img]="icons.Plus" /> {{ callbacks.new.label }}
+      <lucide-icon [img]="icons.Plus" /> {{ callbacks.new.label }}
     </button>
     } @if(callbacks.launch) {
     <button
@@ -91,7 +91,7 @@
       class="btn btn-secondary"
       (click)="callbacks.launch.cb()"
     >
-      <lucide-angular [img]="icons.Rocket" /> {{ callbacks.launch.label }}
+      <lucide-icon [img]="icons.Rocket" /> {{ callbacks.launch.label }}
     </button>
     }
   </div>

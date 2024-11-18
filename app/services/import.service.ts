@@ -253,6 +253,7 @@ export class ImportService extends PhobosApi {
         files,
         parents: parents.map((p) => p.name),
         icon,
+        tags: [],
       };
       newProfiles.push(newProfile);
     }

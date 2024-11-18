@@ -10,3 +10,15 @@ export enum HomeViewState {
   ProfileList,
   ProfileEdit,
 }
+
+export type DaisyVariant =
+  | 'default'
+  | 'neutral'
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'ghost'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error';

@@ -48,4 +48,5 @@ export interface Profile {
   categories: string[];
   cvars: Cvar[];
   parents: string[];
+  tags: string[];
 }
