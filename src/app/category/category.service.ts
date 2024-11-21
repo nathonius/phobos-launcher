@@ -33,7 +33,7 @@ export class CategoryService {
   }
 
   public async deleteCategory(category: Category) {
-    await Api['category.delete'](category);
+    await Api['category.delete'](category.id);
     await this.getAllCategories();
   }
 
