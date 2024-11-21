@@ -28,6 +28,8 @@ import { AutocompleteComponent } from '../shared/components/autocomplete/autocom
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { ConsolePipe } from '../shared/pipes/console.pipe';
 import { TagListComponent } from '../shared/components/tag-list/tag-list.component';
+import { ViewService } from '../shared/services/view.service';
+import { HomeViewState } from '../shared/constants';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -58,6 +60,7 @@ export class ProfileComponent implements OnInit {
   protected readonly profileService = inject(ProfileService);
   protected readonly navbarService = inject(NavbarService);
   protected readonly steamGridService = inject(SteamGridService);
+  protected readonly viewService = inject(ViewService);
   protected readonly profileForm = new FormGroup({
     name: new FormControl<string>('', { nonNullable: true }),
     engine: new FormControl<string>('', { nonNullable: true }),
@@ -139,7 +142,7 @@ export class ProfileComponent implements OnInit {
 
   public ngOnInit(): void {
     this.navbarService.setCallbacks({
-      delete: { cb: () => {}, label: 'Delete Profile' },
+      delete: { cb: this.handleDelete.bind(this), label: 'Delete Profile' },
       save: { cb: this.handleSave.bind(this), label: 'Save' },
       launch: { cb: this.handleLaunch.bind(this), label: 'Launch' },
     });
@@ -173,6 +176,15 @@ export class ProfileComponent implements OnInit {
   protected handleSave() {
     const profile = this.getProfile();
     void this.profileService.save(profile);
+  }
+
+  protected async handleDelete() {
+    const profile = this.profile();
+    if (profile?.id) {
+      await this.profileService.deleteProfile(profile);
+    }
+    this.viewService.homeState.set(HomeViewState.ProfileList);
+    this.profileService.selectedProfile.set(undefined);
   }
 
   protected handleLaunch() {
@@ -225,7 +237,10 @@ export class ProfileComponent implements OnInit {
 
   private getProfile(): Profile {
     // TODO: Validate profile
-    const profileId = this.profile()?.id ?? uuid();
+    let profileId = this.profile()?.id;
+    if (profileId === undefined) {
+      profileId = uuid();
+    }
     const {
       engine,
       base,

@@ -15,8 +15,8 @@ export const clientApi = {
   'category.getCategories': () => ipcRenderer.invoke('category.getCategories'),
   'category.save': (category: Category) =>
     ipcRenderer.invoke('category.save', category),
-  'category.delete': (category: Category) =>
-    ipcRenderer.invoke('category.delete', category),
+  'category.delete': (categoryId: string) =>
+    ipcRenderer.invoke('category.delete', categoryId),
   'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
   'profile.launchCustom': (profile: Profile) =>
     ipcRenderer.invoke('profile.launchCustom', profile),

@@ -6,13 +6,11 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule, Play, Plus, Trash, Wrench } from 'lucide-angular';
-import { v4 as uuid } from 'uuid';
 import type { Category, Profile } from '@shared/config';
-import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import type {
   GridItem,
   GridItemEvent,
@@ -22,7 +20,6 @@ import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { CategoryService } from '../category/category.service';
 import { CategoryComponent } from '../category/category.component';
-import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { NavbarService } from '../shared/services/navbar.service';
 import { HomeViewState } from '../shared/constants';
 import { ViewService } from '../shared/services/view.service';
@@ -32,14 +29,11 @@ import { ViewService } from '../shared/services/view.service';
   templateUrl: './home.component.html',
   standalone: true,
   imports: [
-    RouterLink,
     ReactiveFormsModule,
-    FileInputComponent,
     ItemGridComponent,
     ProfileComponent,
     CategoryComponent,
     LucideAngularModule,
-    FormSectionComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -75,6 +69,25 @@ export class HomeComponent implements OnInit {
   private readonly navbarService = inject(NavbarService);
 
   constructor() {
+    effect(
+      () => {
+        const selectedCategory = this.categoryService.selectedCategory();
+        this.setNavActions(selectedCategory);
+      },
+      { allowSignalWrites: true }
+    );
+    effect(
+      () => {
+        const selectedProfile = this.profileService.selectedProfile();
+        if (selectedProfile === undefined) {
+          const selectedCategory = untracked(() =>
+            this.categoryService.selectedCategory()
+          );
+          this.setNavActions(selectedCategory);
+        }
+      },
+      { allowSignalWrites: true }
+    );
     effect(
       async () => {
         const allCategories = [
@@ -132,7 +145,7 @@ export class HomeComponent implements OnInit {
     const selectedCategory = this.categoryService.selectedCategory();
     const newCategories = selectedCategory ? [selectedCategory.id] : [];
     this.profileService.selectedProfile.set({
-      id: uuid(),
+      id: '',
       base: '',
       engine: '',
       icon: '',
@@ -148,7 +161,7 @@ export class HomeComponent implements OnInit {
 
   protected newCategory() {
     this.categoryService.selectedCategory.set({
-      id: uuid(),
+      id: '',
       name: '',
       icon: '',
     });
@@ -171,15 +184,8 @@ export class HomeComponent implements OnInit {
   protected handleSelectCategory(category: Category) {
     if (category.id === 'all') {
       this.categoryService.selectedCategory.set(undefined);
-      this.navbarService.setCallbacks({
-        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
-      });
     } else {
       this.categoryService.selectedCategory.set(category);
-      this.navbarService.setCallbacks({
-        edit: { cb: this.editCategory.bind(this), label: 'Edit Category' },
-        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
-      });
     }
     this.profileService.selectedProfile.set(undefined);
     this.viewService.homeState.set(HomeViewState.ProfileList);
@@ -198,5 +204,18 @@ export class HomeComponent implements OnInit {
     this.categoryService.selectedCategory.set(category);
     this.profileService.selectedProfile.set(undefined);
     this.viewService.homeState.set(HomeViewState.CategoryEdit);
+  }
+
+  private setNavActions(selectedCategory: Category | undefined) {
+    if (selectedCategory === undefined) {
+      this.navbarService.setCallbacks({
+        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
+      });
+    } else {
+      this.navbarService.setCallbacks({
+        edit: { cb: this.editCategory.bind(this), label: 'Edit Category' },
+        new: { cb: this.newProfile.bind(this), label: 'New Profile' },
+      });
+    }
   }
 }

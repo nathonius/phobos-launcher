@@ -13,6 +13,8 @@ import { v4 as uuid } from 'uuid';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { NavbarService } from '../shared/services/navbar.service';
+import { ViewService } from '../shared/services/view.service';
+import { HomeViewState } from '../shared/constants';
 import { CategoryService } from './category.service';
 
 @Component({
@@ -32,6 +34,7 @@ export class CategoryComponent implements OnInit {
   protected readonly categoryIcon = signal<string>('');
   private readonly categoryService = inject(CategoryService);
   private readonly navbarService = inject(NavbarService);
+  private readonly viewService = inject(ViewService);
 
   constructor() {
     effect(
@@ -55,7 +58,10 @@ export class CategoryComponent implements OnInit {
 
   public ngOnInit(): void {
     this.navbarService.setCallbacks({
-      delete: { cb: () => {}, label: 'Delete Category' },
+      delete: {
+        cb: this.handleDelete.bind(this),
+        label: 'Delete Category',
+      },
       save: { cb: this.handleSave.bind(this), label: 'Save' },
     });
   }
@@ -70,9 +76,21 @@ export class CategoryComponent implements OnInit {
     await this.categoryService.save(category);
   }
 
+  protected async handleDelete() {
+    const category = this.category();
+    if (category?.id) {
+      await this.categoryService.deleteCategory(category);
+    }
+    this.viewService.homeState.set(HomeViewState.ProfileList);
+    this.categoryService.selectedCategory.set(undefined);
+  }
+
   private getCategory(): Category {
     // TODO: Validate category
-    const categoryId = this.category()?.id ?? uuid();
+    let categoryId = this.category()?.id;
+    if (categoryId === undefined) {
+      categoryId = uuid();
+    }
     const { name, icon } = this.categoryForm.value;
     return {
       id: categoryId,

@@ -26,8 +26,8 @@ export const Api = {
     window.api['category.getCategories']() as Promise<Category[]>,
   'category.save': (category: Category) =>
     window.api['category.save'](category) as Promise<void>,
-  'category.delete': (category: Category) =>
-    window.api['category.delete'](category) as Promise<void>,
+  'category.delete': (categoryId: string) =>
+    window.api['category.delete'](categoryId) as Promise<void>,
   'profile.getProfiles': () =>
     window.api['profile.getProfiles']() as Promise<Profile[]>,
   'profile.launchCustom': (profile: Profile) =>
