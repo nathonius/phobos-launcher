@@ -88,7 +88,7 @@ export class CategoryComponent implements OnInit {
   private getCategory(): Category {
     // TODO: Validate category
     let categoryId = this.category()?.id;
-    if (categoryId === undefined) {
+    if (!categoryId) {
       categoryId = uuid();
     }
     const { name, icon } = this.categoryForm.value;

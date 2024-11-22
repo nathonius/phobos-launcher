@@ -238,7 +238,7 @@ export class ProfileComponent implements OnInit {
   private getProfile(): Profile {
     // TODO: Validate profile
     let profileId = this.profile()?.id;
-    if (profileId === undefined) {
+    if (!profileId) {
       profileId = uuid();
     }
     const {
