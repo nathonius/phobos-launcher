@@ -13,13 +13,18 @@ export class ProfileService {
     void this.getAllProfiles();
   }
 
-  public async getAllProfiles(): Promise<Profile[]> {
+  public async getAllProfiles(selectProfile?: Profile): Promise<Profile[]> {
     const profiles = await Api['profile.getProfiles']();
     this.allProfiles.set(profiles);
-    const selectedProfile = this.selectedProfile();
-    if (selectedProfile) {
-      const stillExists = profiles.find((p) => p.id === selectedProfile.id);
-      this.selectedProfile.set(stillExists);
+    if (selectProfile) {
+      const matchingProfile = profiles.find((p) => p.id === selectProfile.id);
+      this.selectedProfile.set(matchingProfile);
+    } else {
+      const selectedProfile = this.selectedProfile();
+      if (selectedProfile) {
+        const stillExists = profiles.find((p) => p.id === selectedProfile.id);
+        this.selectedProfile.set(stillExists);
+      }
     }
     return profiles;
   }
@@ -29,7 +34,7 @@ export class ProfileService {
     if (_profile) {
       await Api['profile.save'](_profile);
     }
-    await this.getAllProfiles();
+    await this.getAllProfiles(_profile);
   }
 
   public async deleteProfile(profile: Profile) {
