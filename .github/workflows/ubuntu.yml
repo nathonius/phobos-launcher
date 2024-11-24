@@ -62,3 +62,4 @@ jobs:
         with:
           name: linux
           path: release
+          retention-days: 1

@@ -60,3 +60,4 @@ jobs:
         with:
           name: macos
           path: release
+          retention-days: 1
