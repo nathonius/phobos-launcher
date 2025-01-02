@@ -237,7 +237,8 @@ export class ProfileComponent implements OnInit {
 
   private getProfile(): Profile {
     // TODO: Validate profile
-    let profileId = this.profile()?.id;
+    const originalProfile = this.profile();
+    let profileId = originalProfile?.id;
     if (!profileId) {
       profileId = uuid();
     }
@@ -263,6 +264,8 @@ export class ProfileComponent implements OnInit {
       cvars: cvars!,
       parents: parents!,
       tags: tags!,
+      created: originalProfile?.created ?? new Date().toISOString(),
+      lastPlayed: originalProfile?.lastPlayed ?? null,
     };
   }
 }

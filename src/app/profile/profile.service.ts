@@ -44,6 +44,17 @@ export class ProfileService {
 
   public launch(profile: Profile) {
     void Api['profile.launchCustom'](profile);
+
+    // Set last played date locally, so we don't have to refetch all profiles
+    const allProfiles = this.allProfiles();
+    const profileIndex = allProfiles.findIndex((p) => p.id === profile.id);
+    if (profileIndex !== -1) {
+      allProfiles.splice(profileIndex, 1, {
+        ...profile,
+        lastPlayed: new Date().toISOString(),
+      });
+      this.allProfiles.set(allProfiles);
+    }
   }
 
   public async getProfileIcon(profile: Profile | string) {

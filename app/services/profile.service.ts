@@ -60,6 +60,9 @@ export class ProfileService extends PhobosApi {
       profile = config;
     }
 
+    // Set profile last played
+    this.saveProfile({ ...profile, lastPlayed: new Date().toISOString() });
+
     // Prepare args
     // TODO: Logic to actually parse these settings should live elsewhere
     const engines = (getPhobos().settingsService.getSetting('engines') ??
