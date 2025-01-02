@@ -41,6 +41,14 @@ export interface Settings {
 export interface Profile {
   id: string;
   name: string;
+  /**
+   * ISO timestamp
+   */
+  created: string;
+  /**
+   * ISO timestamp
+   */
+  lastPlayed: string | null;
   engine: string;
   base: string;
   icon: string;

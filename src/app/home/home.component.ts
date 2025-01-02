@@ -9,7 +9,15 @@ import {
   untracked,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LucideAngularModule, Play, Plus, Trash, Wrench } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Play,
+  Plus,
+  SortAsc,
+  SortDesc,
+  Trash,
+  Wrench,
+} from 'lucide-angular';
 import type { Category, Profile } from '@shared/config';
 import type {
   GridItem,
@@ -23,6 +31,16 @@ import { CategoryComponent } from '../category/category.component';
 import { NavbarService } from '../shared/services/navbar.service';
 import { HomeViewState } from '../shared/constants';
 import { ViewService } from '../shared/services/view.service';
+import { toSorted } from '../shared/functions/toSorted';
+import { Api } from '../api/api';
+
+type ProfileGridItem = GridItem & Profile;
+type ProfileSort = 'alphabetical' | 'date_added' | 'last_played';
+const VALID_SORT_ARRAY: ProfileSort[] = [
+  'alphabetical',
+  'date_added',
+  'last_played',
+];
 
 @Component({
   selector: 'app-home',
@@ -47,23 +65,53 @@ export class HomeComponent implements OnInit {
   });
   protected readonly icons = {
     Plus,
+    SortAsc,
+    SortDesc,
   };
   protected readonly viewService = inject(ViewService);
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
-  protected readonly allProfileItems = signal<GridItem[]>([]);
+  protected readonly allProfileItems = signal<ProfileGridItem[]>([]);
+  protected readonly sort = signal<null | ProfileSort>(null);
+  protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
   protected readonly profileItems = computed(() => {
     const allItems = this.allProfileItems();
     const selectedCategory = this.categoryService.selectedCategory();
+    const sort = this.sort();
+    const sortDirection = this.sortDirection() === 'asc' ? 1 : -1;
+    let filtered: ProfileGridItem[];
     if (selectedCategory === undefined || selectedCategory.id === 'all') {
-      return allItems;
+      filtered = allItems;
     } else {
-      return allItems.filter((p) =>
+      filtered = allItems.filter((p) =>
         ((p as unknown as Profile).categories ?? []).includes(
           selectedCategory.id
         )
       );
+    }
+    if (sort === 'alphabetical') {
+      return toSorted(filtered, (a, b) =>
+        a.name > b.name ? sortDirection : sortDirection * -1
+      );
+    } else if (sort === 'last_played') {
+      return toSorted(
+        filtered,
+        (a, b) =>
+          (new Date(a.lastPlayed ?? 0).valueOf() -
+            new Date(b.lastPlayed ?? 0).valueOf()) *
+          sortDirection
+      );
+    } else if (sort === 'date_added') {
+      return toSorted(
+        filtered,
+        (a, b) =>
+          (new Date(a.created ?? 0).valueOf() -
+            new Date(b.created ?? 0).valueOf()) *
+          sortDirection
+      );
+    } else {
+      return filtered;
     }
   });
   private readonly navbarService = inject(NavbarService);
@@ -106,7 +154,7 @@ export class HomeComponent implements OnInit {
     effect(
       async () => {
         const allProfiles = this.profileService.allProfiles();
-        const itemGridItems: GridItem[] = [];
+        const itemGridItems: ProfileGridItem[] = [];
         for (const profile of allProfiles) {
           const img = await this.profileService.getProfileIcon(profile);
           itemGridItems.push({
@@ -135,6 +183,19 @@ export class HomeComponent implements OnInit {
       },
       { allowSignalWrites: true }
     );
+    Api['settings.get']('home.sort').then((v) => {
+      if (
+        typeof v === 'string' &&
+        VALID_SORT_ARRAY.includes(v as ProfileSort)
+      ) {
+        this.sort.set(v as ProfileSort);
+      }
+    });
+    Api['settings.get']('home.sortDirection').then((v) => {
+      if (typeof v === 'string' && ['asc', 'desc'].includes(v)) {
+        this.sortDirection.set(v as 'asc' | 'desc');
+      }
+    });
   }
 
   public ngOnInit() {
@@ -155,6 +216,8 @@ export class HomeComponent implements OnInit {
       cvars: [],
       parents: [],
       tags: [],
+      created: new Date().toISOString(),
+      lastPlayed: null,
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }
@@ -168,7 +231,17 @@ export class HomeComponent implements OnInit {
     this.editCategory();
   }
 
-  protected handleAction(event: GridItemEvent) {
+  protected handleSort(event: ProfileSort) {
+    this.sort.set(event);
+    Api['settings.set']('home.sort', event);
+  }
+
+  protected handleSortDirectionChange(event: 'asc' | 'desc') {
+    this.sortDirection.set(event);
+    Api['settings.set']('home.sortDirection', event);
+  }
+
+  protected handleAction(event: GridItemEvent<ProfileGridItem>) {
     const profile = this.profileService
       .allProfiles()
       .find((p) => p.name === event.item.name);

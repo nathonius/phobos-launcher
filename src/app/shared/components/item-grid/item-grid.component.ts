@@ -20,8 +20,8 @@ export interface GridItem {
   actions: GridItemAction[];
 }
 
-export interface GridItemEvent {
-  item: GridItem;
+export interface GridItemEvent<T extends GridItem> {
+  item: T;
   action: string;
 }
 
@@ -36,7 +36,7 @@ export interface GridItemEvent {
     class: 'h-full overflow-y-auto',
   },
 })
-export class ItemGridComponent {
-  public readonly action = output<GridItemEvent>();
-  public readonly items = input.required<GridItem[]>();
+export class ItemGridComponent<T extends GridItem> {
+  public readonly action = output<GridItemEvent<T>>();
+  public readonly items = input.required<T[]>();
 }

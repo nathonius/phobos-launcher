@@ -254,6 +254,8 @@ export class ImportService extends PhobosApi {
         parents: parents.map((p) => p.name),
         icon,
         tags: [],
+        created: new Date().toISOString(),
+        lastPlayed: null,
       };
       newProfiles.push(newProfile);
     }
