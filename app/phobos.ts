@@ -12,6 +12,7 @@ import { CategoryService } from './services/category.service';
 import { SettingsService } from './services/settings.service';
 import { SGDBService } from './services/sgdb.service';
 import { ImportService } from './services/import.service';
+import { EngineService } from './services/engine.service';
 
 export class Phobos {
   public readonly store = new Store();
@@ -20,6 +21,7 @@ export class Phobos {
   public categoryService!: CategoryService;
   public settingsService!: SettingsService;
   public steamGridService!: SGDBService;
+  public engineService!: EngineService;
   public importService!: ImportService;
   public readonly attachedHandlers: Channel[] = [];
   private window: BrowserWindow | null = null;
@@ -45,6 +47,7 @@ export class Phobos {
       this.profileService = new ProfileService(this.store);
       this.categoryService = new CategoryService(this.store);
       this.settingsService = new SettingsService(this.store);
+      this.engineService = new EngineService(this.store);
       this.steamGridService = new SGDBService();
       this.importService = new ImportService(this);
       this.userDataService = new UserDataService(app.getPath('userData'));

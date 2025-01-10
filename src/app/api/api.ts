@@ -1,4 +1,4 @@
-import type { Category, Profile } from '@shared/config';
+import type { Category, Engine, Profile } from '@shared/config';
 import type { Channel } from '@shared/public-api';
 import type { JSONValue } from '@shared/json';
 import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
@@ -28,6 +28,12 @@ export const Api = {
     window.api['category.save'](category) as Promise<void>,
   'category.delete': (categoryId: string) =>
     window.api['category.delete'](categoryId) as Promise<void>,
+  'engine.getEngines': () =>
+    window.api['engine.getEngines']() as Promise<Engine[]>,
+  'engine.save': (engine: Engine) =>
+    window.api['engine.save'](engine) as Promise<void>,
+  'engine.delete': (engineId: string) =>
+    window.api['engine.delete'](engineId) as Promise<void>,
   'profile.getProfiles': () =>
     window.api['profile.getProfiles']() as Promise<Profile[]>,
   'profile.launchCustom': (profile: Profile) =>

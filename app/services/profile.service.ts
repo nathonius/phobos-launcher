@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import type { Engine, Profile, UniqueFileRecord } from '@shared/config';
+import type { Profile, UniqueFileRecord } from '@shared/config';
 import type Store from 'electron-store';
 import { getPhobos } from '../main';
 import { ipcHandler, PhobosApi } from '../api';
@@ -65,8 +65,7 @@ export class ProfileService extends PhobosApi {
 
     // Prepare args
     // TODO: Logic to actually parse these settings should live elsewhere
-    const engines = (getPhobos().settingsService.getSetting('engines') ??
-      []) as Engine[];
+    const engines = getPhobos().engineService.getEngines();
     const bases = (getPhobos().settingsService.getSetting('bases') ??
       []) as UniqueFileRecord[];
     const base = bases.find((b) => b.id === profile.base);
@@ -75,6 +74,7 @@ export class ProfileService extends PhobosApi {
       // TODO: Handle this error condition
       return;
     }
+    const configArg = engine.config ? ['-config', engine.config] : [];
     const baseArg = ['-iwad', base.path];
 
     // TODO: Probably worth deduplicating these files
@@ -88,7 +88,12 @@ export class ProfileService extends PhobosApi {
     files.push(...this.getProfileFiles(profile));
     cvars.push(...this.getProfileCvars(profile));
 
-    const _process = spawn(engine.path, [...baseArg, ...files, ...cvars]);
+    const _process = spawn(engine.path, [
+      ...configArg,
+      ...baseArg,
+      ...files,
+      ...cvars,
+    ]);
   }
 
   private getProfileById(id: string) {

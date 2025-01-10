@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from '@shared/public-api';
-import type { Category, Profile } from '@shared/config';
+import type { Category, Engine, Profile } from '@shared/config';
 import type { JSONValue } from '@shared/json';
 import type { SGDBGame, SGDBImage, SGDBImageCategory } from '@shared/lib/SGDB';
 
@@ -17,6 +17,10 @@ export const clientApi = {
     ipcRenderer.invoke('category.save', category),
   'category.delete': (categoryId: string) =>
     ipcRenderer.invoke('category.delete', categoryId),
+  'engine.getEngines': () => ipcRenderer.invoke('engine.getEngines'),
+  'engine.save': (engine: Engine) => ipcRenderer.invoke('engine.save', engine),
+  'engine.delete': (engineId: string) =>
+    ipcRenderer.invoke('engine.delete', engineId),
   'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
   'profile.launchCustom': (profile: Profile) =>
     ipcRenderer.invoke('profile.launchCustom', profile),

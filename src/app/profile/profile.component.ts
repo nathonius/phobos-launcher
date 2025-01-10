@@ -97,12 +97,12 @@ export class ProfileComponent implements OnInit {
     effect(
       async () => {
         const currentProfile = this.profile();
-        const engines = await Api['settings.get']('engines');
+        const engines = await Api['engine.getEngines']();
         const bases = await Api['settings.get']('bases');
         const profiles = (await Api['profile.getProfiles']()).filter(
           (p) => p.id !== currentProfile?.id
         );
-        this.engineOptions.set((engines ?? []) as Engine[]);
+        this.engineOptions.set(engines);
         this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
         this.allParentProfileOptions.set(profiles);
       },

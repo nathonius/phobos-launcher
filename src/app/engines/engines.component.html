@@ -1,11 +1,43 @@
 <form-section label="Doom Engines">
-  <key-value-list
-    key="name"
-    keyPlaceholder="Engine"
-    value="path"
-    valuePlaceholder="Path"
-    valueType="file"
-    [values]="engines()"
-    (valueChange)="handleChange($event)"
-  />
+  <div class="flex flex-col gap-2">
+    @for (engine of engines(); track engine.id) {
+    <div class="flex gap-1 items-center">
+      <input
+        type="text"
+        class="input input-bordered flex-grow"
+        placeholder="Engine"
+        [value]="engine.name"
+        (change)="handleNameChange($any($event.target).value, engine.id)"
+      />
+      <file-input
+        directory="false"
+        reorder="false"
+        removable="false"
+        placeholder="Path"
+        [value]="engine.path"
+        (valueChange)="handlePathChange($event, engine.id)"
+      />
+      <file-input
+        directory="false"
+        reorder="false"
+        removable="true"
+        placeholder="Config file"
+        [value]="engine.config"
+        (valueChange)="handleConfigChange($event, engine.id)"
+      />
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="handleDelete(engine.id)"
+      >
+        <lucide-icon [img]="icons.Trash" />
+      </button>
+    </div>
+    }
+    <div class="flex justify-end">
+      <button type="button" class="btn btn-primary" (click)="handleNewEngine()">
+        <lucide-icon [img]="icons.Plus" />
+      </button>
+    </div>
+  </div>
 </form-section>

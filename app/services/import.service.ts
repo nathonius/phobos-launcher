@@ -119,9 +119,7 @@ export class ImportService extends PhobosApi {
     engines: Arachnotron.Engine[],
     basePath: string
   ) {
-    const currentEngines = this.phobos.settingsService.getSetting(
-      'engines'
-    ) as Engine[];
+    const currentEngines = this.phobos.engineService.getEngines();
     const newEngines: Engine[] = [];
     for (const engine of engines) {
       const path = this.resolvePath(engine.path, basePath);
@@ -143,16 +141,12 @@ export class ImportService extends PhobosApi {
         console.warn(`Skipping engine ${newEngine.name}`);
         continue;
       }
+      this.phobos.engineService.saveEngine(newEngine);
       newEngines.push(newEngine);
     }
 
-    currentEngines.push(...newEngines);
     console.info(
       `Adding ${newEngines.length} new engines from arachnotron config.`
-    );
-    this.phobos.settingsService.saveSetting(
-      'engines',
-      currentEngines as unknown as JSONValue
     );
   }
 
@@ -211,7 +205,7 @@ export class ImportService extends PhobosApi {
         continue;
       }
       const engine = this.resolveUniqueRecord<Engine>(
-        this.phobos.settingsService.getSetting('engines') as Engine[],
+        this.phobos.engineService.getEngines(),
         profile.engine
       );
       const base = this.resolveUniqueRecord<UniqueFileRecord>(

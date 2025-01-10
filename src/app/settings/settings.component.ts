@@ -14,6 +14,7 @@ import { FileInputComponent } from '../shared/components/file-input/file-input.c
 import { Api } from '../api/api';
 import { CategoryService } from '../category/category.service';
 import { ProfileService } from '../profile/profile.service';
+import { NavbarService } from '../shared/services/navbar.service';
 
 @Component({
   selector: 'app-settings',
@@ -33,8 +34,10 @@ export class SettingsComponent implements OnInit {
     steamGridApiKey: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
   });
+  private readonly navbarService = inject(NavbarService);
 
   public constructor() {
+    this.navbarService.setCallbacks({});
     effect(() => {
       const key = this.steamGridService.apiKey();
       this.settingsForm.controls.steamGridApiKey.reset(key);
