@@ -26,11 +26,23 @@ import { KeyValueListComponent } from '../shared/components/key-value-list/key-v
 import { Api } from '../api/api';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import { SteamGridService } from '../shared/services/steam-grid.service';
-import { ConsolePipe } from '../shared/pipes/console.pipe';
 import { TagListComponent } from '../shared/components/tag-list/tag-list.component';
 import { ViewService } from '../shared/services/view.service';
 import { HomeViewState } from '../shared/constants';
 import { ProfileService } from './profile.service';
+
+type ProfileForm = FormGroup<{
+  name: FormControl<string>;
+  engine: FormControl<string>;
+  base: FormControl<string>;
+  icon: FormControl<string>;
+  files: FormControl<string[]>;
+  categories: FormControl<string[]>;
+  cvars: FormControl<Cvar[]>;
+  parents: FormControl<string[]>;
+  tags: FormControl<string[]>;
+  complete: FormControl<boolean>;
+}>;
 
 @Component({
   selector: 'profile',
@@ -43,7 +55,6 @@ import { ProfileService } from './profile.service';
     SelectListComponent,
     KeyValueListComponent,
     AutocompleteComponent,
-    ConsolePipe,
     CdkListboxModule,
     TagListComponent,
   ],
@@ -61,7 +72,7 @@ export class ProfileComponent implements OnInit {
   protected readonly navbarService = inject(NavbarService);
   protected readonly steamGridService = inject(SteamGridService);
   protected readonly viewService = inject(ViewService);
-  protected readonly profileForm = new FormGroup({
+  protected readonly profileForm: ProfileForm = new FormGroup({
     name: new FormControl<string>('', { nonNullable: true }),
     engine: new FormControl<string>('', { nonNullable: true }),
     base: new FormControl<string>('', { nonNullable: true }),
@@ -71,6 +82,7 @@ export class ProfileComponent implements OnInit {
     cvars: new FormControl<Cvar[]>([], { nonNullable: true }),
     parents: new FormControl<string[]>([], { nonNullable: true }),
     tags: new FormControl<string[]>([], { nonNullable: true }),
+    complete: new FormControl<boolean>(false, { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -122,6 +134,7 @@ export class ProfileComponent implements OnInit {
             cvars: profile.cvars,
             parents: profile.parents,
             tags: profile.tags,
+            complete: profile.complete,
           });
         } else {
           this.profileForm.reset({
@@ -133,6 +146,7 @@ export class ProfileComponent implements OnInit {
             cvars: [],
             parents: [],
             tags: [],
+            complete: false,
           });
         }
       },
@@ -153,24 +167,15 @@ export class ProfileComponent implements OnInit {
     this.profileIcon.set(icon);
   }
 
-  protected handleResourcesChange(values: string[]) {
-    this.profileForm.controls.files.setValue(values);
-  }
-
-  protected handleCategoriesChange(values: string[]) {
-    this.profileForm.controls.categories.setValue(values);
-  }
-
-  protected handleParentChange(values: string[]) {
-    this.profileForm.controls.parents.setValue(values);
-  }
-
-  protected handleCvarsChange(values: Cvar[]): void {
-    this.profileForm.controls.cvars.setValue(values);
-  }
-
-  protected handleTagsChange(values: string[]): void {
-    this.profileForm.controls.tags.setValue(values);
+  protected handleFormControlChange<K extends keyof ProfileForm['controls']>(
+    value: ProfileForm['controls'][K]['value'],
+    control: keyof ProfileForm['controls']
+  ): void {
+    (
+      this.profileForm.controls[control] as FormControl<
+        string | boolean | string[] | Cvar[]
+      >
+    ).setValue(value);
   }
 
   protected handleSave() {
@@ -252,6 +257,7 @@ export class ProfileComponent implements OnInit {
       cvars,
       parents,
       tags,
+      complete,
     } = this.profileForm.value;
     return {
       id: profileId,
@@ -266,6 +272,7 @@ export class ProfileComponent implements OnInit {
       tags: tags!,
       created: originalProfile?.created ?? new Date().toISOString(),
       lastPlayed: originalProfile?.lastPlayed ?? null,
+      complete: complete!,
     };
   }
 }

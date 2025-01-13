@@ -18,6 +18,7 @@ export interface GridItem {
   name: string;
   img: string;
   actions: GridItemAction[];
+  statuses: { name: string; icon: LucideIconData }[];
 }
 
 export interface GridItemEvent<T extends GridItem> {

@@ -32,6 +32,7 @@ export default tseslint.config(
       import: ImportPlugin,
     },
     rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/restrict-template-expressions": "warn",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-call": "off",

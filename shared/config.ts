@@ -57,4 +57,5 @@ export interface Profile {
   cvars: Cvar[];
   parents: string[];
   tags: string[];
+  complete: boolean;
 }

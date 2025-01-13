@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
+  Check,
   LucideAngularModule,
   Play,
   Plus,
@@ -177,6 +178,9 @@ export class HomeComponent implements OnInit {
                 icon: Trash,
               },
             ],
+            statuses: profile.complete
+              ? [{ name: 'Complete', icon: Check }]
+              : [],
           });
         }
         this.allProfileItems.set(itemGridItems);
@@ -218,6 +222,7 @@ export class HomeComponent implements OnInit {
       tags: [],
       created: new Date().toISOString(),
       lastPlayed: null,
+      complete: false,
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }

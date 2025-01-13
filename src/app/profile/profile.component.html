@@ -53,13 +53,13 @@
       placeholderOption="Select a profile"
       [options]="parentProfileOptions()"
       [values]="profileForm.controls.parents.value"
-      (valueChange)="handleParentChange($event)"
+      (valueChange)="handleFormControlChange($event, 'parents')"
     />
   </form-section>
   <form-section label="Profile Resources">
     <file-list
       [values]="profileForm.controls.files.value"
-      (valueChange)="handleResourcesChange($event)"
+      (valueChange)="handleFormControlChange($event, 'files')"
     />
   </form-section>
   <form-section label="Categories">
@@ -67,21 +67,32 @@
       placeholderOption="Select a category"
       [options]="categoryOptions()"
       [values]="profileForm.controls.categories.value"
-      (valueChange)="handleCategoriesChange($event)"
+      (valueChange)="handleFormControlChange($event, 'categories')"
     />
   </form-section>
   <form-section label="Tags">
     <tag-list
       [values]="profileForm.controls.tags.value"
-      (valueChange)="handleTagsChange($event)"
+      (valueChange)="handleFormControlChange($event, 'tags')"
     />
+    <div class="form-control">
+      <label for="completed-tag-toggle" class="label cursor-pointer">
+        <span class="label-text">Completed</span>
+        <input
+          id="completed-tag-toggle"
+          type="checkbox"
+          class="toggle toggle-success"
+          formControlName="complete"
+        />
+      </label>
+    </div>
   </form-section>
   <form-section label="CVARs">
     <key-value-list
       key="var"
       withId="false"
       [values]="profileForm.controls.cvars.value"
-      (valueChange)="handleCvarsChange($event)"
+      (valueChange)="handleFormControlChange($event, 'cvars')"
     />
   </form-section>
 </form>
