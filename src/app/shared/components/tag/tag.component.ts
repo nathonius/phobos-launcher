@@ -11,12 +11,11 @@ import { LucideAngularModule, XIcon } from 'lucide-angular';
 import type { DaisyVariant } from '../../constants';
 
 @Component({
-  selector: 'app-tag',
-  standalone: true,
-  imports: [NgClass, LucideAngularModule],
-  templateUrl: './tag.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-tag',
+    imports: [NgClass, LucideAngularModule],
+    templateUrl: './tag.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagComponent {
   public readonly removable = input(true, {

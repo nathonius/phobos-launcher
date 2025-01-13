@@ -17,12 +17,11 @@ import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
-  templateUrl: './settings.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-settings',
+    imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
+    templateUrl: './settings.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsComponent implements OnInit {
   protected readonly themeService = inject(ThemeService);

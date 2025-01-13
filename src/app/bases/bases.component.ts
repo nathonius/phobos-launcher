@@ -13,12 +13,11 @@ import { KeyValueListComponent } from '../shared/components/key-value-list/key-v
 import { NavbarService } from '../shared/services/navbar.service';
 
 @Component({
-  selector: 'app-bases',
-  standalone: true,
-  imports: [KeyValueListComponent, FormSectionComponent],
-  templateUrl: './bases.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-bases',
+    imports: [KeyValueListComponent, FormSectionComponent],
+    templateUrl: './bases.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BasesComponent {
   public readonly baseWads = signal<UniqueFileRecord[]>([]);

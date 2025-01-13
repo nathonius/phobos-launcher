@@ -16,22 +16,21 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 let idCount = 0;
 
 @Component({
-  selector: 'app-autocomplete',
-  standalone: true,
-  imports: [CdkListboxModule, NgClass, NgTemplateOutlet],
-  templateUrl: './autocomplete.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AutocompleteComponent),
-      multi: true,
-    },
-  ],
-  host: {
-    class: 'flex flex-col w-full gap-2 items-center',
-  },
+    selector: 'app-autocomplete',
+    imports: [CdkListboxModule, NgClass, NgTemplateOutlet],
+    templateUrl: './autocomplete.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AutocompleteComponent),
+            multi: true,
+        },
+    ],
+    host: {
+        class: 'flex flex-col w-full gap-2 items-center',
+    }
 })
 export class AutocompleteComponent<T> implements ControlValueAccessor {
   public readonly options = input.required<T[]>();

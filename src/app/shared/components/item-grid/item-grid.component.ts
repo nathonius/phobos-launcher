@@ -27,15 +27,14 @@ export interface GridItemEvent<T extends GridItem> {
 }
 
 @Component({
-  selector: 'item-grid',
-  standalone: true,
-  imports: [LucideAngularModule, FitTextDirective],
-  templateUrl: './item-grid.component.html',
-  styleUrl: './item-grid.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'h-full overflow-y-auto',
-  },
+    selector: 'item-grid',
+    imports: [LucideAngularModule, FitTextDirective],
+    templateUrl: './item-grid.component.html',
+    styleUrl: './item-grid.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'h-full overflow-y-auto',
+    }
 })
 export class ItemGridComponent<T extends GridItem> {
   public readonly action = output<GridItemEvent<T>>();

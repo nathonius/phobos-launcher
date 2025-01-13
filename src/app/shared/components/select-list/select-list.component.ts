@@ -20,11 +20,10 @@ export interface SelectOption {
 }
 
 @Component({
-  selector: 'select-list',
-  standalone: true,
-  imports: [LucideAngularModule, ReactiveFormsModule],
-  templateUrl: './select-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'select-list',
+    imports: [LucideAngularModule, ReactiveFormsModule],
+    templateUrl: './select-list.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectListComponent extends ListComponentBase {
   public readonly valueChange = output<string[]>();

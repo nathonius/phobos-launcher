@@ -10,12 +10,11 @@ import { ListComponentBase } from '../../classes/ListComponentBase';
 import { TagComponent } from '../tag/tag.component';
 
 @Component({
-  selector: 'tag-list',
-  standalone: true,
-  imports: [ReactiveFormsModule, TagComponent, LucideAngularModule],
-  templateUrl: './tag-list.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'tag-list',
+    imports: [ReactiveFormsModule, TagComponent, LucideAngularModule],
+    templateUrl: './tag-list.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagListComponent extends ListComponentBase<string> {
   public valueChange = output<string[]>();

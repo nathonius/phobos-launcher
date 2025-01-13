@@ -15,11 +15,10 @@ import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 @Component({
-  selector: 'key-value-list',
-  standalone: true,
-  imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
-  templateUrl: './key-value-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'key-value-list',
+    imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
+    templateUrl: './key-value-list.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly valueChange = output<T[]>();

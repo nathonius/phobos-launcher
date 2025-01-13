@@ -14,12 +14,11 @@ import { FileInputComponent } from '../shared/components/file-input/file-input.c
 import { NavbarService } from '../shared/services/navbar.service';
 
 @Component({
-  selector: 'app-engines',
-  standalone: true,
-  imports: [FormSectionComponent, FileInputComponent, LucideAngularModule],
-  templateUrl: './engines.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-engines',
+    imports: [FormSectionComponent, FileInputComponent, LucideAngularModule],
+    templateUrl: './engines.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnginesComponent {
   public readonly engines = signal<Engine[]>([]);

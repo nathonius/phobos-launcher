@@ -29,18 +29,17 @@ import { Api } from '../../../api/api';
 let idCount = 0;
 
 @Component({
-  selector: 'file-input',
-  standalone: true,
-  imports: [LucideAngularModule, NgClass],
-  templateUrl: './file-input.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FileInputComponent),
-      multi: true,
-    },
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'file-input',
+    imports: [LucideAngularModule, NgClass],
+    templateUrl: './file-input.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FileInputComponent),
+            multi: true,
+        },
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileInputComponent implements ControlValueAccessor {
   public readonly value = input<string>();

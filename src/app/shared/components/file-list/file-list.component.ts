@@ -14,11 +14,10 @@ import { Api } from '../../../api/api';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 @Component({
-  selector: 'file-list',
-  standalone: true,
-  imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
-  templateUrl: './file-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'file-list',
+    imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
+    templateUrl: './file-list.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent extends ListComponentBase<string> {
   public readonly valueChange = output<string[]>();

@@ -18,12 +18,11 @@ import { HomeViewState } from '../shared/constants';
 import { CategoryService } from './category.service';
 
 @Component({
-  selector: 'category',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
-  templateUrl: './category.component.html',
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'category',
+    imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
+    templateUrl: './category.component.html',
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryComponent implements OnInit {
   public readonly category = input<Category | null>();

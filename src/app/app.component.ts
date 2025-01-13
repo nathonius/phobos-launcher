@@ -24,20 +24,19 @@ import { AppViewState } from './shared/constants';
 import { ViewService } from './shared/services/view.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  imports: [
-    HomeComponent,
-    SettingsComponent,
-    EnginesComponent,
-    BasesComponent,
-    LucideAngularModule,
-    NgClass,
-  ],
-  standalone: true,
-  host: {
-    class: 'flex flex-col h-screen w-screen overflow-hidden',
-  },
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    imports: [
+        HomeComponent,
+        SettingsComponent,
+        EnginesComponent,
+        BasesComponent,
+        LucideAngularModule,
+        NgClass,
+    ],
+    host: {
+        class: 'flex flex-col h-screen w-screen overflow-hidden',
+    }
 })
 export class AppComponent {
   protected readonly AppViewState = AppViewState;

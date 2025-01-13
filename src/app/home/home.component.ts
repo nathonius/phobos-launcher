@@ -44,20 +44,19 @@ const VALID_SORT_ARRAY: ProfileSort[] = [
 ];
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    ItemGridComponent,
-    ProfileComponent,
-    CategoryComponent,
-    LucideAngularModule,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'flex-grow',
-  },
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    imports: [
+        ReactiveFormsModule,
+        ItemGridComponent,
+        ProfileComponent,
+        CategoryComponent,
+        LucideAngularModule,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'flex-grow',
+    }
 })
 export class HomeComponent implements OnInit {
   protected readonly HomeViewState = HomeViewState;

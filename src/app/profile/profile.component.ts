@@ -45,25 +45,24 @@ type ProfileForm = FormGroup<{
 }>;
 
 @Component({
-  selector: 'profile',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FileInputComponent,
-    FileListComponent,
-    FormSectionComponent,
-    SelectListComponent,
-    KeyValueListComponent,
-    AutocompleteComponent,
-    CdkListboxModule,
-    TagListComponent,
-  ],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'block flex-grow',
-  },
+    selector: 'profile',
+    imports: [
+        ReactiveFormsModule,
+        FileInputComponent,
+        FileListComponent,
+        FormSectionComponent,
+        SelectListComponent,
+        KeyValueListComponent,
+        AutocompleteComponent,
+        CdkListboxModule,
+        TagListComponent,
+    ],
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'block flex-grow',
+    }
 })
 export class ProfileComponent implements OnInit {
   public readonly profile = input<Profile>();
