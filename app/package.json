@@ -5,7 +5,7 @@
     "name": "Nathonius",
     "url": "https://nathan-smith.org/"
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "main.js",
   "private": true,
   "dependencies": {}

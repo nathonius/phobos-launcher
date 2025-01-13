@@ -250,6 +250,7 @@ export class ImportService extends PhobosApi {
         tags: [],
         created: new Date().toISOString(),
         lastPlayed: null,
+        complete: false,
       };
       newProfiles.push(newProfile);
     }
