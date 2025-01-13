@@ -28,14 +28,14 @@
       class="btn btn-ghost btn-xs"
       (click)="handleReorderUp($index)"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.ArrowUpIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowUp" />
     </button>
     <button
       type="button"
       class="btn btn-ghost btn-xs"
       (click)="handleReorderDown($index)"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.ArrowDownIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowDown" />
     </button>
     } @if (removable()) {
     <button
@@ -43,7 +43,7 @@
       class="btn btn-ghost btn-xs"
       (click)="handleRemove($index)"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.TrashIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.Trash" />
     </button>
     }
   </div>
@@ -54,6 +54,6 @@
     (click)="handleAdd()"
     data-tip="Add var"
   >
-    <lucide-icon [img]="icons.PlusIcon" />
+    <lucide-icon [img]="icons.Plus" />
   </button>
 </div>

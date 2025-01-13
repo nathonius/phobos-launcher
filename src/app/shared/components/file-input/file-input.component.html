@@ -33,7 +33,7 @@
       class="btn btn-ghost btn-xs"
       (click)="handleSelectDirectory()"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.FolderIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.Folder" />
     </button>
     } @if (web()) {
     <button
@@ -41,7 +41,7 @@
       class="btn btn-ghost btn-xs"
       (click)="webClick.emit()"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.GlobeIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.Globe" />
     </button>
     } @if (reorder()) {
     <button
@@ -49,18 +49,18 @@
       class="btn btn-ghost btn-xs"
       (click)="reorderUp.emit()"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.ArrowUpIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowUp" />
     </button>
     <button
       type="button"
       class="btn btn-ghost btn-xs"
       (click)="reorderDown.emit()"
     >
-      <lucide-icon class="h-4 w-4" [img]="icons.ArrowDownIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowDown" />
     </button>
     } @if (removable()) {
     <button type="button" class="btn btn-ghost btn-xs" (click)="remove.emit()">
-      <lucide-icon class="h-4 w-4" [img]="icons.TrashIcon" />
+      <lucide-icon class="h-4 w-4" [img]="icons.Trash" />
     </button>
     }
   </div>

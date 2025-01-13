@@ -7,15 +7,15 @@ import {
   output,
 } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { LucideAngularModule, XIcon } from 'lucide-angular';
+import { LucideAngularModule, X } from 'lucide-angular';
 import type { DaisyVariant } from '../../constants';
 
 @Component({
-    selector: 'app-tag',
-    imports: [NgClass, LucideAngularModule],
-    templateUrl: './tag.component.html',
-    styles: ``,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-tag',
+  imports: [NgClass, LucideAngularModule],
+  templateUrl: './tag.component.html',
+  styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagComponent {
   public readonly removable = input(true, {
@@ -24,7 +24,7 @@ export class TagComponent {
   public readonly label = input<string>('');
   public readonly remove = output();
   public readonly variant = input<DaisyVariant>('default');
-  protected readonly RemoveIcon = XIcon;
+  protected readonly RemoveIcon = X;
   protected readonly classes = computed(() => {
     const classes: string[] = ['btn', 'btn-xs'];
     const variant = this.variant();

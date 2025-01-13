@@ -16,12 +16,12 @@ import {
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import {
   LucideAngularModule,
-  FileIcon,
-  FolderIcon,
-  TrashIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  GlobeIcon,
+  File as FileIcon,
+  Folder,
+  Trash,
+  ArrowUp,
+  ArrowDown,
+  Globe,
 } from 'lucide-angular';
 import { DOCUMENT, NgClass } from '@angular/common';
 import { Api } from '../../../api/api';
@@ -29,17 +29,17 @@ import { Api } from '../../../api/api';
 let idCount = 0;
 
 @Component({
-    selector: 'file-input',
-    imports: [LucideAngularModule, NgClass],
-    templateUrl: './file-input.component.html',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FileInputComponent),
-            multi: true,
-        },
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'file-input',
+  imports: [LucideAngularModule, NgClass],
+  templateUrl: './file-input.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FileInputComponent),
+      multi: true,
+    },
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInputComponent implements ControlValueAccessor {
   public readonly value = input<string>();
@@ -62,11 +62,11 @@ export class FileInputComponent implements ControlValueAccessor {
   );
   protected readonly icons = {
     FileIcon,
-    FolderIcon,
-    TrashIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
-    GlobeIcon,
+    Folder,
+    Trash,
+    ArrowUp,
+    ArrowDown,
+    Globe,
   };
   protected readonly textInput =
     viewChild<ElementRef<HTMLInputElement>>('textInput');
