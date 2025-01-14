@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { ValidTheme } from '../shared/services/theme.service';
-import { ThemeService } from '../shared/services/theme.service';
+import { ThemeService, THEME_MAP } from '../shared/services/theme.service';
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -17,13 +17,14 @@ import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
 
 @Component({
-    selector: 'app-settings',
-    imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
-    templateUrl: './settings.component.html',
-    styles: ``,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-settings',
+  imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
+  templateUrl: './settings.component.html',
+  styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
+  protected readonly themeOptions = Object.entries(THEME_MAP);
   protected readonly themeService = inject(ThemeService);
   protected readonly steamGridService = inject(SteamGridService);
   protected readonly categoryService = inject(CategoryService);

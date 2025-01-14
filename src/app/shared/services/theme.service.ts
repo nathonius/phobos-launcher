@@ -2,7 +2,74 @@ import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Api } from '../../api/api';
 
-export type ValidTheme = 'retro' | 'synthwave';
+export type ValidTheme =
+  | 'acid'
+  | 'aqua'
+  | 'autumn'
+  | 'black'
+  | 'bumblebee'
+  | 'business'
+  | 'cmyk'
+  | 'coffee'
+  | 'corporate'
+  | 'cupcake'
+  | 'cyberpunk'
+  | 'dark'
+  | 'dim'
+  | 'dracula'
+  | 'emerald'
+  | 'fantasy'
+  | 'forest'
+  | 'garden'
+  | 'halloween'
+  | 'lemonade'
+  | 'light'
+  | 'lofi'
+  | 'luxury'
+  | 'night'
+  | 'nord'
+  | 'pastel'
+  | 'retro'
+  | 'sunset'
+  | 'synthwave'
+  | 'valentine'
+  | 'winter'
+  | 'wireframe';
+
+export const THEME_MAP: Record<ValidTheme, string> = {
+  acid: 'Acid',
+  aqua: 'Aqua',
+  autumn: 'Autumn',
+  black: 'Black',
+  bumblebee: 'Bumblebee',
+  business: 'Business',
+  cmyk: 'cmyk',
+  coffee: 'Coffee',
+  corporate: 'Corporate',
+  cupcake: 'Cupcake',
+  cyberpunk: 'Cyberpunk',
+  dark: 'Dark',
+  dim: 'Dim',
+  dracula: 'Dracula',
+  emerald: 'Emerald',
+  fantasy: 'Fantasy',
+  forest: 'Forest',
+  garden: 'Garden',
+  halloween: 'Halloween',
+  lemonade: 'Lemonade',
+  light: 'Light',
+  lofi: 'lofi',
+  luxury: 'Luxury',
+  night: 'Night',
+  nord: 'Nord',
+  pastel: 'Pastel',
+  retro: 'Retro',
+  sunset: 'Sunset',
+  synthwave: 'Synthwave',
+  valentine: 'Valentine',
+  winter: 'Winter',
+  wireframe: 'Wireframe',
+};
 
 @Injectable({
   providedIn: 'root',

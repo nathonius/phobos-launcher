@@ -6,8 +6,9 @@
       </div>
       <select class="select select-bordered" formControlName="theme">
         <option [ngValue]="null">Default</option>
-        <option [ngValue]="'retro'">Retro</option>
-        <option [ngValue]="'synthwave'">Synthwave</option>
+        @for (theme of themeOptions; track theme[0]) {
+        <option [ngValue]="theme[0]">{{ theme[1] }}</option>
+        }
       </select>
     </label>
     <label class="form-control">
