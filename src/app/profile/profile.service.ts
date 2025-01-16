@@ -57,11 +57,12 @@ export class ProfileService {
     }
   }
 
-  public async getProfileIcon(profile: Profile | string) {
+  public getProfileIcon(profile: Profile | string) {
     const path = typeof profile === 'string' ? profile : profile.icon;
+    const params = new URLSearchParams({ path });
     if (path) {
-      return await Api['fileSystem.getBase64Image'](path);
+      return `phobos-data://get-file?${params.toString()}`;
     }
-    return Promise.resolve('');
+    return '';
   }
 }

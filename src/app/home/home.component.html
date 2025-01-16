@@ -52,11 +52,14 @@
         </button>
       </div>
     </div>
-    @let items = profileItems(); @if (items.length > 0) {
+    @if (loadingProfiles()) {
+    <div class="loading loading-ring loading-lg"></div>
+
+    } @else { @let items = profileItems(); @if (items.length > 0) {
     <item-grid [items]="items" (action)="handleAction($event)" />
     } @else {
     <p>No profiles.</p>
-    }
+    } }
   </div>
   } @else if (viewService.homeState() === HomeViewState.ProfileEdit) {
   <profile [profile]="profileService.selectedProfile()" />

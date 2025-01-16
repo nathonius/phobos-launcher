@@ -38,6 +38,7 @@
     "electron-store": "^8.2.0",
     "lucide-angular": "0.471.0",
     "rxjs": "7.8.1",
+    "sharp": "^0.33.5",
     "slugify": "^1.6.6",
     "theme-change": "^2.5.0",
     "tslib": "2.6.2",

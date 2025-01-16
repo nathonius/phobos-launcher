@@ -44,19 +44,19 @@ const VALID_SORT_ARRAY: ProfileSort[] = [
 ];
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    imports: [
-        ReactiveFormsModule,
-        ItemGridComponent,
-        ProfileComponent,
-        CategoryComponent,
-        LucideAngularModule,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'flex-grow',
-    }
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  imports: [
+    ReactiveFormsModule,
+    ItemGridComponent,
+    ProfileComponent,
+    CategoryComponent,
+    LucideAngularModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex-grow',
+  },
 })
 export class HomeComponent implements OnInit {
   protected readonly HomeViewState = HomeViewState;
@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit {
   protected readonly allProfileItems = signal<ProfileGridItem[]>([]);
   protected readonly sort = signal<null | ProfileSort>(null);
   protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
+  protected readonly loadingProfiles = signal<boolean>(false);
   protected readonly profileItems = computed(() => {
     const allItems = this.allProfileItems();
     const selectedCategory = this.categoryService.selectedCategory();
@@ -153,6 +154,7 @@ export class HomeComponent implements OnInit {
     );
     effect(
       async () => {
+        this.loadingProfiles.set(true);
         const allProfiles = this.profileService.allProfiles();
         const itemGridItems: ProfileGridItem[] = [];
         for (const profile of allProfiles) {
@@ -183,6 +185,7 @@ export class HomeComponent implements OnInit {
           });
         }
         this.allProfileItems.set(itemGridItems);
+        this.loadingProfiles.set(false);
       },
       { allowSignalWrites: true }
     );

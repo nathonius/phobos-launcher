@@ -1,22 +1,34 @@
+/* eslint-disable no-case-declarations */
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { dialog, protocol } from 'electron';
+import { pathToFileURL } from 'node:url';
+import { dialog, protocol, net } from 'electron';
+import sharp from 'sharp';
 import { ipcHandler, PhobosApi } from '../api';
 
 export class UserDataService extends PhobosApi {
   constructor(private readonly dataPath: string) {
     super();
     protocol.handle('phobos-data', async (req) => {
-      if (req.method === 'GET') {
-        const filePath = req.url.slice('phobos-data://'.length);
-        return new Response(await this.readDataFile(filePath));
-      } else if (req.method === 'POST') {
-        const filePath = req.url.slice('phobos-data://'.length);
-        const data = await req.arrayBuffer();
-        await this.writeDataFile(filePath, data);
-        return new Response();
+      const url = new URL(req.url);
+      switch (url.hostname) {
+        case 'get-file':
+          const imageResponse = await net.fetch(
+            pathToFileURL(url.searchParams.get('path') as string).href
+          );
+          const buffer = await imageResponse.arrayBuffer();
+          const compressed = await sharp(buffer)
+            .resize({
+              width: 300,
+              height: 300,
+              fit: 'inside',
+              background: { r: 0, g: 0, b: 0, alpha: 0 },
+            })
+            .toBuffer();
+          return new Response(compressed);
+        default:
+          return new Response('Unknown endpoint.', { status: 400 });
       }
-      return new Response(null);
     });
   }
 
