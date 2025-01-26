@@ -12,7 +12,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [],
+  // plugins: [require("daisyui")],
   daisyui: {
     themes: [
       "retro",
