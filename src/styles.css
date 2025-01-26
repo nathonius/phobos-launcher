@@ -1,6 +1,8 @@
-@import 'tailwindcss';
-
-@config '../tailwind.config.js';
+@import "tailwindcss";
+@theme inline {
+  --font-doom: "DooM", var(--font-sans);
+  --font-accent: "Xolonium", var(--font-sans);
+}
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
