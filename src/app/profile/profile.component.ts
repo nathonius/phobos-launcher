@@ -45,24 +45,24 @@ type ProfileForm = FormGroup<{
 }>;
 
 @Component({
-    selector: 'profile',
-    imports: [
-        ReactiveFormsModule,
-        FileInputComponent,
-        FileListComponent,
-        FormSectionComponent,
-        SelectListComponent,
-        KeyValueListComponent,
-        AutocompleteComponent,
-        CdkListboxModule,
-        TagListComponent,
-    ],
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'block flex-grow',
-    }
+  selector: 'profile',
+  imports: [
+    ReactiveFormsModule,
+    FileInputComponent,
+    FileListComponent,
+    FormSectionComponent,
+    SelectListComponent,
+    KeyValueListComponent,
+    AutocompleteComponent,
+    CdkListboxModule,
+    TagListComponent,
+  ],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block flex-grow',
+  },
 })
 export class ProfileComponent implements OnInit {
   public readonly profile = input<Profile>();
@@ -161,8 +161,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  protected async handleIconChange(iconPath: string) {
-    const icon = await this.profileService.getProfileIcon(iconPath);
+  protected handleIconChange(iconPath: string) {
+    const icon = this.profileService.getProfileIcon(iconPath);
     this.profileIcon.set(icon);
   }
 

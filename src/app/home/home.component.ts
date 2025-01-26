@@ -9,22 +9,8 @@ import {
   untracked,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  Check,
-  LucideAngularModule,
-  Play,
-  Plus,
-  SortAsc,
-  SortDesc,
-  Trash,
-  Wrench,
-} from 'lucide-angular';
+import { LucideAngularModule, Plus, SortAsc, SortDesc } from 'lucide-angular';
 import type { Category, Profile } from '@shared/config';
-import type {
-  GridItem,
-  GridItemEvent,
-} from '../shared/components/item-grid/item-grid.component';
-import { ItemGridComponent } from '../shared/components/item-grid/item-grid.component';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
 import { CategoryService } from '../category/category.service';
@@ -34,8 +20,12 @@ import { HomeViewState } from '../shared/constants';
 import { ViewService } from '../shared/services/view.service';
 import { toSorted } from '../shared/functions/toSorted';
 import { Api } from '../api/api';
+import { ProfileItemGridComponent } from '../profile/profile-item/profile-item-grid/profile-item-grid.component';
+import type {
+  ProfileItem,
+  ProfileItemEvent,
+} from '../profile/profile-item/profile-item.interface';
 
-type ProfileGridItem = GridItem & Profile;
 type ProfileSort = 'alphabetical' | 'date_added' | 'last_played';
 const VALID_SORT_ARRAY: ProfileSort[] = [
   'alphabetical',
@@ -48,7 +38,7 @@ const VALID_SORT_ARRAY: ProfileSort[] = [
   templateUrl: './home.component.html',
   imports: [
     ReactiveFormsModule,
-    ItemGridComponent,
+    ProfileItemGridComponent,
     ProfileComponent,
     CategoryComponent,
     LucideAngularModule,
@@ -72,16 +62,15 @@ export class HomeComponent implements OnInit {
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
-  protected readonly allProfileItems = signal<ProfileGridItem[]>([]);
   protected readonly sort = signal<null | ProfileSort>(null);
   protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
   protected readonly loadingProfiles = signal<boolean>(false);
   protected readonly profileItems = computed(() => {
-    const allItems = this.allProfileItems();
+    const allItems = this.profileService.displayProfiles();
     const selectedCategory = this.categoryService.selectedCategory();
     const sort = this.sort();
     const sortDirection = this.sortDirection() === 'asc' ? 1 : -1;
-    let filtered: ProfileGridItem[];
+    let filtered: ProfileItem[];
     if (selectedCategory === undefined || selectedCategory.id === 'all') {
       filtered = allItems;
     } else {
@@ -152,43 +141,6 @@ export class HomeComponent implements OnInit {
       },
       { allowSignalWrites: true }
     );
-    effect(
-      async () => {
-        this.loadingProfiles.set(true);
-        const allProfiles = this.profileService.allProfiles();
-        const itemGridItems: ProfileGridItem[] = [];
-        for (const profile of allProfiles) {
-          const img = await this.profileService.getProfileIcon(profile);
-          itemGridItems.push({
-            ...profile,
-            img,
-            actions: [
-              {
-                name: 'edit',
-                label: 'Edit',
-                icon: Wrench,
-              },
-              {
-                name: 'launch',
-                label: 'Launch',
-                icon: Play,
-              },
-              {
-                name: 'delete',
-                label: 'Delete',
-                icon: Trash,
-              },
-            ],
-            statuses: profile.complete
-              ? [{ name: 'Complete', icon: Check }]
-              : [],
-          });
-        }
-        this.allProfileItems.set(itemGridItems);
-        this.loadingProfiles.set(false);
-      },
-      { allowSignalWrites: true }
-    );
     Api['settings.get']('home.sort').then((v) => {
       if (
         typeof v === 'string' &&
@@ -248,7 +200,7 @@ export class HomeComponent implements OnInit {
     Api['settings.set']('home.sortDirection', event);
   }
 
-  protected handleAction(event: GridItemEvent<ProfileGridItem>) {
+  protected handleAction(event: ProfileItemEvent) {
     const profile = this.profileService
       .allProfiles()
       .find((p) => p.name === event.item.name);

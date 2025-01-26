@@ -9,8 +9,8 @@
         type="button"
         (click)="action.emit({item, action: 'primary'})"
       >
-        @if (item.img) {
-        <img class="item-image" [src]="item.img" />
+        @if (item.icon) {
+        <img class="item-image" [src]="item.icon" />
         } @else {
         <div
           class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
