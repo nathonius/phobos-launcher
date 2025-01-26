@@ -3,13 +3,13 @@
     <span class="label">{{ label() }}</span>
   </label>
   <div
-    class="inline-flex items-center gap-1 px-1 flex-grow"
+    class="inline-flex items-center gap-1 px-1 grow"
     [ngClass]="{ 'input input-bordered': styleInput() }"
   >
     <input
       #textInput
       type="text"
-      class="flex-grow"
+      class="grow"
       [id]="fileTargetId"
       [placeholder]="_placeholder()"
       [value]="filePath()"

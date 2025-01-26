@@ -45,7 +45,7 @@ const VALID_SORT_ARRAY: ProfileSort[] = [
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex-grow',
+    class: 'grow',
   },
 })
 export class HomeComponent implements OnInit {

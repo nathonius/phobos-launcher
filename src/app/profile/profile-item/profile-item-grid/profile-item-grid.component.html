@@ -2,10 +2,10 @@
   @for (item of items(); track item.name) {
   <div class="item-wrapper flex flex-col gap-2 items-center">
     <div
-      class="item-content w-full relative flex-grow flex flex-col bg-base-200 hover:bg-base-300 rounded"
+      class="item-content w-full relative grow flex flex-col bg-base-200 hover:bg-base-300 rounded-sm"
     >
       <button
-        class="item-target relative w-full flex-grow flex flex-col items-center justify-center border-0 p-0 m-0"
+        class="item-target relative w-full grow flex flex-col items-center justify-center border-0 p-0 m-0"
         type="button"
         (click)="action.emit({item, action: 'primary'})"
       >
