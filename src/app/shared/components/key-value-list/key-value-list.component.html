@@ -3,21 +3,21 @@
   {
   <div class="input w-full flex items-center gap-1 px-1">
     <input
-      class="font-mono"
+      class="font-mono flex-1"
       [placeholder]="keyPlaceholder()"
       [value]="pair[k]"
       (change)="handleKeyChange($index, $any($event.target).value)"
     />
     @if (valueType() === 'text') {
     <input
-      class="font-mono"
+      class="font-mono flex-1"
       [placeholder]="valuePlaceholder()"
       [value]="pair[v]"
       (change)="handleValueChange($index, $any($event.target).value)"
     />
     } @else {
     <file-input
-      styleInput="false"
+      class="flex-1"
       [placeholder]="valuePlaceholder()"
       [value]="pair[v]"
       (valueChange)="handleValueChange($index, $event)"
@@ -52,7 +52,7 @@
     type="button"
     class="btn btn-primary btn-sm tooltip self-end"
     (click)="handleAdd()"
-    data-tip="Add var"
+    [attr.data-tip]="addLabel()"
   >
     <lucide-icon [img]="icons.Plus" />
   </button>

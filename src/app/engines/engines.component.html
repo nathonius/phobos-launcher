@@ -9,22 +9,28 @@
         [value]="engine.name"
         (change)="handleNameChange($any($event.target).value, engine.id)"
       />
-      <file-input
-        directory="false"
-        reorder="false"
-        removable="false"
-        placeholder="Path"
-        [value]="engine.path"
-        (valueChange)="handlePathChange($event, engine.id)"
-      />
-      <file-input
-        directory="false"
-        reorder="false"
-        removable="true"
-        placeholder="Config file"
-        [value]="engine.config"
-        (valueChange)="handleConfigChange($event, engine.id)"
-      />
+      <div class="input">
+        <file-input
+          class="grow"
+          directory="false"
+          reorder="false"
+          removable="false"
+          placeholder="Path"
+          [value]="engine.path"
+          (valueChange)="handlePathChange($event, engine.id)"
+        />
+      </div>
+      <div class="input">
+        <file-input
+          class="grow"
+          directory="false"
+          reorder="false"
+          removable="true"
+          placeholder="Config file"
+          [value]="engine.config"
+          (valueChange)="handleConfigChange($event, engine.id)"
+        />
+      </div>
       <button
         type="button"
         class="btn btn-ghost"

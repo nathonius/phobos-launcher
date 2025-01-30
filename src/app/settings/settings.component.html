@@ -28,15 +28,22 @@
       <label class="fieldset-label" for="arachnotron-path-input"
         >Arachnotron path</label
       >
-      <file-input
-        id="arachnotron-path-input"
-        formControlName="importPath"
-        file="false"
-        directory="true"
-        reorder="false"
-        removable="false"
-      />
-      <button type="button" class="btn" (click)="startImport()">Import</button>
+      <div class="flex gap-1">
+        <div class="input">
+          <file-input
+            class="grow"
+            id="arachnotron-path-input"
+            formControlName="importPath"
+            file="false"
+            directory="true"
+            reorder="false"
+            removable="false"
+          />
+        </div>
+        <button type="button" class="btn" (click)="startImport()">
+          Import
+        </button>
+      </div>
     </fieldset>
   </form>
 </form-section>
