@@ -14,6 +14,7 @@ export class ProfileService {
     const profiles = this.allProfiles();
     return profiles.map((p) => ({
       ...p,
+      icon: this.getProfileIcon(p),
       actions: [
         {
           name: 'edit',
