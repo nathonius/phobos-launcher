@@ -1,50 +1,45 @@
 <form id="wrapper-form" class="grid w-full gap-2" [formGroup]="profileForm">
   <form-section>
     <div class="flex flex-col gap-2">
-      <div class="flex flex-wrap justify-between items-center gap-2">
-        <label>Name</label>
+      <label for="profile-name" class="input w-full">
+        <span class="label">Name</span>
         <input
-          class="input flex-grow"
+          id="profile-name"
           type="text"
           placeholder="Profile name"
           formControlName="name"
         />
-      </div>
-      <div class="flex gap-2 items-center">
-        <label for="engine-select">Engine</label>
-        <select
-          id="engine-select"
-          class="select flex-grow"
-          formControlName="engine"
-        >
+      </label>
+      <label for="engine-select" class="select w-full">
+        <span class="label">Engine</span>
+        <select id="engine-select" formControlName="engine">
           <option [ngValue]="''" disabled>Select engine</option>
           @for (option of engineOptions(); track option.id) {
           <option [ngValue]="option.id">{{ option.name }}</option>
           }
         </select>
-      </div>
-      <div class="flex gap-2 items-center">
-        <label for="base-select">Base</label>
-        <select
-          id="base-select"
-          class="select flex-grow"
-          formControlName="base"
-        >
+      </label>
+      <label for="base-select" class="select w-full">
+        <span class="label">Base</span>
+        <select id="base-select" formControlName="base">
           <option [ngValue]="''" disabled>Select base</option>
           @for (option of baseOptions(); track option.id) {
           <option [ngValue]="option.id">{{ option.name }}</option>
           }
         </select>
-      </div>
-      <file-input
-        formControlName="icon"
-        label="Icon"
-        droppable="true"
-        directory="false"
-        [web]="steamGridService.apiKey() !== null"
-        (webClick)="openSgdbDialog()"
-        (valueChange)="handleIconChange($event)"
-      />
+      </label>
+      <label for="icon-input" class="input w-full">
+        <span class="label">Icon</span>
+        <file-input
+          class="grow"
+          formControlName="icon"
+          droppable="true"
+          directory="false"
+          [web]="steamGridService.apiKey() !== null"
+          (webClick)="openSgdbDialog()"
+          (valueChange)="handleIconChange($event)"
+        />
+      </label>
       <img class="h-full max-w-60" [src]="profileIcon()" />
     </div>
   </form-section>
@@ -75,22 +70,24 @@
       [values]="profileForm.controls.tags.value"
       (valueChange)="handleFormControlChange($event, 'tags')"
     />
-    <div class="form-control">
-      <label for="completed-tag-toggle" class="label cursor-pointer">
-        <span class="label-text">Completed</span>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Profile status</legend>
+      <label for="completed-tag-toggle" class="fieldset-label">
         <input
           id="completed-tag-toggle"
           type="checkbox"
           class="toggle toggle-success"
           formControlName="complete"
         />
+        Completed
       </label>
-    </div>
+    </fieldset>
   </form-section>
   <form-section label="CVARs">
     <key-value-list
       key="var"
       withId="false"
+      addLabel="Add var"
       [values]="profileForm.controls.cvars.value"
       (valueChange)="handleFormControlChange($event, 'cvars')"
     />

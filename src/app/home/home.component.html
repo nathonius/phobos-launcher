@@ -56,7 +56,7 @@
     <div class="loading loading-ring loading-lg"></div>
 
     } @else { @let items = profileItems(); @if (items.length > 0) {
-    <item-grid [items]="items" (action)="handleAction($event)" />
+    <profile-item-grid [items]="items" (action)="handleAction($event)" />
     } @else {
     <p>No profiles.</p>
     } }

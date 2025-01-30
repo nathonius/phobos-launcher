@@ -1,7 +1,7 @@
 <label class="input input-bordered w-full flex gap-2 items-center">
   <input
     type="text"
-    class="flex-grow"
+    class="grow"
     (change)="query.emit($any($event.target).value)"
   />
   @if (loading()) {

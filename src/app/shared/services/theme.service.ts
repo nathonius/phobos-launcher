@@ -3,46 +3,51 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Api } from '../../api/api';
 
 export type ValidTheme =
-  | 'acid'
-  | 'aqua'
-  | 'autumn'
-  | 'black'
-  | 'bumblebee'
-  | 'business'
-  | 'cmyk'
-  | 'coffee'
-  | 'corporate'
-  | 'cupcake'
-  | 'cyberpunk'
-  | 'dark'
-  | 'dim'
-  | 'dracula'
-  | 'emerald'
-  | 'fantasy'
-  | 'forest'
-  | 'garden'
-  | 'halloween'
-  | 'lemonade'
   | 'light'
-  | 'lofi'
-  | 'luxury'
-  | 'night'
-  | 'nord'
-  | 'pastel'
-  | 'retro'
-  | 'sunset'
+  | 'dark'
+  | 'cupcake'
+  | 'bumblebee'
+  | 'emerald'
+  | 'corporate'
   | 'synthwave'
+  | 'retro'
+  | 'cyberpunk'
   | 'valentine'
+  | 'halloween'
+  | 'garden'
+  | 'forest'
+  | 'aqua'
+  | 'lofi'
+  | 'pastel'
+  | 'fantasy'
+  | 'wireframe'
+  | 'black'
+  | 'luxury'
+  | 'dracula'
+  | 'cmyk'
+  | 'autumn'
+  | 'business'
+  | 'acid'
+  | 'lemonade'
+  | 'night'
+  | 'coffee'
   | 'winter'
-  | 'wireframe';
+  | 'dim'
+  | 'nord'
+  | 'sunset'
+  | 'caramellatte'
+  | 'abyss'
+  | 'silk';
 
 export const THEME_MAP: Record<ValidTheme, string> = {
+  abyss: 'Abyss',
   acid: 'Acid',
   aqua: 'Aqua',
   autumn: 'Autumn',
   black: 'Black',
   bumblebee: 'Bumblebee',
   business: 'Business',
+  caramellatte: 'Caramel Latte',
   cmyk: 'cmyk',
   coffee: 'Coffee',
   corporate: 'Corporate',
@@ -64,6 +69,7 @@ export const THEME_MAP: Record<ValidTheme, string> = {
   nord: 'Nord',
   pastel: 'Pastel',
   retro: 'Retro',
+  silk: 'Silk',
   sunset: 'Sunset',
   synthwave: 'Synthwave',
   valentine: 'Valentine',

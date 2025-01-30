@@ -1,6 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import type { Profile } from '@shared/config';
+import { Wrench, Play, Trash, Check } from 'lucide-angular';
 import { Api } from '../api/api';
+import type { ProfileItem } from './profile-item/profile-item.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +10,31 @@ import { Api } from '../api/api';
 export class ProfileService {
   public readonly selectedProfile = signal<Profile | undefined>(undefined);
   public readonly allProfiles = signal<Profile[]>([]);
+  public readonly displayProfiles = computed<ProfileItem[]>(() => {
+    const profiles = this.allProfiles();
+    return profiles.map((p) => ({
+      ...p,
+      icon: this.getProfileIcon(p),
+      actions: [
+        {
+          name: 'edit',
+          label: 'Edit',
+          icon: Wrench,
+        },
+        {
+          name: 'launch',
+          label: 'Launch',
+          icon: Play,
+        },
+        {
+          name: 'delete',
+          label: 'Delete',
+          icon: Trash,
+        },
+      ],
+      statuses: p.complete ? [{ name: 'Complete', icon: Check }] : [],
+    }));
+  });
 
   constructor() {
     void this.getAllProfiles();

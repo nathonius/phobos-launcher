@@ -23,14 +23,12 @@ import {
   ArrowDown,
   Globe,
 } from 'lucide-angular';
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Api } from '../../../api/api';
-
-let idCount = 0;
 
 @Component({
   selector: 'file-input',
-  imports: [LucideAngularModule, NgClass],
+  imports: [LucideAngularModule],
   templateUrl: './file-input.component.html',
   providers: [
     {
@@ -40,10 +38,13 @@ let idCount = 0;
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex items-center gap-1',
+  },
 })
 export class FileInputComponent implements ControlValueAccessor {
+  public readonly inputId = input<string>();
   public readonly value = input<string>();
-  public readonly label = input<string>();
   public readonly placeholder = input<string>();
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
@@ -51,15 +52,12 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly removable = input(false, { transform: booleanAttribute });
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
-  public readonly styleInput = input(true, { transform: booleanAttribute });
   public readonly remove = output();
   public readonly valueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();
   public readonly webClick = output();
-  protected readonly _placeholder = computed(
-    () => this.placeholder() ?? this.label() ?? ''
-  );
+  protected readonly _placeholder = computed(() => this.placeholder() ?? '');
   protected readonly icons = {
     FileIcon,
     Folder,
@@ -70,7 +68,6 @@ export class FileInputComponent implements ControlValueAccessor {
   };
   protected readonly textInput =
     viewChild<ElementRef<HTMLInputElement>>('textInput');
-  protected readonly fileTargetId = `file-target-${++idCount}`;
   protected readonly filePath = signal<string>('');
   protected readonly dragging = signal(false);
   protected readonly isDisabled = signal<boolean>(false);

@@ -1,12 +1,12 @@
 <div class="relative flex flex-col items-end gap-1">
-  <select class="select flex-grow" (change)="handleAdd($event)">
+  <select class="select grow" (change)="handleAdd($event)">
     <option #placeholder disabled selected>{{ placeholderOption() }}</option>
     @for (option of availableOptions(); track option) {
     <option value="{{ option.value }}">{{ option.label }}</option>
     }
   </select>
   @for (value of displayValues(); track value) {
-  <div class="input inline-flex items-center gap-1 px-1 flex-grow">
+  <div class="input inline-flex items-center gap-1 px-1 grow">
     <span>{{ value }}</span>
     @if (reorder()) {
     <button

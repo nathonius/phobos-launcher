@@ -15,10 +15,10 @@ import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 @Component({
-    selector: 'key-value-list',
-    imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
-    templateUrl: './key-value-list.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'key-value-list',
+  imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
+  templateUrl: './key-value-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly valueChange = output<T[]>();
@@ -31,6 +31,7 @@ export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly value = input('value');
   public readonly valuePlaceholder = input('Value');
   public readonly valueType = input<'text' | 'file'>('text');
+  public readonly addLabel = input.required<string>();
   protected readonly templateValues = computed(
     () => this.values() as Record<string, string>[]
   );

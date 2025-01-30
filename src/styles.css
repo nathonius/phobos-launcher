@@ -1,6 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@theme inline {
+  --font-doom: "DooM", var(--font-sans);
+  --font-accent: "Xolonium", var(--font-sans);
+}
+@plugin "daisyui" {
+  themes: all;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @font-face {
   font-family: "DooM";
@@ -15,40 +38,68 @@
 :root {
   --text-shadow-3d-fg-1: color-mix(
     in srgb,
-    oklch(var(--nc)) 70%,
-    oklch(var(--n))
+    var(--color-neutral-content) 70%,
+    var(--color-neutral)
   );
   --text-shadow-3d-fg-2: color-mix(
     in srgb,
-    oklch(var(--nc)) 60%,
-    oklch(var(--n))
+    var(--color-neutral-content) 60%,
+    var(--color-neutral)
   );
   --text-shadow-3d-fg-3: color-mix(
     in srgb,
-    oklch(var(--nc)) 50%,
-    oklch(var(--n))
+    var(--color-neutral-content) 50%,
+    var(--color-neutral)
   );
   --text-shadow-3d-fg-4: color-mix(
     in srgb,
-    oklch(var(--nc)) 45%,
-    oklch(var(--n))
+    var(--color-neutral-content) 45%,
+    var(--color-neutral)
   );
   --text-shadow-3d-fg-5: color-mix(
     in srgb,
-    oklch(var(--nc)) 40%,
-    oklch(var(--n))
+    var(--color-neutral-content) 40%,
+    var(--color-neutral)
   );
-  --text-shadow-3d-bg-1: color-mix(in srgb, oklch(var(--n)) 10%, transparent);
-  --text-shadow-3d-bg-2: color-mix(in srgb, oklch(var(--n)) 10%, transparent);
-  --text-shadow-3d-bg-3: color-mix(in srgb, oklch(var(--n)) 30%, transparent);
-  --text-shadow-3d-bg-4: color-mix(in srgb, oklch(var(--n)) 20%, transparent);
-  --text-shadow-3d-bg-5: color-mix(in srgb, oklch(var(--n)) 25%, transparent);
-  --text-shadow-3d-bg-6: color-mix(in srgb, oklch(var(--n)) 20%, transparent);
-  --text-shadow-3d-bg-7: color-mix(in srgb, oklch(var(--n)) 15%, transparent);
+  --text-shadow-3d-bg-1: color-mix(
+    in srgb,
+    var(--color-neutral) 10%,
+    transparent
+  );
+  --text-shadow-3d-bg-2: color-mix(
+    in srgb,
+    var(--color-neutral) 10%,
+    transparent
+  );
+  --text-shadow-3d-bg-3: color-mix(
+    in srgb,
+    var(--color-neutral) 30%,
+    transparent
+  );
+  --text-shadow-3d-bg-4: color-mix(
+    in srgb,
+    var(--color-neutral) 20%,
+    transparent
+  );
+  --text-shadow-3d-bg-5: color-mix(
+    in srgb,
+    var(--color-neutral) 25%,
+    transparent
+  );
+  --text-shadow-3d-bg-6: color-mix(
+    in srgb,
+    var(--color-neutral) 20%,
+    transparent
+  );
+  --text-shadow-3d-bg-7: color-mix(
+    in srgb,
+    var(--color-neutral) 15%,
+    transparent
+  );
 }
 
 .text-shadow-3d {
-  color: oklch(var(--nc));
+  color: var(--color-neutral-content);
   text-shadow: 0 1px 0 var(--text-shadow-3d-fg-1),
     0 2px 0 var(--text-shadow-3d-fg-2), 0 3px 0 var(--text-shadow-3d-fg-3),
     0 4px 0 var(--text-shadow-3d-fg-4), 0 5px 0 var(--text-shadow-3d-fg-5),

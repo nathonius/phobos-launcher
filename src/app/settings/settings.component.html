@@ -1,38 +1,49 @@
 <form-section label="Settings">
   <form class="min-w-[30rem]" [formGroup]="settingsForm">
-    <label class="form-control">
-      <div class="label">
-        <span class="label-text">Theme</span>
-      </div>
-      <select class="select select-bordered" formControlName="theme">
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Appearance</legend>
+      <label class="fieldset-label" for="theme-select">Theme</label>
+      <select id="theme-select" class="select" formControlName="theme">
         <option [ngValue]="null">Default</option>
         @for (theme of themeOptions; track theme[0]) {
         <option [ngValue]="theme[0]">{{ theme[1] }}</option>
         }
       </select>
-    </label>
-    <label class="form-control">
-      <div class="label">
-        <span class="label-text">SteamGridDB API Key</span>
-      </div>
+    </fieldset>
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Integrations</legend>
+      <label class="fieldset-label" for="steamgriddb-api-input"
+        >SteamGridDB API key</label
+      >
       <input
-        class="input input-bordered"
+        id="steamgriddb-api-input"
+        class="input"
         type="text"
         formControlName="steamGridApiKey"
       />
-    </label>
-    <label class="form-control">
-      <div class="label">
-        <span class="label-text">Arachnotron Path</span>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Arachnotron</legend>
+      <label class="fieldset-label" for="arachnotron-path-input"
+        >Arachnotron path</label
+      >
+      <div class="flex gap-1">
+        <div class="input">
+          <file-input
+            class="grow"
+            id="arachnotron-path-input"
+            formControlName="importPath"
+            file="false"
+            directory="true"
+            reorder="false"
+            removable="false"
+          />
+        </div>
+        <button type="button" class="btn" (click)="startImport()">
+          Import
+        </button>
       </div>
-      <file-input
-        formControlName="importPath"
-        file="false"
-        directory="true"
-        reorder="false"
-        removable="false"
-      />
-      <button type="button" class="btn" (click)="startImport()">Import</button>
-    </label>
+    </fieldset>
   </form>
 </form-section>

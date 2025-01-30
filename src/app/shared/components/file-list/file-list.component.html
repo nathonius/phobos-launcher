@@ -1,12 +1,12 @@
 <div
-  class="relative w-full flex flex-col items-end gap-1"
+  class="relative w-full flex flex-col gap-1"
   (dragover)="handleDragOver($event)"
   (dragleave)="handleDragOut()"
   (drop)="handleDrop($event)"
 >
   @for (path of values(); track path) {
   <file-input
-    class="w-full"
+    class="w-full input"
     reorder="true"
     removable="true"
     [value]="path"
@@ -18,7 +18,7 @@
   }
   <button
     type="button"
-    class="btn btn-primary btn-sm tooltip"
+    class="btn btn-primary btn-sm tooltip self-end"
     (click)="handleAdd()"
     data-tip="Add file"
   >
