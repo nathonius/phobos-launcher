@@ -1,0 +1,31 @@
+<label class="input input-bordered w-full flex gap-2 items-center">
+  <input
+    type="text"
+    class="grow"
+    (change)="query.emit($any($event.target).value)"
+  />
+  @if (loading()) {
+  <span class="loading loading-dots loading-sm"></span>
+  }
+</label>
+<ul
+  cdkListbox
+  class="menu p-0 w-full"
+  [ngClass]="{ 'menu-horizontal gap-2': orientation() === 'horizontal' }"
+  [cdkListboxValue]="listboxValue()"
+  (cdkListboxValueChange)="value.set($event.value[0] ?? null)"
+>
+  @let _labelKey = labelKey(); @for (option of options(); track $index) { @if
+  (itemTemplate(); as _itemTemplate) {
+  <li [cdkOption]="option">
+    <ng-container
+      [ngTemplateOutlet]="_itemTemplate"
+      [ngTemplateOutletContext]="{ $implicit: option }"
+    />
+  </li>
+  } @else {
+  <li class="btn btn-ghost" [cdkOption]="option">
+    {{ $any(option)[_labelKey] }}
+  </li>
+  } }
+</ul>

@@ -1,0 +1,5 @@
+<button type="button" [ngClass]="classes()" (click)="remove.emit()">
+  {{ label() }}@if (removable()) {
+  <lucide-icon class="w-2 h-2" [img]="RemoveIcon" />
+  }
+</button>

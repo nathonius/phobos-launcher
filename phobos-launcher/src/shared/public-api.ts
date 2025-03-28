@@ -1,0 +1,26 @@
+export const ALL_CHANNELS = [
+  'settings.getAll',
+  'settings.get',
+  'settings.set',
+  'settings.openConfig',
+  'sgdb.queryGames',
+  'sgdb.getImages',
+  'sgdb.downloadImage',
+  'category.getByName',
+  'category.getCategories',
+  'category.save',
+  'category.delete',
+  'engine.getEngines',
+  'engine.save',
+  'engine.delete',
+  'profile.getProfiles',
+  'profile.launchCustom',
+  'profile.save',
+  'profile.delete',
+  'fileSystem.showOpenDialog',
+  'fileSystem.getPathForFile',
+  'fileSystem.getBase64Image',
+  'import.arachnotron',
+] as const;
+
+export type Channel = (typeof ALL_CHANNELS)[number];

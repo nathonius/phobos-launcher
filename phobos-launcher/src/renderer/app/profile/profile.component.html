@@ -1,0 +1,131 @@
+<form id="wrapper-form" class="grid w-full gap-2" [formGroup]="profileForm">
+  <form-section>
+    <div class="flex flex-col gap-2">
+      <label for="profile-name" class="input w-full">
+        <span class="label">Name</span>
+        <input
+          id="profile-name"
+          type="text"
+          placeholder="Profile name"
+          formControlName="name"
+        />
+      </label>
+      <label for="engine-select" class="select w-full">
+        <span class="label">Engine</span>
+        <select id="engine-select" formControlName="engine">
+          <option [ngValue]="''" disabled>Select engine</option>
+          @for (option of engineOptions(); track option.id) {
+          <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label for="base-select" class="select w-full">
+        <span class="label">Base</span>
+        <select id="base-select" formControlName="base">
+          <option [ngValue]="''" disabled>Select base</option>
+          @for (option of baseOptions(); track option.id) {
+          <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </label>
+      <label for="icon-input" class="input w-full">
+        <span class="label">Icon</span>
+        <file-input
+          class="grow"
+          formControlName="icon"
+          droppable="true"
+          directory="false"
+          [web]="steamGridService.apiKey() !== null"
+          (webClick)="openSgdbDialog()"
+          (valueChange)="handleIconChange($event)"
+        />
+      </label>
+      <img class="h-full max-w-60" [src]="profileIcon()" />
+    </div>
+  </form-section>
+  <form-section label="Inherit from profile">
+    <select-list
+      placeholderOption="Select a profile"
+      [options]="parentProfileOptions()"
+      [values]="profileForm.controls.parents.value"
+      (valueChange)="handleFormControlChange($event, 'parents')"
+    />
+  </form-section>
+  <form-section label="Profile Resources">
+    <file-list
+      [values]="profileForm.controls.files.value"
+      (valueChange)="handleFormControlChange($event, 'files')"
+    />
+  </form-section>
+  <form-section label="Categories">
+    <select-list
+      placeholderOption="Select a category"
+      [options]="categoryOptions()"
+      [values]="profileForm.controls.categories.value"
+      (valueChange)="handleFormControlChange($event, 'categories')"
+    />
+  </form-section>
+  <form-section label="Tags">
+    <tag-list
+      [values]="profileForm.controls.tags.value"
+      (valueChange)="handleFormControlChange($event, 'tags')"
+    />
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Profile status</legend>
+      <label for="completed-tag-toggle" class="fieldset-label">
+        <input
+          id="completed-tag-toggle"
+          type="checkbox"
+          class="toggle toggle-success"
+          formControlName="complete"
+        />
+        Completed
+      </label>
+    </fieldset>
+  </form-section>
+  <form-section label="CVARs">
+    <key-value-list
+      key="var"
+      withId="false"
+      addLabel="Add var"
+      [values]="profileForm.controls.cvars.value"
+      (valueChange)="handleFormControlChange($event, 'cvars')"
+    />
+  </form-section>
+</form>
+
+<!-- SteamGrid Dialog -->
+<!-- TODO: Move this to its own component -->
+<dialog #sgdbDialog id="steam-grid-dialog" class="modal">
+  <div class="modal-box">
+    @if (!selectedGame()) {
+    <app-autocomplete
+      labelKey="name"
+      [loading]="sgdbLoading()"
+      [options]="steamGridGames()"
+      (query)="steamGridGameQuery($event)"
+      (valueChange)="steamGridSelectGame($event)"
+    />
+    } @else {
+    <app-autocomplete
+      labelKey="id"
+      orientation="horizontal"
+      [loading]="sgdbLoading()"
+      [options]="steamGridGrids()"
+      [itemTemplate]="gridOption"
+      (valueChange)="steamGridSelectGrid($event)"
+    />
+    <ng-template #gridOption let-option>
+      <div class="flex items-center justify-center w-36 h-36 p-0 m-0">
+        <img
+          class="p-0 m-0 max-h-full max-w-full h-auto"
+          [src]="option ? option.url : ''"
+        />
+      </div>
+    </ng-template>
+    }
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

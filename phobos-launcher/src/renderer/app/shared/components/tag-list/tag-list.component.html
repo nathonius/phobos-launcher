@@ -1,0 +1,11 @@
+<form [formGroup]="formGroup" (ngSubmit)="handleSubmit()">
+  <input type="text" class="input input-bordered" formControlName="tag" />
+  <button type="submit" class="btn btn-primary">
+    <lucide-icon [img]="icons.Plus" />
+  </button>
+</form>
+<div class="flex flex-wrap gap-2">
+  @for (tag of values(); track $index) {
+  <app-tag [label]="tag" (remove)="this.handleRemove($index)" />
+  }
+</div>

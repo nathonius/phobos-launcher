@@ -1,0 +1,20 @@
+<form class="flex flex-wrap gap-2" [formGroup]="categoryForm">
+  <form-section>
+    <div class="flex flex-wrap justify-between gap-2">
+      <label>Name</label>
+      <input
+        class="input grow"
+        type="text"
+        placeholder="Category name"
+        formControlName="name"
+      />
+    </div>
+    <file-input
+      formControlName="icon"
+      label="Icon"
+      droppable="true"
+      directory="false"
+    />
+  </form-section>
+  <img class="h-full max-w-60" [src]="categoryIcon()" />
+</form>
