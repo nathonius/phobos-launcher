@@ -1,10 +1,20 @@
 /* eslint-disable no-case-declarations */
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { resolve, extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { dialog, protocol, net } from 'electron';
-// import sharp from 'sharp';
+import { Jimp } from 'jimp';
 import { ipcHandler, PhobosApi } from '../api';
+
+// TODO: Figure out how to include the jimp wasm webp plugin
+const JIMP_SUPPORTED_FORMATS = [
+  '.bmp',
+  '.gif',
+  '.jpeg',
+  '.jpg',
+  '.png',
+  '.tiff',
+];
 
 export class UserDataService extends PhobosApi {
   constructor(private readonly dataPath: string) {
@@ -13,19 +23,22 @@ export class UserDataService extends PhobosApi {
       const url = new URL(req.url);
       switch (url.hostname) {
         case 'get-file':
+          const fileUrl = pathToFileURL(
+            url.searchParams.get('path') as string
+          ).href;
+          const extension = extname(fileUrl).toLowerCase();
           const imageResponse = await net.fetch(
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             pathToFileURL(url.searchParams.get('path') as string).href
           );
-          const buffer = await imageResponse.arrayBuffer();
-          // const compressed = await sharp(buffer)
-          //   .resize({
-          //     width: 300,
-          //     height: 300,
-          //     fit: 'inside',
-          //     background: { r: 0, g: 0, b: 0, alpha: 0 },
-          //   })
-          //   .toBuffer();
+
+          let buffer: ArrayBuffer | Buffer<ArrayBufferLike> =
+            await imageResponse.arrayBuffer();
+          if (JIMP_SUPPORTED_FORMATS.includes(extension)) {
+            buffer = await (await Jimp.read(buffer))
+              .scaleToFit({ w: 300, h: 300 })
+              .getBuffer('image/png');
+          }
           return new Response(buffer);
         default:
           return new Response('Unknown endpoint.', { status: 400 });
