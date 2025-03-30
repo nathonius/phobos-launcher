@@ -84,15 +84,12 @@ export class FileInputComponent implements ControlValueAccessor {
   private dragTimeout: number | undefined = undefined;
 
   constructor() {
-    effect(
-      () => {
-        const value = this.value();
-        if (value) {
-          this.filePath.set(value);
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      const value = this.value();
+      if (value) {
+        this.filePath.set(value);
+      }
+    });
     effect(() => {
       const path = this.filePath();
       this.valueChange.emit(path);

@@ -29,13 +29,10 @@ export class EnginesComponent {
   private readonly navbarService = inject(NavbarService);
   constructor() {
     this.navbarService.setCallbacks({});
-    effect(
-      async () => {
-        const engines = await Api['engine.getEngines']();
-        this.engines.set(engines);
-      },
-      { allowSignalWrites: true }
-    );
+    effect(async () => {
+      const engines = await Api['engine.getEngines']();
+      this.engines.set(engines);
+    });
   }
 
   async handleDelete(id: string) {

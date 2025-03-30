@@ -24,14 +24,11 @@ export class BasesComponent {
   private readonly navbarService = inject(NavbarService);
   constructor() {
     this.navbarService.setCallbacks({});
-    effect(
-      async () => {
-        const bases = ((await Api['settings.get']('bases')) ??
-          []) as UniqueFileRecord[];
-        this.baseWads.set(bases);
-      },
-      { allowSignalWrites: true }
-    );
+    effect(async () => {
+      const bases = ((await Api['settings.get']('bases')) ??
+        []) as UniqueFileRecord[];
+      this.baseWads.set(bases);
+    });
   }
 
   async handleChange(value: UniqueFileRecord[]) {

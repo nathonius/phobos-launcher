@@ -37,18 +37,15 @@ export class NavbarService {
   private saveTimeout: number | undefined;
 
   public constructor() {
-    effect(
-      () => {
-        const saved = this.saved();
-        if (saved) {
-          window.clearTimeout(this.saveTimeout);
-          this.saveTimeout = window.setTimeout(() => {
-            this.saved.set(false);
-          }, 2000);
-        }
-      },
-      { allowSignalWrites: false }
-    );
+    effect(() => {
+      const saved = this.saved();
+      if (saved) {
+        window.clearTimeout(this.saveTimeout);
+        this.saveTimeout = window.setTimeout(() => {
+          this.saved.set(false);
+        }, 2000);
+      }
+    });
   }
 
   public clear() {

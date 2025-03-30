@@ -13,7 +13,12 @@ import {
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 import { CdkListboxModule } from '@angular/cdk/listbox';
-import type { UniqueFileRecord, Cvar, Engine, Profile } from '../../../shared/config';
+import type {
+  UniqueFileRecord,
+  Cvar,
+  Engine,
+  Profile,
+} from '../../../shared/config';
 
 import type { SGDBGame, SGDBImage } from '../../../shared/lib/SGDB';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -105,52 +110,46 @@ export class ProfileComponent implements OnInit {
   private steamGridTimeout: number | undefined;
 
   constructor() {
-    effect(
-      async () => {
-        const currentProfile = this.profile();
-        const engines = await Api['engine.getEngines']();
-        const bases = await Api['settings.get']('bases');
-        const profiles = (await Api['profile.getProfiles']()).filter(
-          (p) => p.id !== currentProfile?.id
-        );
-        this.engineOptions.set(engines);
-        this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
-        this.allParentProfileOptions.set(profiles);
-      },
-      { allowSignalWrites: true }
-    );
-    effect(
-      () => {
-        const profile = this.profile();
-        if (profile) {
-          this.profileForm.reset({
-            name: profile.name,
-            base: profile.base,
-            engine: profile.engine,
-            icon: profile.icon,
-            files: profile.files,
-            categories: profile.categories,
-            cvars: profile.cvars,
-            parents: profile.parents,
-            tags: profile.tags,
-            complete: profile.complete,
-          });
-        } else {
-          this.profileForm.reset({
-            name: '',
-            base: '',
-            engine: '',
-            files: [],
-            categories: [],
-            cvars: [],
-            parents: [],
-            tags: [],
-            complete: false,
-          });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(async () => {
+      const currentProfile = this.profile();
+      const engines = await Api['engine.getEngines']();
+      const bases = await Api['settings.get']('bases');
+      const profiles = (await Api['profile.getProfiles']()).filter(
+        (p) => p.id !== currentProfile?.id
+      );
+      this.engineOptions.set(engines);
+      this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
+      this.allParentProfileOptions.set(profiles);
+    });
+    effect(() => {
+      const profile = this.profile();
+      if (profile) {
+        this.profileForm.reset({
+          name: profile.name,
+          base: profile.base,
+          engine: profile.engine,
+          icon: profile.icon,
+          files: profile.files,
+          categories: profile.categories,
+          cvars: profile.cvars,
+          parents: profile.parents,
+          tags: profile.tags,
+          complete: profile.complete,
+        });
+      } else {
+        this.profileForm.reset({
+          name: '',
+          base: '',
+          engine: '',
+          files: [],
+          categories: [],
+          cvars: [],
+          parents: [],
+          tags: [],
+          complete: false,
+        });
+      }
+    });
   }
 
   public ngOnInit(): void {

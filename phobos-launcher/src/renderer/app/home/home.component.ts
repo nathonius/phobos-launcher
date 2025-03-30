@@ -108,40 +108,31 @@ export class HomeComponent implements OnInit {
   private readonly navbarService = inject(NavbarService);
 
   constructor() {
-    effect(
-      () => {
-        const selectedCategory = this.categoryService.selectedCategory();
+    effect(() => {
+      const selectedCategory = this.categoryService.selectedCategory();
+      this.setNavActions(selectedCategory);
+    });
+    effect(() => {
+      const selectedProfile = this.profileService.selectedProfile();
+      if (selectedProfile === undefined) {
+        const selectedCategory = untracked(() =>
+          this.categoryService.selectedCategory()
+        );
         this.setNavActions(selectedCategory);
-      },
-      { allowSignalWrites: true }
-    );
-    effect(
-      () => {
-        const selectedProfile = this.profileService.selectedProfile();
-        if (selectedProfile === undefined) {
-          const selectedCategory = untracked(() =>
-            this.categoryService.selectedCategory()
-          );
-          this.setNavActions(selectedCategory);
-        }
-      },
-      { allowSignalWrites: true }
-    );
-    effect(
-      async () => {
-        const allCategories = [
-          { id: 'all', name: 'All', icon: '' },
-          ...this.categoryService.allCategories(),
-        ];
-        const categories: (Category & { img: string })[] = [];
-        for (const c of allCategories) {
-          const img = await this.categoryService.getCategoryIcon(c);
-          categories.push({ ...c, img });
-        }
-        this.categories.set(categories);
-      },
-      { allowSignalWrites: true }
-    );
+      }
+    });
+    effect(async () => {
+      const allCategories = [
+        { id: 'all', name: 'All', icon: '' },
+        ...this.categoryService.allCategories(),
+      ];
+      const categories: (Category & { img: string })[] = [];
+      for (const c of allCategories) {
+        const img = await this.categoryService.getCategoryIcon(c);
+        categories.push({ ...c, img });
+      }
+      this.categories.set(categories);
+    });
     Api['settings.get']('home.sort').then((v) => {
       if (
         typeof v === 'string' &&

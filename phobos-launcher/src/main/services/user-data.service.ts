@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { dialog, protocol, net } from 'electron';
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { ipcHandler, PhobosApi } from '../api';
 
 export class UserDataService extends PhobosApi {
@@ -18,15 +18,15 @@ export class UserDataService extends PhobosApi {
             pathToFileURL(url.searchParams.get('path') as string).href
           );
           const buffer = await imageResponse.arrayBuffer();
-          const compressed = await sharp(buffer)
-            .resize({
-              width: 300,
-              height: 300,
-              fit: 'inside',
-              background: { r: 0, g: 0, b: 0, alpha: 0 },
-            })
-            .toBuffer();
-          return new Response(compressed);
+          // const compressed = await sharp(buffer)
+          //   .resize({
+          //     width: 300,
+          //     height: 300,
+          //     fit: 'inside',
+          //     background: { r: 0, g: 0, b: 0, alpha: 0 },
+          //   })
+          //   .toBuffer();
+          return new Response(buffer);
         default:
           return new Response('Unknown endpoint.', { status: 400 });
       }

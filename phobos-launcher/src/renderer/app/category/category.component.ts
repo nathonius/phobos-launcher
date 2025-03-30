@@ -36,20 +36,17 @@ export class CategoryComponent implements OnInit {
   private readonly viewService = inject(ViewService);
 
   constructor() {
-    effect(
-      () => {
-        const category = this.category();
-        if (category) {
-          this.categoryForm.reset({
-            name: category.name,
-            icon: category.icon,
-          });
-        } else {
-          this.categoryForm.reset({ name: '', icon: '' });
-        }
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      const category = this.category();
+      if (category) {
+        this.categoryForm.reset({
+          name: category.name,
+          icon: category.icon,
+        });
+      } else {
+        this.categoryForm.reset({ name: '', icon: '' });
+      }
+    });
     this.categoryForm.controls.icon.valueChanges.subscribe((v) => {
       this.handleIconChange(v);
     });

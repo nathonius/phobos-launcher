@@ -85,6 +85,10 @@ export class Phobos {
       },
     });
 
+    const fileURL = MAIN_WINDOW_VITE_DEV_SERVER_URL
+      ? MAIN_WINDOW_VITE_DEV_SERVER_URL
+      : join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
+    console.log(`Loading: ${fileURL}`);
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
       this.window.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     } else {

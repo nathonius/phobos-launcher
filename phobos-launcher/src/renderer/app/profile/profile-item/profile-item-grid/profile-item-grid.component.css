@@ -17,7 +17,7 @@
 .item-image-placeholder {
   height: 100%;
   width: 100%;
-  background-image: url("/assets/rock-wall-bg.png");
+  background-image: url("assets/rock-wall-bg.png");
 }
 
 .item-wrapper {
