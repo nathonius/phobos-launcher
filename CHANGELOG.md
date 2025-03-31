@@ -14,6 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [0.0.5] - 2025-03-30
+
+### Changed
+
+- New build and publish framework for the app. Some things may be a bit wonky. You may need to reinstall.
+- Images for profiles are compressed at render-time and stored on disk
+- Lots of library updates, maintenance, invisible changes
+
+### Fixed
+
+- Fixed loading the app with no SGDB key set
+
 <!-- ## Unreleased -->
 
 ## [0.0.4] - 2025-01-12
