@@ -11,7 +11,11 @@ import { ipcHandler, PhobosApi } from '../api';
 export class SGDBService extends PhobosApi {
   @ipcHandler('sgdb.queryGames')
   public async searchGames(query: string) {
-    const games = await this.client.searchGame(query);
+    const client = this.getClient();
+    if (!client) {
+      return [];
+    }
+    const games = await client.searchGame(query);
     if (!games || games.length === 0) {
       return [];
     }
@@ -41,7 +45,11 @@ export class SGDBService extends PhobosApi {
   }
 
   public async getGrids(game: SGDBGame) {
-    const grids = await this.client.getGrids({
+    const client = this.getClient();
+    if (!client) {
+      return [];
+    }
+    const grids = await client.getGrids({
       id: game.id,
       type: 'game',
       types: ['static'],
@@ -53,7 +61,11 @@ export class SGDBService extends PhobosApi {
   }
 
   public async getHeroes(game: SGDBGame) {
-    const heroes = await this.client.getHeroes({
+    const client = this.getClient();
+    if (!client) {
+      return [];
+    }
+    const heroes = await client.getHeroes({
       id: game.id,
       type: 'game',
       types: ['static'],
@@ -65,7 +77,11 @@ export class SGDBService extends PhobosApi {
   }
 
   public async getLogos(game: SGDBGame) {
-    const logos = await this.client.getLogos({
+    const client = this.getClient();
+    if (!client) {
+      return [];
+    }
+    const logos = await client.getLogos({
       id: game.id,
       type: 'game',
       types: ['static'],
@@ -77,7 +93,11 @@ export class SGDBService extends PhobosApi {
   }
 
   public async getIcons(game: SGDBGame) {
-    const icons = await this.client.getIcons({
+    const client = this.getClient();
+    if (!client) {
+      return [];
+    }
+    const icons = await client.getIcons({
       id: game.id,
       type: 'game',
       types: ['static'],
@@ -104,10 +124,11 @@ export class SGDBService extends PhobosApi {
     return path;
   }
 
-  private get client(): SGDB {
+  private getClient(): SGDB | null {
     const key = getPhobos().settingsService.getSetting('steamGridApiKey');
     if (typeof key !== 'string' || !key) {
-      throw new Error('No SGDB API Key');
+      console.error('No SGDB key found.');
+      return null;
     }
     return new SGDB(key);
   }
