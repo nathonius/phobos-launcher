@@ -87,6 +87,7 @@ typings/
 
 # Vite
 .vite/
+vite.renderer.config.mts.timestamp*
 
 # Electron-Forge
 out/
