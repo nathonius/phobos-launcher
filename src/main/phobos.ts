@@ -49,7 +49,10 @@ export class Phobos {
       this.engineService = new EngineService(this.store);
       this.steamGridService = new SGDBService();
       this.importService = new ImportService(this);
-      this.userDataService = new UserDataService(app.getPath('userData'));
+      this.userDataService = new UserDataService(
+        app.getPath('userData'),
+        this.store
+      );
 
       // Log in case some channels were missed
       for (const c of ALL_CHANNELS) {
