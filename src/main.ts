@@ -1,6 +1,12 @@
 import path from 'node:path';
-import { screen } from 'electron';
+import { app, screen } from 'electron';
+import squirrel from 'electron-squirrel-startup';
 import { Phobos } from './main/phobos';
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (squirrel) {
+  app.quit();
+}
 
 export function DEFAULT_WINDOW_SETTINGS(): Electron.Rectangle {
   const size = screen.getPrimaryDisplay().workAreaSize;
