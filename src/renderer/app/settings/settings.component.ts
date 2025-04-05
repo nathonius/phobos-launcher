@@ -4,6 +4,7 @@ import {
   Component,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { ValidTheme } from '../shared/services/theme.service';
@@ -15,10 +16,18 @@ import { Api } from '../api/api';
 import { CategoryService } from '../category/category.service';
 import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
+import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
+import type { Cvar } from '../../../shared/config';
+import type { JSONValue } from '../../../shared/json';
 
 @Component({
   selector: 'app-settings',
-  imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    FormSectionComponent,
+    FileInputComponent,
+    KeyValueListComponent,
+  ],
   templateUrl: './settings.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +43,7 @@ export class SettingsComponent implements OnInit {
     steamGridApiKey: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
   });
+  protected readonly defaultCvars = signal<Cvar[]>([]);
   private readonly navbarService = inject(NavbarService);
 
   public constructor() {
@@ -45,6 +55,13 @@ export class SettingsComponent implements OnInit {
     effect(() => {
       const theme = this.themeService.theme();
       this.settingsForm.controls.theme.reset(theme);
+    });
+    effect(() => {
+      const defaultCvars = this.defaultCvars();
+      Api['settings.set']('defaultCvars', defaultCvars as unknown as JSONValue);
+    });
+    Api['settings.get']('defaultCvars').then((cvars: Cvar[] | null) => {
+      this.defaultCvars.set(cvars ?? []);
     });
   }
 
@@ -62,5 +79,9 @@ export class SettingsComponent implements OnInit {
     await Api['import.arachnotron'](path);
     await this.categoryService.getAllCategories();
     await this.profileService.getAllProfiles();
+  }
+
+  public handleCvarChange(values: Cvar[]): void {
+    this.defaultCvars.set(values);
   }
 }

@@ -45,5 +45,17 @@
         </button>
       </div>
     </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">Profile global settings</legend>
+      <span class="fieldset-label">Default CVARs</span>
+      <key-value-list
+        key="var"
+        withId="false"
+        addLabel="Add var"
+        [values]="defaultCvars()"
+        (valueChange)="handleCvarChange($event)"
+      />
+    </fieldset>
   </form>
 </form-section>

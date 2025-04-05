@@ -1,12 +1,15 @@
 import { spawn } from 'node:child_process';
 import type Store from 'electron-store';
-import type { Profile, UniqueFileRecord } from '../../shared/config';
+import slugify from 'slugify';
+import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
 
 export interface FsError extends Error {
   code: string;
 }
+
+type CvarContext = Record<string, string>;
 
 export class ProfileService extends PhobosApi {
   public constructor(private readonly store: Store) {
@@ -79,14 +82,21 @@ export class ProfileService extends PhobosApi {
 
     // TODO: Probably worth deduplicating these files
     const files: string[] = [];
-    const cvars: string[] = [];
+    const cvarCtx: CvarContext = {
+      slug: slugify(profile.name),
+    };
+    const defaultCvars = (getPhobos().settingsService.getSetting(
+      'defaultCvars'
+    ) ?? []) as Cvar[];
+
+    const cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
     for (const parentId of profile.parents) {
       const parent = this.getProfileById(parentId);
       files.push(...this.getProfileFiles(parent));
-      cvars.push(...this.getProfileCvars(parent));
+      cvars.push(...this.prepareCvars(parent.cvars, cvarCtx));
     }
     files.push(...this.getProfileFiles(profile));
-    cvars.push(...this.getProfileCvars(profile));
+    cvars.push(...this.prepareCvars(profile.cvars, cvarCtx));
 
     const _process = spawn(engine.path, [
       ...configArg,
@@ -104,7 +114,18 @@ export class ProfileService extends PhobosApi {
     return profile?.files.flatMap((f) => ['-file', f]) ?? [];
   }
 
-  private getProfileCvars(profile: Profile | undefined): string[] {
-    return profile?.cvars.flatMap((v) => ['+set', v.var, v.value]) ?? [];
+  private prepareCvars(cvars: Cvar[], ctx: CvarContext): string[] {
+    // Do template replacements inside vars
+    const template = (v: string) => {
+      let result = v;
+      for (const [templateVar, templateValue] of Object.entries(ctx)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        result = result.replaceAll(`{${templateVar}}`, templateValue);
+      }
+      return result;
+    };
+    return (
+      cvars.flatMap((v) => ['+set', template(v.var), template(v.value)]) ?? []
+    );
   }
 }
