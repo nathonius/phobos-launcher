@@ -1,7 +1,7 @@
 <input
   #textInput
   type="text"
-  class="grow"
+  class="input w-full"
   [id]="inputId()"
   [placeholder]="_placeholder()"
   [value]="filePath()"
@@ -11,31 +11,18 @@
   (dragover)="handleDragOver($event)"
   (dragleave)="handleDragOut()"
 />
-@if (file()) {
-<button type="button" class="btn btn-ghost btn-xs" (click)="handleSelectFile()">
-  <lucide-icon class="h-4 w-4" [img]="icons.FileIcon" />
-</button>
-} @if (directory()) {
-<button
-  type="button"
-  class="btn btn-ghost btn-xs"
-  (click)="handleSelectDirectory()"
->
-  <lucide-icon class="h-4 w-4" [img]="icons.Folder" />
-</button>
-} @if (web()) {
-<button type="button" class="btn btn-ghost btn-xs" (click)="webClick.emit()">
-  <lucide-icon class="h-4 w-4" [img]="icons.Globe" />
-</button>
-} @if (reorder()) {
-<button type="button" class="btn btn-ghost btn-xs" (click)="reorderUp.emit()">
-  <lucide-icon class="h-4 w-4" [img]="icons.ArrowUp" />
-</button>
-<button type="button" class="btn btn-ghost btn-xs" (click)="reorderDown.emit()">
-  <lucide-icon class="h-4 w-4" [img]="icons.ArrowDown" />
-</button>
-} @if (removable()) {
-<button type="button" class="btn btn-ghost btn-xs" (click)="remove.emit()">
-  <lucide-icon class="h-4 w-4" [img]="icons.Trash" />
-</button>
+@if (includeControls()) {
+<file-input-controls
+  [directory]="directory()"
+  [file]="file()"
+  [web]="web()"
+  [removable]="removable()"
+  [reorder]="reorder()"
+  (remove)="remove.emit()"
+  (reorderUp)="reorderUp.emit()"
+  (reorderDown)="reorderDown.emit()"
+  (selectDirectory)="handleSelectDirectory()"
+  (selectFile)="handleSelectFile()"
+  (webClick)="webClick.emit()"
+/>
 }

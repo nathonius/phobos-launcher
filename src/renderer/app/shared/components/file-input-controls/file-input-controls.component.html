@@ -1,0 +1,44 @@
+@if (file()) {
+<button
+  type="button"
+  class="btn btn-ghost btn-square"
+  (click)="selectFile.emit()"
+>
+  <lucide-icon class="h-4 w-4" [img]="icons.FileIcon" />
+</button>
+} @if (directory()) {
+<button
+  type="button"
+  class="btn btn-ghost btn-square"
+  (click)="selectDirectory.emit()"
+>
+  <lucide-icon class="h-4 w-4" [img]="icons.Folder" />
+</button>
+} @if (web()) {
+<button
+  type="button"
+  class="btn btn-ghost btn-square"
+  (click)="webClick.emit()"
+>
+  <lucide-icon class="h-4 w-4" [img]="icons.Globe" />
+</button>
+} @if (reorder()) {
+<button
+  type="button"
+  class="btn btn-ghost btn-square"
+  (click)="reorderUp.emit()"
+>
+  <lucide-icon class="h-4 w-4" [img]="icons.ArrowUp" />
+</button>
+<button
+  type="button"
+  class="btn btn-ghost btn-square"
+  (click)="reorderDown.emit()"
+>
+  <lucide-icon class="h-4 w-4" [img]="icons.ArrowDown" />
+</button>
+} @if (removable()) {
+<button type="button" class="btn btn-ghost btn-square" (click)="remove.emit()">
+  <lucide-icon class="h-4 w-4" [img]="icons.Trash" />
+</button>
+}

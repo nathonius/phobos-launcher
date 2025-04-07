@@ -1,11 +1,30 @@
 <form [formGroup]="formGroup" (ngSubmit)="handleSubmit()">
-  <input type="text" class="input input-bordered" formControlName="tag" />
-  <button type="submit" class="btn btn-primary">
-    <lucide-icon [img]="icons.Plus" />
-  </button>
+  @if (inputType() === 'text') {
+  <div class="mb-2">
+    <input
+      type="text"
+      class="input"
+      formControlName="tag"
+      [placeholder]="placeholder()"
+    />
+    <button type="submit" class="btn btn-primary btn-square ml-1">
+      <lucide-icon [img]="icons.Plus" />
+    </button>
+  </div>
+  } @else {
+  <select
+    class="select mb-2"
+    (change)="handleSubmit($any($event.target).value)"
+  >
+    <option #placeholderOption disabled selected>{{ placeholder() }}</option>
+    @for (option of availableOptions(); track option) {
+    <option value="{{ option.value }}">{{ option.label }}</option>
+    }
+  </select>
+  }
 </form>
 <div class="flex flex-wrap gap-2">
-  @for (tag of values(); track $index) {
+  @for (tag of displayValues(); track $index) {
   <app-tag [label]="tag" (remove)="this.handleRemove($index)" />
   }
 </div>

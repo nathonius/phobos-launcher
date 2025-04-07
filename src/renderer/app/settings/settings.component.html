@@ -48,11 +48,13 @@
 
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Profile global settings</legend>
-      <span class="fieldset-label">Default CVARs</span>
+      <span class="fieldset-label pl-4">Default CVARs</span>
       <key-value-list
         key="var"
         withId="false"
         addLabel="Add var"
+        keyLabel="Variable"
+        valueLabel="Value"
         [values]="defaultCvars()"
         (valueChange)="handleCvarChange($event)"
       />

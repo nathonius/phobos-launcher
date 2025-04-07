@@ -26,10 +26,11 @@ import {
 } from 'lucide-angular';
 import { DOCUMENT } from '@angular/common';
 import { Api } from '../../../api/api';
+import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
 
 @Component({
   selector: 'file-input',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, FileInputControlsComponent],
   templateUrl: './file-input.component.html',
   providers: [
     {
@@ -39,21 +40,22 @@ import { Api } from '../../../api/api';
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'flex items-center gap-1',
-  },
 })
 export class FileInputComponent implements ControlValueAccessor {
   public readonly inputId = input<string>();
   public readonly value = input<string>();
   public readonly placeholder = input<string>();
+  public readonly includeControls = input(false, {
+    transform: booleanAttribute,
+  });
+
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
   public readonly web = input(false, { transform: booleanAttribute });
   public readonly removable = input(false, { transform: booleanAttribute });
+  public readonly remove = output();
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
-  public readonly remove = output();
   public readonly valueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();

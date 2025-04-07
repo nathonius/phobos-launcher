@@ -66,7 +66,7 @@ type ProfileForm = FormGroup<{
   styleUrls: ['./profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block grow',
+    class: 'block grow overflow-auto',
   },
 })
 export class ProfileComponent implements OnInit {

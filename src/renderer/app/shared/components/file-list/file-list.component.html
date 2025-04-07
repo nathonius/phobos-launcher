@@ -1,33 +1,57 @@
-<div
-  class="relative w-full flex flex-col gap-1"
+<table
+  class="table table-zebra"
   (dragover)="handleDragOver($event)"
   (dragleave)="handleDragOut()"
   (drop)="handleDrop($event)"
 >
-  @for (path of values(); track path) {
-  <file-input
-    class="w-full input"
-    reorder="true"
-    removable="true"
-    [value]="path"
-    (reorderUp)="handleReorderUp($index)"
-    (reorderDown)="handleReorderDown($index)"
-    (remove)="handleRemove($index)"
-    (valueChange)="handleChange($index, $event)"
-  />
-  }
-  <button
-    type="button"
-    class="btn btn-primary btn-sm tooltip self-end"
-    (click)="handleAdd()"
-    data-tip="Add file"
-  >
-    <lucide-icon [img]="icons.Plus" />
-  </button>
-  <div
-    class="absolute flex justify-center items-center h-full w-full glass top-0 left-0 pointer-events-none transition-all"
-    [class]="{ 'opacity-0': !dragging(), 'opacity-100': dragging() }"
-  >
-    Drop Files
-  </div>
+  <thead>
+    <tr>
+      <th>Path</th>
+      <th><!-- Actions --></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(path of values(); track path) {
+    <tr>
+      <td class="w-full">
+        <file-input
+          [value]="path"
+          (valueChange)="handleChange($index, $event)"
+        />
+      </td>
+      <td class="whitespace-nowrap">
+        <file-input-controls
+          reorder="true"
+          removable="true"
+          (reorderUp)="handleReorderUp($index)"
+          (reorderDown)="handleReorderDown($index)"
+          (remove)="handleRemove($index)"
+        />
+      </td>
+    </tr>
+    }
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>
+        <!-- empty -->
+      </td>
+      <td class="text-end">
+        <button
+          type="button"
+          class="btn btn-primary btn-square tooltip"
+          (click)="handleAdd()"
+          data-tip="Add file"
+        >
+          <lucide-icon [img]="icons.Plus" />
+        </button>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+<div
+  class="absolute flex justify-center items-center h-full w-full glass top-0 left-0 pointer-events-none transition-all"
+  [class]="{ 'opacity-0': !dragging(), 'opacity-100': dragging() }"
+>
+  Drop Files
 </div>

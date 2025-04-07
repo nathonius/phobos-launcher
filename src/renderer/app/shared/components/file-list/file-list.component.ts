@@ -12,12 +12,18 @@ import { LucideAngularModule } from 'lucide-angular';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { Api } from '../../../api/api';
 import { ListComponentBase } from '../../classes/ListComponentBase';
+import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
 
 @Component({
-    selector: 'file-list',
-    imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
-    templateUrl: './file-list.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'file-list',
+  imports: [
+    LucideAngularModule,
+    FileInputComponent,
+    ReactiveFormsModule,
+    FileInputControlsComponent,
+  ],
+  templateUrl: './file-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileListComponent extends ListComponentBase<string> {
   public readonly valueChange = output<string[]>();

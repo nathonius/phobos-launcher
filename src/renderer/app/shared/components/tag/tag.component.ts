@@ -26,7 +26,7 @@ export class TagComponent {
   public readonly variant = input<DaisyVariant>('default');
   protected readonly RemoveIcon = X;
   protected readonly classes = computed(() => {
-    const classes: string[] = ['btn', 'btn-xs'];
+    const classes: string[] = [];
     const variant = this.variant();
     if (variant !== 'default') {
       classes.push(`btn-${variant}`);

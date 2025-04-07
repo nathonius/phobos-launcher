@@ -12,5 +12,10 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "experimentalDecorators": true
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
   }
 }

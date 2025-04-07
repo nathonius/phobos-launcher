@@ -11,12 +11,19 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 
 import { LucideAngularModule } from 'lucide-angular';
+import { NgClass, NgStyle } from '@angular/common';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 @Component({
   selector: 'key-value-list',
-  imports: [LucideAngularModule, FileInputComponent, ReactiveFormsModule],
+  imports: [
+    LucideAngularModule,
+    FileInputComponent,
+    ReactiveFormsModule,
+    NgClass,
+    NgStyle,
+  ],
   templateUrl: './key-value-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,8 +35,13 @@ export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly withId = input(true, { transform: booleanAttribute });
   public readonly key = input('key');
   public readonly keyPlaceholder = input('Key');
+  public readonly keyLabel = input('Key');
+  public readonly keyMono = input(true, { transform: booleanAttribute });
+  public readonly keyColumnWidth = input('20%');
+  public readonly valueMono = input(true, { transform: booleanAttribute });
   public readonly value = input('value');
   public readonly valuePlaceholder = input('Value');
+  public readonly valueLabel = input('Value');
   public readonly valueType = input<'text' | 'file'>('text');
   public readonly addLabel = input.required<string>();
   protected readonly templateValues = computed(
