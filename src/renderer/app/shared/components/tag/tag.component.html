@@ -1,7 +1,27 @@
+@let _shape = shape(); @let _color = color(); @let _variant = variant();
 <button
   type="button"
-  class="btn leading-none"
-  [ngClass]="classes()"
+  class="btn btn-sm leading-none"
+  [ngClass]="{
+    'btn-square': _shape === 'square',
+    'btn-circle': _shape === 'circle',
+    'btn-wide': _shape === 'wide',
+    'btn-neutral': _color === 'neutral',
+    'btn-primary': _color === 'primary',
+    'btn-secondary': _color === 'secondary',
+    'btn-accent': _color === 'accent',
+    'btn-info': _color === 'info',
+    'btn-success': _color === 'success',
+    'btn-warning': _color === 'warning',
+    'btn-error': _color === 'error',
+    'btn-ghost': _variant === 'ghost',
+    'btn-link': _variant === 'link',
+    'btn-soft': _variant === 'soft',
+    'btn-outline': _variant === 'outline',
+    'btn-dash': _variant === 'dash',
+    'btn-active': _variant === 'active',
+    'btn-disabled': _variant === 'disabled'
+  }"
   (click)="remove.emit()"
 >
   {{ label() }}@if (removable()) {

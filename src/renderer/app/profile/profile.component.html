@@ -67,12 +67,14 @@
     <tag-list
       placeholder="Select a category"
       inputType="select"
+      color="accent"
       [options]="categoryOptions()"
       [values]="profileForm.controls.categories.value"
       (valueChange)="handleFormControlChange($event, 'categories')"
     />
     <h3 class="font-semibold mb-1">Profile tags</h3>
     <tag-list
+      color="info"
       [values]="profileForm.controls.tags.value"
       (valueChange)="handleFormControlChange($event, 'tags')"
     />

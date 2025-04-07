@@ -25,6 +25,12 @@
 </form>
 <div class="flex flex-wrap gap-2">
   @for (tag of displayValues(); track $index) {
-  <app-tag [label]="tag" (remove)="this.handleRemove($index)" />
+  <app-tag
+    [label]="tag"
+    [variant]="variant()"
+    [color]="color()"
+    [shape]="shape()"
+    (remove)="this.handleRemove($index)"
+  />
   }
 </div>

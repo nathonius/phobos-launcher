@@ -11,13 +11,23 @@ export enum HomeViewState {
   ProfileEdit,
 }
 
-export type DaisyVariant =
+export type DaisyButtonVariant =
+  | 'default'
+  | 'ghost'
+  | 'link'
+  | 'soft'
+  | 'outline'
+  | 'dash'
+  | 'active'
+  | 'disabled';
+export type DaisyButtonShape = 'default' | 'square' | 'circle' | 'wide';
+export type DaisyButtonSize = 'default' | 'medium' | 'xs' | 's' | 'lg' | 'xl';
+export type DaisyButtonColor =
   | 'default'
   | 'neutral'
   | 'primary'
   | 'secondary'
   | 'accent'
-  | 'ghost'
   | 'info'
   | 'success'
   | 'warning'
