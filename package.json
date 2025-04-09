@@ -62,6 +62,7 @@
     "@jimp/wasm-jpeg": "^1.6.0",
     "@jimp/wasm-png": "^1.6.0",
     "@jimp/wasm-webp": "^1.6.0",
+    "@nrkn/wad": "^0.0.2",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.2.0",
     "jimp": "^1.6.0",

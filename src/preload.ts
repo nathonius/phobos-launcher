@@ -41,6 +41,10 @@ export const clientApi = {
     ipcRenderer.invoke('sgdb.downloadImage', image),
   'import.arachnotron': (basePath: string) =>
     ipcRenderer.invoke('import.arachnotron', basePath),
+  'wad.listLumps': (wadPath: string) =>
+    ipcRenderer.invoke('wad.listLumps', wadPath),
+  'wad.getLump': (wadPath: string, lumpName: string) =>
+    ipcRenderer.invoke('wad.getLump', wadPath, lumpName),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

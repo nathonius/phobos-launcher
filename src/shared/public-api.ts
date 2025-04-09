@@ -21,6 +21,8 @@ export const ALL_CHANNELS = [
   'fileSystem.getPathForFile',
   'fileSystem.getBase64Image',
   'import.arachnotron',
+  'wad.listLumps',
+  'wad.getLump',
 ] as const;
 
 export type Channel = (typeof ALL_CHANNELS)[number];
