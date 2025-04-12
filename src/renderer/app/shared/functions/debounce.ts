@@ -8,3 +8,21 @@ export function debounce(func: Function, delayMs: number) {
     }, delayMs);
   };
 }
+
+/**
+ * https://github.com/angular/angular/issues/59528#issuecomment-2593974981
+ */
+export function wait(ms: number, signal: AbortSignal) {
+  return new Promise<void>((resolve, reject) => {
+    const timeout = window.setTimeout(() => resolve(), ms);
+
+    signal.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(timeout);
+        reject(new Error('Operation aborted'));
+      },
+      { once: true }
+    );
+  });
+}

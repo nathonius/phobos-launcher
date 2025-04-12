@@ -44,6 +44,7 @@
         } @else {
         <file-input
           class="input w-full"
+          includeControls="true"
           [placeholder]="valuePlaceholder()"
           [value]="pair[v]"
           (valueChange)="handleValueChange($index, $event)"

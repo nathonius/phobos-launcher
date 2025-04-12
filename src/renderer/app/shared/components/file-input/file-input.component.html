@@ -1,28 +1,30 @@
-<input
-  #textInput
-  type="text"
-  class="input w-full"
-  [id]="inputId()"
-  [placeholder]="_placeholder()"
-  [value]="filePath()"
-  (focus)="onTouch()"
-  (change)="handleTextChange()"
-  (drop)="handleDrop($event)"
-  (dragover)="handleDragOver($event)"
-  (dragleave)="handleDragOut()"
-/>
-@if (includeControls()) {
-<file-input-controls
-  [directory]="directory()"
-  [file]="file()"
-  [web]="web()"
-  [removable]="removable()"
-  [reorder]="reorder()"
-  (remove)="remove.emit()"
-  (reorderUp)="reorderUp.emit()"
-  (reorderDown)="reorderDown.emit()"
-  (selectDirectory)="handleSelectDirectory()"
-  (selectFile)="handleSelectFile()"
-  (webClick)="webClick.emit()"
-/>
-}
+<div class="w-full flex items-center">
+  <input
+    #textInput
+    type="text"
+    class="grow"
+    [attr.id]="inputId()"
+    [placeholder]="_placeholder()"
+    [value]="filePath()"
+    (focus)="onTouch()"
+    (change)="handleTextChange()"
+    (drop)="handleDrop($event)"
+    (dragover)="handleDragOver($event)"
+    (dragleave)="handleDragOut()"
+  />
+  @if (includeControls()) {
+  <file-input-controls
+    [directory]="directory()"
+    [file]="file()"
+    [web]="web()"
+    [removable]="removable()"
+    [reorder]="reorder()"
+    (remove)="remove.emit()"
+    (reorderUp)="reorderUp.emit()"
+    (reorderDown)="reorderDown.emit()"
+    (selectDirectory)="handleSelectDirectory()"
+    (selectFile)="handleSelectFile()"
+    (webClick)="webClick.emit()"
+  />
+  }
+</div>

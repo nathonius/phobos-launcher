@@ -1,4 +1,4 @@
-import type { OnInit, ElementRef } from '@angular/core';
+import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,7 +20,7 @@ import type {
   Profile,
 } from '../../../shared/config';
 
-import type { SGDBGame, SGDBImage } from '../../../shared/lib/SGDB';
+import type { SGDBImage } from '../../../shared/lib/SGDB';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { FileListComponent } from '../shared/components/file-list/file-list.component';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
@@ -29,12 +29,12 @@ import { SelectListComponent } from '../shared/components/select-list/select-lis
 import { CategoryService } from '../category/category.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
 import { Api } from '../api/api';
-import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { TagListComponent } from '../shared/components/tag-list/tag-list.component';
 import { ViewService } from '../shared/services/view.service';
 import { HomeViewState } from '../shared/constants';
 import { WadInfoComponent } from '../wad-info/wad-info.component';
+import { SgdbDialogComponent } from '../sgdb-dialog/sgdb-dialog.component';
 import { ProfileService } from './profile.service';
 
 type ProfileForm = FormGroup<{
@@ -59,10 +59,10 @@ type ProfileForm = FormGroup<{
     FormSectionComponent,
     SelectListComponent,
     KeyValueListComponent,
-    AutocompleteComponent,
     CdkListboxModule,
     TagListComponent,
     WadInfoComponent,
+    SgdbDialogComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
@@ -98,12 +98,7 @@ export class ProfileComponent implements OnInit {
   );
   protected readonly engineOptions = signal<Engine[]>([]);
   protected readonly baseOptions = signal<UniqueFileRecord[]>([]);
-  protected readonly sgdbLoading = signal<boolean>(false);
-  protected readonly steamGridGames = signal<SGDBGame[]>([]);
-  protected readonly selectedGame = signal<SGDBGame | null>(null);
-  protected readonly steamGridGrids = signal<SGDBImage[]>([]);
-  protected readonly sgdbDialog =
-    viewChild<ElementRef<HTMLDialogElement>>('sgdbDialog');
+  protected readonly sgdbDialog = viewChild(SgdbDialogComponent);
   protected readonly allParentProfileOptions = signal<Profile[]>([]);
   protected readonly parentProfileOptions = computed(() =>
     this.allParentProfileOptions().map((p) => ({ value: p.id, label: p.name }))
@@ -204,41 +199,16 @@ export class ProfileComponent implements OnInit {
   }
 
   protected openSgdbDialog() {
-    this.sgdbDialog()?.nativeElement.showModal();
+    this.sgdbDialog()?.open();
   }
 
-  protected steamGridGameQuery(val: string) {
-    this.sgdbLoading.set(true);
-    window.clearTimeout(this.steamGridTimeout);
-    if (!val || val.length < 3) {
-      this.steamGridGames.set([]);
-      return;
-    }
-    window.setTimeout(async () => {
-      const games = await Api['sgdb.queryGames'](val);
-      this.steamGridGames.set(games);
-      this.sgdbLoading.set(false);
-    }, 500);
-  }
-
-  protected async steamGridSelectGame(game: SGDBGame | null) {
-    if (!game) {
-      return;
-    }
-    this.selectedGame.set(game);
-    this.sgdbLoading.set(true);
-    const grids = await Api['sgdb.getImages'](game, ['grid', 'icon', 'logo']);
-    this.steamGridGrids.set(grids);
-    this.sgdbLoading.set(false);
-  }
   protected async steamGridSelectGrid(grid: SGDBImage | null) {
     if (!grid) {
       return;
     }
     const path = await Api['sgdb.downloadImage'](grid);
     this.profileForm.controls.icon.setValue(path);
-    this.selectedGame.set(null);
-    this.sgdbDialog()?.nativeElement.close();
+    this.sgdbDialog()?.close();
   }
 
   private getProfile(): Profile {

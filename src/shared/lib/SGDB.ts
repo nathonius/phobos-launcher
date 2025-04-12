@@ -5,6 +5,18 @@ export interface SGDBGame {
   verified: boolean;
 }
 
+export interface SGDBDimensionOptions {
+  grid: SGDBGridDimension[];
+  hero: SGDBHeroDimension[];
+  icon: SGDBIconDimension[];
+}
+
+export type SGDBLimitOptions = Record<SGDBImageCategory, number>;
+
+export interface SGDBGameWithIcon extends SGDBGame {
+  icon: string | undefined;
+}
+
 export interface SGDBAuthor {
   name: string;
   steam64: string;

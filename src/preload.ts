@@ -2,7 +2,13 @@ import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from './shared/public-api';
 import type { Category, Engine, Profile } from './shared/config';
 import type { JSONValue } from './shared/json';
-import type { SGDBGame, SGDBImage, SGDBImageCategory } from './shared/lib/SGDB';
+import type {
+  SGDBDimensionOptions,
+  SGDBGame,
+  SGDBImage,
+  SGDBImageCategory,
+  SGDBLimitOptions,
+} from './shared/lib/SGDB';
 
 export const clientApi = {
   'settings.getAll': () => ipcRenderer.invoke('settings.getAll'),
@@ -33,10 +39,15 @@ export const clientApi = {
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),
   'fileSystem.getBase64Image': (path: string) =>
     ipcRenderer.invoke('fileSystem.getBase64Image', path),
-  'sgdb.queryGames': (query: string) =>
-    ipcRenderer.invoke('sgdb.queryGames', query),
-  'sgdb.getImages': (game: SGDBGame, categories: SGDBImageCategory[]) =>
-    ipcRenderer.invoke('sgdb.getImages', game, categories),
+  'sgdb.queryGames': (query: string, withIcons?: boolean) =>
+    ipcRenderer.invoke('sgdb.queryGames', query, withIcons),
+  'sgdb.getImages': (
+    game: SGDBGame,
+    categories: SGDBImageCategory[],
+    dimensions?: Partial<SGDBDimensionOptions>,
+    limits?: Partial<SGDBLimitOptions>
+  ) =>
+    ipcRenderer.invoke('sgdb.getImages', game, categories, dimensions, limits),
   'sgdb.downloadImage': (image: SGDBImage) =>
     ipcRenderer.invoke('sgdb.downloadImage', image),
   'import.arachnotron': (basePath: string) =>

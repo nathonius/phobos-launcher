@@ -41,6 +41,8 @@
             formControlName="icon"
             droppable="true"
             directory="false"
+            includeControls="true"
+            inputId="icon-input"
             [web]="steamGridService.apiKey() !== null"
             (webClick)="openSgdbDialog()"
             (valueChange)="handleIconChange($event)"
@@ -109,39 +111,4 @@
     @if (selectedResource(); as wadPath) { <wad-info [wadPath]="wadPath" />}
   </div>
 </div>
-
-<!-- SteamGrid Dialog -->
-<!-- TODO: Move this to its own component -->
-<dialog #sgdbDialog id="steam-grid-dialog" class="modal">
-  <div class="modal-box">
-    @if (!selectedGame()) {
-    <app-autocomplete
-      labelKey="name"
-      [loading]="sgdbLoading()"
-      [options]="steamGridGames()"
-      (query)="steamGridGameQuery($event)"
-      (valueChange)="steamGridSelectGame($event)"
-    />
-    } @else {
-    <app-autocomplete
-      labelKey="id"
-      orientation="horizontal"
-      [loading]="sgdbLoading()"
-      [options]="steamGridGrids()"
-      [itemTemplate]="gridOption"
-      (valueChange)="steamGridSelectGrid($event)"
-    />
-    <ng-template #gridOption let-option>
-      <div class="flex items-center justify-center w-36 h-36 p-0 m-0">
-        <img
-          class="p-0 m-0 max-h-full max-w-full h-auto"
-          [src]="option ? option.url : ''"
-        />
-      </div>
-    </ng-template>
-    }
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+<sgdb-dialog (imageSelected)="steamGridSelectGrid($event)" />

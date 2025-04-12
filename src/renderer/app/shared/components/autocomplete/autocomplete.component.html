@@ -1,13 +1,24 @@
 <label class="input input-bordered w-full flex gap-2 items-center">
+  @if (icon()) {
+  <lucide-icon [img]="icon()" class="w-4 h-4" />
+  }
   <input
+    #queryInput
     type="text"
     class="grow"
-    (change)="query.emit($any($event.target).value)"
+    [autofocus]="autofocusInput()"
+    [id]="inputId()"
+    [placeholder]="placeholder()"
+    (input)="query.emit($any($event.target).value)"
   />
   @if (loading()) {
   <span class="loading loading-dots loading-sm"></span>
   }
 </label>
+@if (options().length === 0 && !loading() && queryInput.value &&
+queryInput.value.length > 3) {
+<p class="prose text-center mt-2">No results.</p>
+}
 <ul
   cdkListbox
   class="menu p-0 w-full"

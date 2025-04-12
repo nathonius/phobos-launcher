@@ -2,9 +2,12 @@ import type { Category, Engine, Profile } from '../../../shared/config';
 import type { Channel } from '../../../shared/public-api';
 import type { JSONValue } from '../../../shared/json';
 import type {
+  SGDBDimensionOptions,
   SGDBGame,
+  SGDBGameWithIcon,
   SGDBImage,
   SGDBImageCategory,
+  SGDBLimitOptions,
 } from '../../../shared/lib/SGDB';
 import type { ClientApi } from '../../../preload';
 import type { WadInfo } from '../../../shared/lib/wad';
@@ -55,10 +58,22 @@ export const Api = {
     ) as Promise<Electron.OpenDialogReturnValue>,
   'fileSystem.getBase64Image': (path: string) =>
     window.api['fileSystem.getBase64Image'](path) as Promise<string>,
-  'sgdb.queryGames': (query: string) =>
-    window.api['sgdb.queryGames'](query) as Promise<SGDBGame[]>,
-  'sgdb.getImages': (game: SGDBGame, categories: SGDBImageCategory[]) =>
-    window.api['sgdb.getImages'](game, categories) as Promise<SGDBImage[]>,
+  'sgdb.queryGames': (query: string, withIcons?: boolean) =>
+    window.api['sgdb.queryGames'](query, withIcons) as Promise<
+      SGDBGame[] | SGDBGameWithIcon[]
+    >,
+  'sgdb.getImages': (
+    game: SGDBGame,
+    categories: SGDBImageCategory[],
+    dimensions?: Partial<SGDBDimensionOptions>,
+    limits?: Partial<SGDBLimitOptions>
+  ) =>
+    window.api['sgdb.getImages'](
+      game,
+      categories,
+      dimensions,
+      limits
+    ) as Promise<SGDBImage[]>,
   'sgdb.downloadImage': (image: SGDBImage) =>
     window.api['sgdb.downloadImage'](image) as Promise<string>,
   'import.arachnotron': (basepath: string) =>

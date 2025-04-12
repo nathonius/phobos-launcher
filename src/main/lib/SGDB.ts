@@ -44,6 +44,7 @@ export interface SGDBImageOptions {
   humor?: SGDBImageBooleanOption;
   oneoftag?: string;
   page?: number;
+  limit?: number;
 }
 
 export interface SGDBGetGameOptions {
