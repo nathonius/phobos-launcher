@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import type Store from 'electron-store';
-import slugify from 'slugify';
+import filenamify from 'filenamify';
 import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
@@ -83,7 +83,7 @@ export class ProfileService extends PhobosApi {
     // TODO: Probably worth deduplicating these files
     const files: string[] = [];
     const cvarCtx: CvarContext = {
-      slug: slugify(profile.name),
+      slug: filenamify(profile.name, { replacement: '' }),
     };
     const defaultCvars = (getPhobos().settingsService.getSetting(
       'defaultCvars'
