@@ -15,6 +15,8 @@ import { NgClass, NgStyle } from '@angular/common';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
+let radioNumber = 0;
+
 @Component({
   selector: 'key-value-list',
   imports: [
@@ -29,7 +31,9 @@ import { ListComponentBase } from '../../classes/ListComponentBase';
 })
 export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly valueChange = output<T[]>();
+  public readonly valueSelected = output<T>();
   public readonly values = input.required<T[]>();
+  public readonly selectable = input(false, { transform: booleanAttribute });
   public readonly removable = input(true, { transform: booleanAttribute });
   public readonly reorder = input(true, { transform: booleanAttribute });
   public readonly withId = input(true, { transform: booleanAttribute });
@@ -47,6 +51,12 @@ export class KeyValueListComponent<T> extends ListComponentBase<T> {
   protected readonly templateValues = computed(
     () => this.values() as Record<string, string>[]
   );
+  protected readonly radioName = `key-value-list-radio-${radioNumber++}`;
+
+  handleSelect(index: number): void {
+    const value = this.values()[index];
+    this.valueSelected.emit(value);
+  }
 
   handleAdd(): void {
     const newValues: Record<string, string>[] = [

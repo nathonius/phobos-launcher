@@ -1,0 +1,7 @@
+@if (wadPath(); as path) {
+<h2 class="font-semibold">{{ path }}</h2>
+@if (wadInfo(); as info) {
+<p>Level count: {{ info.maps.length }}</p>
+@if (info.info) {
+<pre><code>{{info.info}}</code></pre>
+} } }

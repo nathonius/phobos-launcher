@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   input,
@@ -14,6 +15,8 @@ import { Api } from '../../../api/api';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
 
+let radioNumber = 0;
+
 @Component({
   selector: 'file-list',
   imports: [
@@ -24,12 +27,23 @@ import { FileInputControlsComponent } from '../file-input-controls/file-input-co
   ],
   templateUrl: './file-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'relative',
+  },
 })
 export class FileListComponent extends ListComponentBase<string> {
+  public readonly selectable = input(false, { transform: booleanAttribute });
   public readonly valueChange = output<string[]>();
+  public readonly valueSelected = output<string>();
   public readonly values = input.required<string[]>();
+  protected readonly radioName = `file-list-radio-${radioNumber++}`;
   protected readonly dragging = signal(false);
   private dragTimeout: number | undefined = undefined;
+
+  handleSelect(index: number): void {
+    const value = this.values()[index];
+    this.valueSelected.emit(value);
+  }
 
   handleAdd(path?: string): void {
     const newValues = [...this.values()];

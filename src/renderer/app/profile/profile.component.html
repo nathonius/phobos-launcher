@@ -1,106 +1,114 @@
-<form
-  id="wrapper-form"
-  class="flex flex-col gap-6 p-4"
-  [formGroup]="profileForm"
->
-  <form-section>
-    <div class="flex flex-col gap-2">
-      <label for="profile-name" class="input w-full">
-        <span class="label">Name</span>
-        <input
-          id="profile-name"
-          type="text"
-          placeholder="Profile name"
-          formControlName="name"
-        />
-      </label>
-      <label for="engine-select" class="select w-full">
-        <span class="label">Engine</span>
-        <select id="engine-select" formControlName="engine">
-          <option [ngValue]="''" disabled>Select engine</option>
-          @for (option of engineOptions(); track option.id) {
-          <option [ngValue]="option.id">{{ option.name }}</option>
-          }
-        </select>
-      </label>
-      <label for="base-select" class="select w-full">
-        <span class="label">Base</span>
-        <select id="base-select" formControlName="base">
-          <option [ngValue]="''" disabled>Select base</option>
-          @for (option of baseOptions(); track option.id) {
-          <option [ngValue]="option.id">{{ option.name }}</option>
-          }
-        </select>
-      </label>
-      <label for="icon-input" class="input w-full">
-        <span class="label">Icon</span>
-        <file-input
-          class="grow"
-          formControlName="icon"
-          droppable="true"
-          directory="false"
-          [web]="steamGridService.apiKey() !== null"
-          (webClick)="openSgdbDialog()"
-          (valueChange)="handleIconChange($event)"
-        />
-      </label>
-      <img class="h-full max-w-60" [src]="profileIcon()" />
-    </div>
-  </form-section>
-  <form-section label="Profile Resources">
-    <h3 class="font-semibold mb-1">Inherit profile resources</h3>
-    <select-list
-      class="w-auto"
-      placeholderOption="Select a profile"
-      [options]="parentProfileOptions()"
-      [values]="profileForm.controls.parents.value"
-      (valueChange)="handleFormControlChange($event, 'parents')"
-    />
-    <h3 class="font-semibold mb-1">Resources</h3>
-    <file-list
-      [values]="profileForm.controls.files.value"
-      (valueChange)="handleFormControlChange($event, 'files')"
-    />
-  </form-section>
-  <form-section label="Categories">
-    <h3 class="font-semibold mb-1">Profile categories</h3>
-    <tag-list
-      placeholder="Select a category"
-      inputType="select"
-      color="accent"
-      [options]="categoryOptions()"
-      [values]="profileForm.controls.categories.value"
-      (valueChange)="handleFormControlChange($event, 'categories')"
-    />
-    <h3 class="font-semibold mb-1">Profile tags</h3>
-    <tag-list
-      color="info"
-      [values]="profileForm.controls.tags.value"
-      (valueChange)="handleFormControlChange($event, 'tags')"
-    />
-    <fieldset class="fieldset">
-      <legend class="fieldset-legend">Profile status</legend>
-      <label for="completed-tag-toggle" class="fieldset-label">
-        <input
-          id="completed-tag-toggle"
-          type="checkbox"
-          class="toggle toggle-success"
-          formControlName="complete"
-        />
-        Completed
-      </label>
-    </fieldset>
-  </form-section>
-  <form-section label="CVARs">
-    <key-value-list
-      key="var"
-      withId="false"
-      addLabel="Add var"
-      [values]="profileForm.controls.cvars.value"
-      (valueChange)="handleFormControlChange($event, 'cvars')"
-    />
-  </form-section>
-</form>
+<div class="drawer drawer-end lg:drawer-open">
+  <input type="checkbox" class="drawer-toggle" />
+  <form
+    id="wrapper-form"
+    class="drawer-content flex flex-col gap-6 p-4 max-w-[95rem]"
+    [formGroup]="profileForm"
+  >
+    <form-section>
+      <div class="flex flex-col gap-2">
+        <label for="profile-name" class="input w-full">
+          <span class="label">Name</span>
+          <input
+            id="profile-name"
+            type="text"
+            placeholder="Profile name"
+            formControlName="name"
+          />
+        </label>
+        <label for="engine-select" class="select w-full">
+          <span class="label">Engine</span>
+          <select id="engine-select" formControlName="engine">
+            <option [ngValue]="''" disabled>Select engine</option>
+            @for (option of engineOptions(); track option.id) {
+            <option [ngValue]="option.id">{{ option.name }}</option>
+            }
+          </select>
+        </label>
+        <label for="base-select" class="select w-full">
+          <span class="label">Base</span>
+          <select id="base-select" formControlName="base">
+            <option [ngValue]="''" disabled>Select base</option>
+            @for (option of baseOptions(); track option.id) {
+            <option [ngValue]="option.id">{{ option.name }}</option>
+            }
+          </select>
+        </label>
+        <label for="icon-input" class="input w-full">
+          <span class="label">Icon</span>
+          <file-input
+            class="grow"
+            formControlName="icon"
+            droppable="true"
+            directory="false"
+            [web]="steamGridService.apiKey() !== null"
+            (webClick)="openSgdbDialog()"
+            (valueChange)="handleIconChange($event)"
+          />
+        </label>
+        <img class="h-full max-w-60" [src]="profileIcon()" />
+      </div>
+    </form-section>
+    <form-section label="Profile Resources">
+      <h3 class="font-semibold mb-1">Inherit profile resources</h3>
+      <select-list
+        class="w-auto"
+        placeholderOption="Select a profile"
+        [options]="parentProfileOptions()"
+        [values]="profileForm.controls.parents.value"
+        (valueChange)="handleFormControlChange($event, 'parents')"
+      />
+      <h3 class="font-semibold mb-1">Resources</h3>
+      <file-list
+        selectable="true"
+        [values]="profileForm.controls.files.value"
+        (valueChange)="handleFormControlChange($event, 'files')"
+        (valueSelected)="selectedResource.set($event)"
+      />
+    </form-section>
+    <form-section label="Categories">
+      <h3 class="font-semibold mb-1">Profile categories</h3>
+      <tag-list
+        placeholder="Select a category"
+        inputType="select"
+        color="accent"
+        [options]="categoryOptions()"
+        [values]="profileForm.controls.categories.value"
+        (valueChange)="handleFormControlChange($event, 'categories')"
+      />
+      <h3 class="font-semibold mb-1">Profile tags</h3>
+      <tag-list
+        color="info"
+        [values]="profileForm.controls.tags.value"
+        (valueChange)="handleFormControlChange($event, 'tags')"
+      />
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Profile status</legend>
+        <label for="completed-tag-toggle" class="fieldset-label">
+          <input
+            id="completed-tag-toggle"
+            type="checkbox"
+            class="toggle toggle-success"
+            formControlName="complete"
+          />
+          Completed
+        </label>
+      </fieldset>
+    </form-section>
+    <form-section label="CVARs">
+      <key-value-list
+        key="var"
+        withId="false"
+        addLabel="Add var"
+        [values]="profileForm.controls.cvars.value"
+        (valueChange)="handleFormControlChange($event, 'cvars')"
+      />
+    </form-section>
+  </form>
+  <div class="drawer-side p-4">
+    @if (selectedResource(); as wadPath) { <wad-info [wadPath]="wadPath" />}
+  </div>
+</div>
 
 <!-- SteamGrid Dialog -->
 <!-- TODO: Move this to its own component -->

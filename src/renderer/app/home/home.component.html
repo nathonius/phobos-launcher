@@ -27,8 +27,18 @@
         {{ categoryService.selectedCategory()?.name ?? "All" }}
       </h2>
       <div class="flex gap-2 items-center">
+        <label for="profile-search" class="input min-w-2xs">
+          <lucide-angular [img]="icons.Search" />
+          <input
+            id="profile-search"
+            type="text"
+            placeholder="Search"
+            class="grow"
+            [(ngModel)]="searchQuery"
+          />
+        </label>
         <select
-          class="select select-bordered w-full max-w-xs"
+          class="select select-bordered min-w-40"
           (change)="handleSort($any($event.target).value)"
           [value]="sort()"
         >

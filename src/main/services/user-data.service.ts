@@ -6,6 +6,7 @@ import { defaultFormats, defaultPlugins } from 'jimp';
 import { createJimp } from '@jimp/core';
 import type Store from 'electron-store';
 import { ipcHandler, PhobosApi } from '../api';
+import { asBase64Image } from '../util';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -137,7 +138,7 @@ export class UserDataService extends PhobosApi {
     if (path) {
       const extension = path.split('.').pop() ?? 'png';
       const data = await readFile(path);
-      return `data:image/${extension};base64,${data.toString('base64')}`;
+      return asBase64Image(data, extension);
     }
     return '';
   }

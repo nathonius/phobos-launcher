@@ -1,6 +1,9 @@
 <table class="table table-zebra">
   <thead>
     <tr>
+      @if (selectable()) {
+      <th><!-- Selection --></th>
+      }
       <th>{{ keyLabel() }}</th>
       <th>{{ valueLabel() }}</th>
       <th><!-- Actions --></th>
@@ -10,6 +13,16 @@
     @let k = key(); @let v = value(); @for (pair of templateValues(); track
     $index) {
     <tr class="w-full">
+      @if (selectable()) {
+      <td>
+        <input
+          type="radio"
+          [name]="radioName"
+          class="radio"
+          (change)="handleSelect($index)"
+        />
+      </td>
+      }
       <td [ngStyle]="{ width: keyColumnWidth() }">
         <input
           class="input w-full"
@@ -68,6 +81,9 @@
   </tbody>
   <tfoot>
     <tr>
+      @if (selectable()) {
+      <td></td>
+      }
       <td></td>
       <td></td>
       <td class="text-end">
