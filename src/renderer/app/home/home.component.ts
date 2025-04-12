@@ -6,11 +6,18 @@ import {
   computed,
   effect,
   inject,
+  linkedSignal,
   signal,
   untracked,
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { LucideAngularModule, Plus, SortAsc, SortDesc } from 'lucide-angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  LucideAngularModule,
+  Plus,
+  SortAsc,
+  SortDesc,
+  Search,
+} from 'lucide-angular';
 import type { Category, Profile } from '../../../shared/config';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
@@ -43,6 +50,7 @@ const VALID_SORT_ARRAY: ProfileSort[] = [
     ProfileComponent,
     CategoryComponent,
     LucideAngularModule,
+    FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -58,7 +66,12 @@ export class HomeComponent implements OnInit {
     Plus,
     SortAsc,
     SortDesc,
+    Search,
   };
+  protected readonly searchQuery = linkedSignal<string>(() => {
+    this.categoryService.selectedCategory();
+    return '';
+  });
   protected readonly viewService = inject(ViewService);
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
@@ -71,6 +84,7 @@ export class HomeComponent implements OnInit {
     const selectedCategory = this.categoryService.selectedCategory();
     const sort = this.sort();
     const sortDirection = this.sortDirection() === 'asc' ? 1 : -1;
+    const query = this.searchQuery();
     let filtered: ProfileItem[];
     if (selectedCategory === undefined || selectedCategory.id === 'all') {
       filtered = allItems;
@@ -79,6 +93,13 @@ export class HomeComponent implements OnInit {
         ((p as unknown as Profile).categories ?? []).includes(
           selectedCategory.id
         )
+      );
+    }
+    if (query) {
+      filtered = filtered.filter(
+        (profile) =>
+          profile.name.toLowerCase().includes(query) ||
+          (profile.tags ?? []).some((t) => t.toLowerCase().includes(query))
       );
     }
     if (sort === 'alphabetical') {

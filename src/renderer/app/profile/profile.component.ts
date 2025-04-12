@@ -34,6 +34,7 @@ import { SteamGridService } from '../shared/services/steam-grid.service';
 import { TagListComponent } from '../shared/components/tag-list/tag-list.component';
 import { ViewService } from '../shared/services/view.service';
 import { HomeViewState } from '../shared/constants';
+import { WadInfoComponent } from '../wad-info/wad-info.component';
 import { ProfileService } from './profile.service';
 
 type ProfileForm = FormGroup<{
@@ -61,6 +62,7 @@ type ProfileForm = FormGroup<{
     AutocompleteComponent,
     CdkListboxModule,
     TagListComponent,
+    WadInfoComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
@@ -106,6 +108,7 @@ export class ProfileComponent implements OnInit {
   protected readonly parentProfileOptions = computed(() =>
     this.allParentProfileOptions().map((p) => ({ value: p.id, label: p.name }))
   );
+  protected readonly selectedResource = signal<string>('');
   private readonly categoryService = inject(CategoryService);
   private steamGridTimeout: number | undefined;
 

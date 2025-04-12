@@ -12,6 +12,7 @@ import { SettingsService } from './services/settings.service';
 import { SGDBService } from './services/sgdb.service';
 import { ImportService } from './services/import.service';
 import { EngineService } from './services/engine.service';
+import { WadService } from './services/wad.service';
 
 export class Phobos {
   public readonly store = new Store();
@@ -22,6 +23,7 @@ export class Phobos {
   public steamGridService!: SGDBService;
   public engineService!: EngineService;
   public importService!: ImportService;
+  public wadService!: WadService;
   public readonly attachedHandlers: Channel[] = [];
   private window: BrowserWindow | null = null;
   private initialized = false;
@@ -53,6 +55,7 @@ export class Phobos {
         app.getPath('userData'),
         this.store
       );
+      this.wadService = new WadService();
 
       // Log in case some channels were missed
       for (const c of ALL_CHANNELS) {

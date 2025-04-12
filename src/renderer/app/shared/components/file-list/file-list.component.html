@@ -6,6 +6,9 @@
 >
   <thead>
     <tr>
+      @if (selectable()) {
+      <th><!-- Select --></th>
+      }
       <th>Path</th>
       <th><!-- Actions --></th>
     </tr>
@@ -13,6 +16,16 @@
   <tbody>
     @for(path of values(); track path) {
     <tr>
+      @if (selectable()) {
+      <td>
+        <input
+          type="radio"
+          class="radio"
+          [name]="radioName"
+          (change)="handleSelect($index)"
+        />
+      </td>
+      }
       <td class="w-full">
         <file-input
           [value]="path"
@@ -33,6 +46,9 @@
   </tbody>
   <tfoot>
     <tr>
+      @if (selectable()) {
+      <td><!-- empty --></td>
+      }
       <td>
         <!-- empty -->
       </td>

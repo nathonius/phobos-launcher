@@ -1,5 +1,5 @@
 import type { LucideIconData } from 'lucide-angular/icons/types';
-import type { Profile } from '@shared/config';
+import type { Profile } from '../../../../shared/config';
 
 export interface ProfileItemAction {
   label: string;

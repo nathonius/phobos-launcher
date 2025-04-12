@@ -1,0 +1,15 @@
+<input
+  type="text"
+  class="input w-full"
+  [placeholder]="placeholder()"
+  [(ngModel)]="query"
+/>
+<ul
+  cdkListbox
+  class="menu w-full"
+  (cdkListboxValueChange)="handleValueChange($any($event))"
+>
+  @for (option of filteredOptions(); track option) {
+  <li [cdkOption]="option">{{ getLabel(option) }}</li>
+  }
+</ul>
