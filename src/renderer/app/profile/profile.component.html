@@ -108,7 +108,8 @@
     </form-section>
   </form>
   <div class="drawer-side p-4">
-    @if (selectedResource(); as wadPath) { <wad-info [wadPath]="wadPath" />}
+    @if (selectedResource(); as wadPath) {
+    <wad-info [wadPath]="wadPath" (saveImage)="setIcon($event)" />}
   </div>
 </div>
 <sgdb-dialog (imageSelected)="steamGridSelectGrid($event)" />

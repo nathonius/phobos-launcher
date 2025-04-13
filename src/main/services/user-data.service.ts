@@ -5,8 +5,9 @@ import { dialog, protocol, net } from 'electron';
 import { defaultFormats, defaultPlugins } from 'jimp';
 import { createJimp } from '@jimp/core';
 import type Store from 'electron-store';
+import { filenamifyPath } from 'filenamify';
 import { ipcHandler, PhobosApi } from '../api';
-import { asBase64Image } from '../util';
+import { asBase64Image, simpleHash } from '../util';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -40,8 +41,12 @@ export class UserDataService extends PhobosApi {
       switch (url.hostname) {
         case 'get-file': {
           const filePath = url.searchParams.get('path');
+          const compress = url.searchParams.get('compress') ?? '';
           const extension = extname(filePath).toLowerCase();
-          if (JIMP_SUPPORTED_FORMATS.includes(extension)) {
+          if (
+            JIMP_SUPPORTED_FORMATS.includes(extension) &&
+            compress !== 'false'
+          ) {
             try {
               return new Response(await this.getOrCreateCompressed(filePath));
             } catch (err) {
@@ -82,7 +87,11 @@ export class UserDataService extends PhobosApi {
       ).arrayBuffer();
     }
 
+    const imageBuffer = await (
+      await net.fetch(pathToFileURL(path).href)
+    ).arrayBuffer();
     const { buffer, ...compressed } = await this.createCompressed(
+      imageBuffer,
       path,
       fileStats.mtimeMs
     );
@@ -90,27 +99,27 @@ export class UserDataService extends PhobosApi {
     return buffer;
   }
 
-  private async createCompressed(
+  public async createCompressed(
+    imageBuffer: ArrayBuffer,
     originalPath: string,
-    modifiedMs: number
+    modifiedMs: number = 0
   ): Promise<
     CompressedImage & { buffer: ArrayBuffer | Buffer<ArrayBufferLike> }
   > {
-    const imageBuffer = await (
-      await net.fetch(pathToFileURL(originalPath).href)
-    ).arrayBuffer();
-
     // Compress image
-    const compressed = (await this.jimp.read(imageBuffer)).scaleToFit({
+    const compressed = (await this.jimp.fromBuffer(imageBuffer)).scaleToFit({
       w: 300,
       h: 300,
     });
+
+    // Hash the original path for uniqueness
+    const hash = simpleHash(originalPath);
 
     // Write to disk
     const compressedPath = join(
       this.dataPath,
       'processed-images',
-      basename(originalPath)
+      `${hash}_${basename(originalPath)}`
     );
     const buffer = await compressed.getBuffer('image/png');
     // Write buffer
@@ -152,5 +161,15 @@ export class UserDataService extends PhobosApi {
     const fullPath = resolve(this.dataPath, path);
     await writeFile(resolve(this.dataPath, path), Buffer.from(value));
     return fullPath;
+  }
+
+  async makeWadDataDir(wadPath: string) {
+    const path = join(
+      this.dataPath,
+      'extracted-graphics',
+      basename(filenamifyPath(wadPath, { replacement: '' }))
+    );
+    await mkdir(path, { recursive: true });
+    return path;
   }
 }

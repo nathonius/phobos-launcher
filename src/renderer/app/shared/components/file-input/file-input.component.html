@@ -12,7 +12,7 @@
     (dragover)="handleDragOver($event)"
     (dragleave)="handleDragOut()"
   />
-  @if (includeControls()) {
+  @if (!controls()) {
   <file-input-controls
     [directory]="directory()"
     [file]="file()"

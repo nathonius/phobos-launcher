@@ -80,5 +80,9 @@ export const Api = {
     window.api['import.arachnotron'](basepath),
   'wad.getInfo': (wadPath: string) =>
     window.api['wad.getInfo'](wadPath) as Promise<WadInfo | null>,
+  'wad.getGraphics': (wadPath: string, lumpNames: string[]) =>
+    window.api['wad.getGraphics'](wadPath, lumpNames) as Promise<
+      string[] | null
+    >,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;

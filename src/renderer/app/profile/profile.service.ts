@@ -84,9 +84,12 @@ export class ProfileService {
     }
   }
 
-  public getProfileIcon(profile: Profile | string) {
+  public getProfileIcon(profile: Profile | string, compress?: boolean) {
     const path = typeof profile === 'string' ? profile : profile.icon;
     const params = new URLSearchParams({ path });
+    if (compress !== undefined) {
+      params.set('compress', `${compress}`);
+    }
     if (path) {
       return `phobos-data://get-file?${params.toString()}`;
     }

@@ -41,6 +41,7 @@ export class SettingsComponent implements OnInit {
   protected readonly settingsForm = new FormGroup({
     theme: new FormControl<string | null>(null),
     steamGridApiKey: new FormControl<string | null>(null),
+    deutexPath: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
   });
   protected readonly defaultCvars = signal<Cvar[]>([]);
@@ -63,6 +64,9 @@ export class SettingsComponent implements OnInit {
     Api['settings.get']('defaultCvars').then((cvars: Cvar[] | null) => {
       this.defaultCvars.set(cvars ?? []);
     });
+    Api['settings.get']('deutexPath').then((path: string | null) => {
+      this.settingsForm.controls.deutexPath.setValue(path ?? null);
+    });
   }
 
   public ngOnInit(): void {
@@ -71,6 +75,9 @@ export class SettingsComponent implements OnInit {
     });
     this.settingsForm.controls.steamGridApiKey.valueChanges.subscribe((val) => {
       this.steamGridService.setKey(val ? val : null);
+    });
+    this.settingsForm.controls.deutexPath.valueChanges.subscribe((val) => {
+      Api['settings.set']('deutexPath', val);
     });
   }
 

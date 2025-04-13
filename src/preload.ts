@@ -54,6 +54,8 @@ export const clientApi = {
     ipcRenderer.invoke('import.arachnotron', basePath),
   'wad.getInfo': (wadPath: string) =>
     ipcRenderer.invoke('wad.getInfo', wadPath),
+  'wad.getGraphics': (wadPath: string, lumpNames: string[]) =>
+    ipcRenderer.invoke('wad.getGraphics', wadPath, lumpNames),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

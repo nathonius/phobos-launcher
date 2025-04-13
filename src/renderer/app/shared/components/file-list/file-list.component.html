@@ -29,11 +29,13 @@
       <td class="w-full">
         <file-input
           [value]="path"
+          [controls]="inputControls"
           (valueChange)="handleChange($index, $event)"
         />
       </td>
       <td class="whitespace-nowrap">
         <file-input-controls
+          #inputControls
           reorder="true"
           removable="true"
           (reorderUp)="handleReorderUp($index)"

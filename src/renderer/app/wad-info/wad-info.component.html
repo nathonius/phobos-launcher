@@ -1,6 +1,17 @@
 @if (wadPath(); as path) {
 <h2 class="font-semibold">{{ path }}</h2>
-@if (wadInfo(); as info) {
+@if (wadInfo(); as info) { @for (graphic of displayGraphics(); track graphic) {
+<div class="relative">
+  <img [src]="graphic" />
+  <button
+    type="button"
+    class="absolute w-full h-full top-0 left-0 flex items-center justify-center bg-primary text-primary-content opacity-0 hover:opacity-100"
+    (click)="saveGraphic($index)"
+  >
+    Save to profile
+  </button>
+</div>
+}
 <p>Level count: {{ info.maps.length }}</p>
 @if (info.info) {
 <pre><code>{{info.info}}</code></pre>

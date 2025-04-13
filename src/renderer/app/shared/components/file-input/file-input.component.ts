@@ -45,9 +45,7 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly inputId = input<string>();
   public readonly value = input<string>();
   public readonly placeholder = input<string>();
-  public readonly includeControls = input(false, {
-    transform: booleanAttribute,
-  });
+  public readonly controls = input<FileInputControlsComponent>();
 
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
@@ -86,6 +84,13 @@ export class FileInputComponent implements ControlValueAccessor {
   private dragTimeout: number | undefined = undefined;
 
   constructor() {
+    effect(() => {
+      const controls = this.controls();
+      if (controls) {
+        controls.selectDirectory.subscribe(this.handleSelectDirectory);
+        controls.selectFile.subscribe(this.handleSelectFile);
+      }
+    });
     effect(() => {
       const value = this.value();
       if (value) {

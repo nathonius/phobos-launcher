@@ -158,6 +158,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  protected setIcon(iconPath: string) {
+    this.profileForm.controls.icon.setValue(iconPath);
+    this.handleIconChange(iconPath);
+  }
+
   protected handleIconChange(iconPath: string) {
     const icon = this.profileService.getProfileIcon(iconPath);
     this.profileIcon.set(icon);
