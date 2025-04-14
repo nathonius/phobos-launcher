@@ -87,8 +87,12 @@ export class FileInputComponent implements ControlValueAccessor {
     effect(() => {
       const controls = this.controls();
       if (controls) {
-        controls.selectDirectory.subscribe(this.handleSelectDirectory);
-        controls.selectFile.subscribe(this.handleSelectFile);
+        controls.selectDirectory.subscribe(() => {
+          this.handleSelectDirectory();
+        });
+        controls.selectFile.subscribe(() => {
+          this.handleSelectFile();
+        });
       }
     });
     effect(() => {
