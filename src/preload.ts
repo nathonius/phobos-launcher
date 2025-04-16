@@ -56,6 +56,7 @@ export const clientApi = {
     ipcRenderer.invoke('wad.getInfo', wadPath),
   'wad.getGraphics': (wadPath: string, lumpNames: string[]) =>
     ipcRenderer.invoke('wad.getGraphics', wadPath, lumpNames),
+  'wad.clearDataDir': () => ipcRenderer.invoke('wad.clearDataDir'),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

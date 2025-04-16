@@ -17,3 +17,8 @@ export function simpleHash(str: string) {
   }
   return hash >>> 0;
 }
+
+export function normalizePathSep(value: string, targetSep = '/'): string {
+  const otherSep = targetSep === '/' ? '\\' : '/';
+  return value.replaceAll(otherSep, targetSep);
+}

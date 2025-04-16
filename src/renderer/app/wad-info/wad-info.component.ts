@@ -45,7 +45,7 @@ export class WadInfoComponent {
       if (!path) {
         return;
       }
-      if (!path.endsWith('.wad')) {
+      if (!path.endsWith('.wad') && !path.endsWith('.pk3')) {
         console.warn(`Reading non-wad files is not yet supported.`);
         return;
       }
@@ -53,9 +53,9 @@ export class WadInfoComponent {
       this.wadInfo.set(info);
     });
     effect(async () => {
-      const info = this.wadInfo();
+      this.wadInfo();
       const wadPath = this.wadPath();
-      if (!info || !wadPath) {
+      if (!wadPath) {
         this.graphics.set(null);
         return;
       }

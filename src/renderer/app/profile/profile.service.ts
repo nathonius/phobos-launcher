@@ -2,6 +2,10 @@ import { computed, Injectable, signal } from '@angular/core';
 import { Wrench, Play, Trash, Check } from 'lucide-angular';
 import type { Profile } from '../../../shared/config';
 import { Api } from '../api/api';
+import {
+  BACKGROUND_TEXTURES,
+  BACKGROUND_TEXTURES_CONST,
+} from '../shared/images/background-textures/background-textures';
 import type { ProfileItem } from './profile-item/profile-item.interface';
 
 @Injectable({
@@ -15,6 +19,7 @@ export class ProfileService {
     return profiles.map((p) => ({
       ...p,
       icon: this.getProfileIcon(p),
+      background: this.getProfileBackground(p),
       actions: [
         {
           name: 'edit',
@@ -81,6 +86,14 @@ export class ProfileService {
         lastPlayed: new Date().toISOString(),
       });
       this.allProfiles.set(allProfiles);
+    }
+  }
+
+  public getProfileBackground(profile: Profile) {
+    if (profile.background) {
+      return `url(${BACKGROUND_TEXTURES[profile.background]})`;
+    } else {
+      return `url(${BACKGROUND_TEXTURES_CONST.RockWall})`;
     }
   }
 

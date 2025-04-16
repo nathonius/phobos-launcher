@@ -58,4 +58,5 @@ export interface Profile {
   parents: string[];
   tags: string[];
   complete: boolean;
+  background: string;
 }

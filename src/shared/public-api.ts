@@ -23,6 +23,7 @@ export const ALL_CHANNELS = [
   'import.arachnotron',
   'wad.getInfo',
   'wad.getGraphics',
+  'wad.clearDataDir',
 ] as const;
 
 export type Channel = (typeof ALL_CHANNELS)[number];

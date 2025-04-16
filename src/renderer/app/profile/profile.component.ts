@@ -35,6 +35,7 @@ import { ViewService } from '../shared/services/view.service';
 import { HomeViewState } from '../shared/constants';
 import { WadInfoComponent } from '../wad-info/wad-info.component';
 import { SgdbDialogComponent } from '../sgdb-dialog/sgdb-dialog.component';
+import { BACKGROUND_TEXTURE_OPTIONS } from '../shared/images/background-textures/background-textures';
 import { ProfileService } from './profile.service';
 
 type ProfileForm = FormGroup<{
@@ -48,6 +49,7 @@ type ProfileForm = FormGroup<{
   parents: FormControl<string[]>;
   tags: FormControl<string[]>;
   complete: FormControl<boolean>;
+  background: FormControl<string>;
 }>;
 
 @Component({
@@ -74,6 +76,7 @@ type ProfileForm = FormGroup<{
 export class ProfileComponent implements OnInit {
   public readonly profile = input<Profile>();
   public readonly deleteProfile = output();
+  protected readonly backgroundOptions = BACKGROUND_TEXTURE_OPTIONS;
   protected readonly profileService = inject(ProfileService);
   protected readonly navbarService = inject(NavbarService);
   protected readonly steamGridService = inject(SteamGridService);
@@ -89,6 +92,7 @@ export class ProfileComponent implements OnInit {
     parents: new FormControl<string[]>([], { nonNullable: true }),
     tags: new FormControl<string[]>([], { nonNullable: true }),
     complete: new FormControl<boolean>(false, { nonNullable: true }),
+    background: new FormControl<string>('', { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -105,7 +109,6 @@ export class ProfileComponent implements OnInit {
   );
   protected readonly selectedResource = signal<string>('');
   private readonly categoryService = inject(CategoryService);
-  private steamGridTimeout: number | undefined;
 
   constructor() {
     effect(async () => {
@@ -133,6 +136,7 @@ export class ProfileComponent implements OnInit {
           parents: profile.parents,
           tags: profile.tags,
           complete: profile.complete,
+          background: profile.background,
         });
       } else {
         this.profileForm.reset({
@@ -145,6 +149,7 @@ export class ProfileComponent implements OnInit {
           parents: [],
           tags: [],
           complete: false,
+          background: '',
         });
       }
     });
@@ -234,21 +239,23 @@ export class ProfileComponent implements OnInit {
       parents,
       tags,
       complete,
+      background,
     } = this.profileForm.value;
     return {
       id: profileId,
-      name: name,
-      engine: engine,
-      base: base,
-      files: files,
-      icon: icon,
-      categories: categories,
-      cvars: cvars,
-      parents: parents,
-      tags: tags,
+      name,
+      engine,
+      base,
+      files,
+      icon,
+      categories,
+      cvars,
+      parents,
+      tags,
       created: originalProfile?.created ?? new Date().toISOString(),
       lastPlayed: originalProfile?.lastPlayed ?? null,
-      complete: complete,
+      complete,
+      background,
     };
   }
 }

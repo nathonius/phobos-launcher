@@ -43,12 +43,25 @@
             directory="false"
             includeControls="true"
             inputId="icon-input"
+            removable="true"
             [web]="steamGridService.apiKey() !== null"
             (webClick)="openSgdbDialog()"
             (valueChange)="handleIconChange($event)"
+            (remove)="setIcon('')"
           />
         </label>
         <img class="h-full max-w-60" [src]="profileIcon()" />
+        @if (!profileForm.controls.icon.value) {
+        <label for="background-select" class="select w-full">
+          <span class="label">Background</span>
+          <select id="background-select" formControlName="background">
+            <option [ngValue]="''" disabled>Select background</option>
+            @for (option of backgroundOptions; track option.key) {
+            <option [ngValue]="option.key">{{ option.name }}</option>
+            }
+          </select>
+        </label>
+        }
       </div>
     </form-section>
     <form-section label="Profile Resources">

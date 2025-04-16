@@ -190,6 +190,7 @@ export class HomeComponent implements OnInit {
       created: new Date().toISOString(),
       lastPlayed: null,
       complete: false,
+      background: '',
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }

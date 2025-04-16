@@ -1,6 +1,6 @@
 @if (wadPath(); as path) {
 <h2 class="font-semibold">{{ path }}</h2>
-@if (wadInfo(); as info) { @for (graphic of displayGraphics(); track graphic) {
+@for (graphic of displayGraphics(); track graphic) {
 <div class="relative">
   <img [src]="graphic" />
   <button
@@ -11,7 +11,8 @@
     Save to profile
   </button>
 </div>
-}
+} @if (wadInfo(); as info) {
+
 <p>Level count: {{ info.maps.length }}</p>
 @if (info.info) {
 <pre><code>{{info.info}}</code></pre>

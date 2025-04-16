@@ -69,6 +69,10 @@ export class UserDataService extends PhobosApi {
     });
   }
 
+  public wadDataDir(): string {
+    return join(this.dataPath, 'extracted-graphics');
+  }
+
   async getOrCreateCompressed(
     path: string
   ): Promise<ArrayBuffer | Buffer<ArrayBufferLike>> {
@@ -170,6 +174,10 @@ export class UserDataService extends PhobosApi {
       basename(filenamifyPath(wadPath, { replacement: '' }))
     );
     await mkdir(path, { recursive: true });
+
+    // Make graphics subfolder as well to help with pk3s
+    await mkdir(join(path, 'graphics'), { recursive: true });
+
     return path;
   }
 }
