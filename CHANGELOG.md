@@ -14,6 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [0.0.8] - 2025-04-16
+
+### Changed
+
+- Some pk3 files can now be read in addition to wads
+- Images found in pk3s and wads can be saved for use as the profile image
+- Can select a background for the profile if no image is set
+
+### Fixed
+
+- Cvar slug will now be a valid file path, even if the name of the profile isn't
+
 ## [0.0.7] - 2025-04-12
 
 ### Changed
@@ -76,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
+[0.0.8]: https://github.com/nathonius/phobos-launcher/compare/0.0.7...0.0.8
 [0.0.7]: https://github.com/nathonius/phobos-launcher/compare/0.0.6...0.0.7
 [0.0.6]: https://github.com/nathonius/phobos-launcher/compare/0.0.5...0.0.6
 [0.0.5]: https://github.com/nathonius/phobos-launcher/compare/0.0.4...0.0.5
