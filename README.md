@@ -4,6 +4,8 @@
 
 *Heavily inspired by the [Arachnotron Doom Launcher](https://nephrite.uk/arachnotron) ❤️*
 
+![Profile list](doc/profile-list.png)
+
 ## Features
 
 - Define multiple engines (GZdoom, Zandronum, etc.)
