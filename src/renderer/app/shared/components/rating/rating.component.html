@@ -1,0 +1,92 @@
+<div class="rating text-xl">
+  <label
+    class="cursor-pointer bg-transparent tooltip"
+    data-tip="1"
+    role="radio"
+    [htmlFor]="radioName() + '_1'"
+    [attr.aria-checked]="_value() === 1"
+  >
+    <ng-container *ngTemplateOutlet="radioIcon()"></ng-container>
+    <input
+      [id]="radioName() + '_1'"
+      class="hidden"
+      type="radio"
+      [name]="radioName()"
+      aria-label="1 star"
+      [value]="1"
+      [(ngModel)]="_value"
+    />
+  </label>
+  <label
+    class="cursor-pointer bg-transparent tooltip"
+    data-tip="2"
+    role="radio"
+    [htmlFor]="radioName() + '_2'"
+    [attr.aria-checked]="_value() === 2"
+  >
+    <ng-container *ngTemplateOutlet="radioIcon()"></ng-container>
+    <input
+      [id]="radioName() + '_2'"
+      class="hidden"
+      type="radio"
+      [name]="radioName()"
+      aria-label="2 star"
+      [value]="2"
+      [(ngModel)]="_value"
+    />
+  </label>
+  <label
+    class="cursor-pointer bg-transparent tooltip"
+    data-tip="3"
+    role="radio"
+    [htmlFor]="radioName() + '_3'"
+    [attr.aria-checked]="_value() === 3"
+  >
+    <ng-container *ngTemplateOutlet="radioIcon()"></ng-container>
+    <input
+      [id]="radioName() + '_3'"
+      class="hidden"
+      type="radio"
+      [name]="radioName()"
+      aria-label="3 star"
+      [value]="3"
+      [(ngModel)]="_value"
+    />
+  </label>
+  <label
+    class="cursor-pointer bg-transparent tooltip"
+    data-tip="4"
+    role="radio"
+    [htmlFor]="radioName() + '_4'"
+    [attr.aria-checked]="_value() === 4"
+  >
+    <ng-container *ngTemplateOutlet="radioIcon()"></ng-container>
+    <input
+      [id]="radioName() + '_4'"
+      class="hidden"
+      type="radio"
+      [name]="radioName()"
+      aria-label="4 star"
+      [value]="4"
+      [(ngModel)]="_value"
+    />
+  </label>
+  <label
+    class="cursor-pointer bg-transparent tooltip"
+    data-tip="5"
+    role="radio"
+    [htmlFor]="radioName() + '_5'"
+    [attr.aria-checked]="_value() === 5"
+  >
+    <ng-container *ngTemplateOutlet="radioIcon()"></ng-container>
+    <input
+      [id]="radioName() + '_5'"
+      class="hidden"
+      type="radio"
+      [name]="radioName()"
+      aria-label="5 star"
+      [value]="5"
+      [(ngModel)]="_value"
+    />
+  </label>
+</div>

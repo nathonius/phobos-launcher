@@ -36,6 +36,7 @@ import { HomeViewState } from '../shared/constants';
 import { WadInfoComponent } from '../wad-info/wad-info.component';
 import { SgdbDialogComponent } from '../sgdb-dialog/sgdb-dialog.component';
 import { BACKGROUND_TEXTURE_OPTIONS } from '../shared/images/background-textures/background-textures';
+import { RatingComponent } from '../shared/components/rating/rating.component';
 import { ProfileService } from './profile.service';
 
 type ProfileForm = FormGroup<{
@@ -50,6 +51,7 @@ type ProfileForm = FormGroup<{
   tags: FormControl<string[]>;
   complete: FormControl<boolean>;
   background: FormControl<string>;
+  rating: FormControl<number | null>;
 }>;
 
 @Component({
@@ -65,6 +67,7 @@ type ProfileForm = FormGroup<{
     TagListComponent,
     WadInfoComponent,
     SgdbDialogComponent,
+    RatingComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
@@ -93,6 +96,7 @@ export class ProfileComponent implements OnInit {
     tags: new FormControl<string[]>([], { nonNullable: true }),
     complete: new FormControl<boolean>(false, { nonNullable: true }),
     background: new FormControl<string>('', { nonNullable: true }),
+    rating: new FormControl<number | null>(null),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -137,6 +141,7 @@ export class ProfileComponent implements OnInit {
           tags: profile.tags,
           complete: profile.complete,
           background: profile.background,
+          rating: profile.rating ?? null,
         });
       } else {
         this.profileForm.reset({
@@ -150,6 +155,7 @@ export class ProfileComponent implements OnInit {
           tags: [],
           complete: false,
           background: '',
+          rating: null,
         });
       }
     });
@@ -175,13 +181,17 @@ export class ProfileComponent implements OnInit {
 
   protected handleFormControlChange<K extends keyof ProfileForm['controls']>(
     value: ProfileForm['controls'][K]['value'],
-    control: keyof ProfileForm['controls']
+    control: keyof ProfileForm['controls'],
+    save = false
   ): void {
     (
       this.profileForm.controls[control] as FormControl<
-        string | boolean | string[] | Cvar[]
+        number | string | boolean | string[] | Cvar[]
       >
     ).setValue(value);
+    if (save) {
+      this.handleSave();
+    }
   }
 
   protected handleSave() {
@@ -240,6 +250,7 @@ export class ProfileComponent implements OnInit {
       tags,
       complete,
       background,
+      rating,
     } = this.profileForm.value;
     return {
       id: profileId,
@@ -256,6 +267,7 @@ export class ProfileComponent implements OnInit {
       lastPlayed: originalProfile?.lastPlayed ?? null,
       complete,
       background,
+      rating,
     };
   }
 }

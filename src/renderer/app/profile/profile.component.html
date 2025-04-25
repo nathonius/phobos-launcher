@@ -95,7 +95,7 @@
       <tag-list
         color="info"
         [values]="profileForm.controls.tags.value"
-        (valueChange)="handleFormControlChange($event, 'tags')"
+        (valueChange)="handleFormControlChange($event, 'tags', true)"
       />
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Profile status</legend>
@@ -108,6 +108,16 @@
           />
           Completed
         </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Rating</legend>
+        <ng-template #profileRatingIcon>💀</ng-template>
+        <rating
+          radioName="profile-rating"
+          [value]="profileForm.controls.rating.value"
+          [radioIcon]="profileRatingIcon"
+          (valueChange)="handleFormControlChange($event, 'rating', true)"
+        ></rating>
       </fieldset>
     </form-section>
     <form-section label="CVARs">

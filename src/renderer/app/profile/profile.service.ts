@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Wrench, Play, Trash, Check } from 'lucide-angular';
+import { Wrench, Play, Trash, Check, Star } from 'lucide-angular';
 import type { Profile } from '../../../shared/config';
 import { Api } from '../api/api';
 import {
@@ -16,29 +16,38 @@ export class ProfileService {
   public readonly allProfiles = signal<Profile[]>([]);
   public readonly displayProfiles = computed<ProfileItem[]>(() => {
     const profiles = this.allProfiles();
-    return profiles.map((p) => ({
-      ...p,
-      icon: this.getProfileIcon(p),
-      background: this.getProfileBackground(p),
-      actions: [
-        {
-          name: 'edit',
-          label: 'Edit',
-          icon: Wrench,
-        },
-        {
-          name: 'launch',
-          label: 'Launch',
-          icon: Play,
-        },
-        {
-          name: 'delete',
-          label: 'Delete',
-          icon: Trash,
-        },
-      ],
-      statuses: p.complete ? [{ name: 'Complete', icon: Check }] : [],
-    }));
+    return profiles.map((p) => {
+      const statuses: ProfileItem['statuses'] = [];
+      if (p.complete) {
+        statuses.push({ name: 'Complete', icon: Check });
+      }
+      if (p.rating) {
+        statuses.push({ name: `${p.rating} stars`, icon: Star });
+      }
+      return {
+        ...p,
+        icon: this.getProfileIcon(p),
+        background: this.getProfileBackground(p),
+        actions: [
+          {
+            name: 'edit',
+            label: 'Edit',
+            icon: Wrench,
+          },
+          {
+            name: 'launch',
+            label: 'Launch',
+            icon: Play,
+          },
+          {
+            name: 'delete',
+            label: 'Delete',
+            icon: Trash,
+          },
+        ],
+        statuses,
+      };
+    });
   });
 
   constructor() {

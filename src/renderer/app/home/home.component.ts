@@ -191,6 +191,7 @@ export class HomeComponent implements OnInit {
       lastPlayed: null,
       complete: false,
       background: '',
+      rating: null,
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }
