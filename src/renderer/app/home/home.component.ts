@@ -34,11 +34,12 @@ import type {
   ProfileItemEvent,
 } from '../profile/profile-item/profile-item.interface';
 
-type ProfileSort = 'alphabetical' | 'date_added' | 'last_played';
+type ProfileSort = 'alphabetical' | 'date_added' | 'last_played' | 'rating';
 const VALID_SORT_ARRAY: ProfileSort[] = [
   'alphabetical',
   'date_added',
   'last_played',
+  'rating',
 ];
 
 @Component({
@@ -122,6 +123,17 @@ export class HomeComponent implements OnInit {
             new Date(b.created ?? 0).valueOf()) *
           sortDirection
       );
+    } else if (sort === 'rating') {
+      return toSorted(filtered, (a, b) => {
+        if ((a.rating ?? null) === null) {
+          return 1;
+        }
+        if ((b.rating ?? null) === null) {
+          return -1;
+        }
+        const result = a.rating > b.rating ? 1 : 0;
+        return result * sortDirection;
+      });
     } else {
       return filtered;
     }
