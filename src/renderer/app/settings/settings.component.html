@@ -31,6 +31,43 @@
         file="true"
         directory="false"
       />
+      <label class="fieldset-label" for="temp-data-path-input">
+        Temporary Data Path
+      </label>
+      <file-input
+        class="input"
+        inputId="temp-data-path-input"
+        formControlName="tempDataPath"
+        file="false"
+        directory="true"
+      />
+      <p class="label">
+        A bug in Deutex prevents extracting graphics to paths longer than 80
+        characters; it may be beneficial to select a short path elsewhere for
+        these files.
+      </p>
+      <div class="flex gap-2 items-center">
+        @let status = clearDataStatus();
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="{
+            'btn-warning': status !== 'CLEARED',
+            'btn-success': status === 'CLEARED'
+          }"
+          (click)="handleClearDataDir()"
+        >
+          Clear temp data
+        </button>
+        @if (clearDataStatus(); as status) { @switch (status) { @case
+        ('CLEARING') {
+        <span class="loading loading-spinner loading-sm"></span>
+        } @case ('CLEARED') {
+        <lucide-angular [img]="icons.Check" />
+        } @case ('ERROR') {
+        <lucide-angular [img]="icons.AlertTriangle" />
+        } } }
+      </div>
     </fieldset>
 
     <fieldset class="fieldset">

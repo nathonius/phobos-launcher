@@ -169,6 +169,13 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  protected async saveWadImage(iconPath: string) {
+    const copiedPath = await this.profileService.saveImageToAppDir(iconPath);
+    if (copiedPath) {
+      this.setIcon(copiedPath);
+    }
+  }
+
   protected setIcon(iconPath: string) {
     this.profileForm.controls.icon.setValue(iconPath);
     this.handleIconChange(iconPath);

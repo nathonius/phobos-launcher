@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { setTimeout, clearTimeout } from 'node:timers';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, protocol } from 'electron';
 import Store from 'electron-store';
 
 import { ALL_CHANNELS, type Channel } from '../shared/public-api'; // This import MUST be relative
@@ -41,6 +41,11 @@ export class Phobos {
     if (this.initialized) {
       return;
     }
+
+    // Enable fetch for custom url schemes
+    protocol.registerSchemesAsPrivileged([
+      { scheme: UserDataService.scheme, privileges: { supportFetchAPI: true } },
+    ]);
 
     // Attach API/IPC handlers, create window
     app.on('ready', () => {

@@ -1,5 +1,5 @@
 import { readFile, access, rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, normalize, resolve } from 'node:path';
 import { readWad, readLumpData } from '@nrkn/wad';
 import type { Wad } from '@nrkn/wad/dist/wad/types';
 import { ipcHandler, PhobosApi } from '../api';
@@ -12,25 +12,26 @@ const mapname = /^map\s+MAP\d+.*"(?<mapname>.+)"/gm;
 
 export class WadService extends PhobosApi {
   @ipcHandler('wad.clearDataDir')
-  public async clearDataDir() {
-    // Implement this later; for small images they won't necessarily be compressed and copied to the processed
-    // images folder. Should have a better way of saving these to the profile to let this directory truly be a
-    // temp dir.
-
-    throw new Error('Not implemented.');
-    const path = getPhobos().userDataService.wadDataDir();
+  public async clearDataDir(_subdir?: string) {
+    const dataDir = getPhobos().userDataService.wadDataDir();
+    const subdir = normalize(_subdir ?? '');
+    // Triple check we aren't deleting something we shouldn't
+    if (
+      subdir.startsWith('..') ||
+      !resolve(dataDir, subdir).startsWith(dataDir)
+    ) {
+      throw new Error(
+        `Tried to delete ${subdir}, which is not a valid wad data dir.`
+      );
+    }
+    const path = join(dataDir, normalize(subdir ?? ''));
     try {
       await access(path);
-      // Triple check we aren't deleting something we shouldn't
-      if (!path.endsWith('extracted-graphics')) {
-        throw new Error(
-          `Tried to delete ${path}, which is not the wad data dir.`
-        );
-      }
-
       await rm(path, { force: true, recursive: true });
+      return true;
     } catch (err) {
       console.error(err);
+      return false;
     }
   }
 

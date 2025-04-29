@@ -7,6 +7,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Check, LucideAngularModule, AlertTriangle } from 'lucide-angular';
+import { NgClass } from '@angular/common';
 import type { ValidTheme } from '../shared/services/theme.service';
 import { ThemeService, THEME_MAP } from '../shared/services/theme.service';
 import { SteamGridService } from '../shared/services/steam-grid.service';
@@ -27,12 +29,18 @@ import type { JSONValue } from '../../../shared/json';
     FormSectionComponent,
     FileInputComponent,
     KeyValueListComponent,
+    LucideAngularModule,
+    NgClass,
   ],
   templateUrl: './settings.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
+  protected readonly icons = {
+    Check,
+    AlertTriangle,
+  };
   protected readonly themeOptions = Object.entries(THEME_MAP);
   protected readonly themeService = inject(ThemeService);
   protected readonly steamGridService = inject(SteamGridService);
@@ -42,9 +50,13 @@ export class SettingsComponent implements OnInit {
     theme: new FormControl<string | null>(null),
     steamGridApiKey: new FormControl<string | null>(null),
     deutexPath: new FormControl<string | null>(null),
+    tempDataPath: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
   });
   protected readonly defaultCvars = signal<Cvar[]>([]);
+  protected readonly clearDataStatus = signal<
+    'CLEARING' | 'CLEARED' | 'ERROR' | null
+  >(null);
   private readonly navbarService = inject(NavbarService);
 
   public constructor() {
@@ -67,6 +79,9 @@ export class SettingsComponent implements OnInit {
     Api['settings.get']('deutexPath').then((path: string | null) => {
       this.settingsForm.controls.deutexPath.setValue(path ?? null);
     });
+    Api['settings.get']('tempDataPath').then((path: string | null) => {
+      this.settingsForm.controls.tempDataPath.setValue(path);
+    });
   }
 
   public ngOnInit(): void {
@@ -79,6 +94,9 @@ export class SettingsComponent implements OnInit {
     this.settingsForm.controls.deutexPath.valueChanges.subscribe((val) => {
       Api['settings.set']('deutexPath', val);
     });
+    this.settingsForm.controls.tempDataPath.valueChanges.subscribe((val) => {
+      Api['settings.set']('tempDataPath', val);
+    });
   }
 
   public async startImport() {
@@ -90,5 +108,22 @@ export class SettingsComponent implements OnInit {
 
   public handleCvarChange(values: Cvar[]): void {
     this.defaultCvars.set(values);
+  }
+
+  public async handleClearDataDir(): Promise<void> {
+    this.clearDataStatus.set('CLEARING');
+    const result = await Api['wad.clearDataDir']();
+    if (result) {
+      this.clearDataStatus.set('CLEARED');
+      window.setTimeout(() => {
+        try {
+          this.clearDataStatus.set(null);
+        } catch (err) {
+          // pass
+        }
+      }, 4000);
+    } else {
+      this.clearDataStatus.set('ERROR');
+    }
   }
 }

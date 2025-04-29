@@ -8,6 +8,7 @@ import type Store from 'electron-store';
 import { filenamifyPath } from 'filenamify';
 import { ipcHandler, PhobosApi } from '../api';
 import { asBase64Image, simpleHash } from '../util';
+import { getPhobos } from '../../main';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -23,9 +24,11 @@ interface CompressedImage {
   originalPath: string;
   compressedPath: string;
   modifiedMs: number;
+  neverReplace: boolean;
 }
 
 export class UserDataService extends PhobosApi {
+  public static readonly scheme = 'phobos-data';
   private readonly dataPath: string;
   private readonly store: Store;
   private readonly jimp = createJimp({
@@ -36,9 +39,51 @@ export class UserDataService extends PhobosApi {
     super();
     this.dataPath = dataPath;
     this.store = store;
-    protocol.handle('phobos-data', async (req) => {
+    protocol.handle(UserDataService.scheme, async (req) => {
       const url = new URL(req.url);
       switch (url.hostname) {
+        case 'save-to-app-data': {
+          const filePath = url.searchParams.get('path');
+          const compress = url.searchParams.get('compress') ?? '';
+          const extension = extname(filePath).toLowerCase();
+          if (
+            JIMP_SUPPORTED_FORMATS.includes(extension) &&
+            compress !== 'false'
+          ) {
+            try {
+              const imageBuffer = await (
+                await net.fetch(pathToFileURL(filePath).href)
+              ).arrayBuffer();
+              const { buffer, ...compressed } = await this.createCompressed(
+                imageBuffer,
+                filePath
+              );
+              const compressedImageConfig: CompressedImage = {
+                ...compressed,
+                originalPath: compressed.compressedPath,
+                neverReplace: true,
+              };
+              // Store the compressed image as the original path
+              const compressedKey = `internal.processed-image.${compressed.compressedPath}`;
+              this.store.set(compressedKey, compressedImageConfig);
+              // Return the path of the copied image
+              return new Response(JSON.stringify(compressed.compressedPath));
+            } catch (err) {
+              // If something fails, let the UI know
+              console.error(`COULD NOT SAVE FILE TO APP DATA`);
+              console.error(err);
+            }
+          } else {
+            return new Response(null, {
+              status: 400,
+              statusText: 'Endpoint only supports compressible images',
+            });
+          }
+          return new Response(null, {
+            status: 500,
+            statusText: 'Failed to save.',
+          });
+        }
         case 'get-file': {
           const filePath = url.searchParams.get('path');
           const compress = url.searchParams.get('compress') ?? '';
@@ -70,7 +115,11 @@ export class UserDataService extends PhobosApi {
   }
 
   public wadDataDir(): string {
-    return join(this.dataPath, 'extracted-graphics');
+    const userTempDir = getPhobos().settingsService.getSetting(
+      'tempDataPath'
+    ) as string | null;
+    const dataPath = userTempDir ?? this.dataPath;
+    return join(dataPath, 'extracted-graphics');
   }
 
   async getOrCreateCompressed(
@@ -136,6 +185,7 @@ export class UserDataService extends PhobosApi {
       compressedPath,
       modifiedMs,
       buffer,
+      neverReplace: false,
     };
   }
 
@@ -168,15 +218,16 @@ export class UserDataService extends PhobosApi {
   }
 
   async makeWadDataDir(wadPath: string) {
-    const path = join(
-      this.dataPath,
-      'extracted-graphics',
-      basename(filenamifyPath(wadPath, { replacement: '' }))
-    );
+    const base = this.wadDataDir();
+    const wadSafePath = basename(filenamifyPath(wadPath, { replacement: '' }))
+      .replaceAll(/\s/g, '_')
+      .toLowerCase();
+    const path = join(base, wadSafePath);
     await mkdir(path, { recursive: true });
 
-    // Make graphics subfolder as well to help with pk3s
+    // Make graphics, lumps subfolders as well to help with pk3s
     await mkdir(join(path, 'graphics'), { recursive: true });
+    await mkdir(join(path, 'lumps'), { recursive: true });
 
     return path;
   }

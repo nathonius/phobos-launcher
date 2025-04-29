@@ -84,6 +84,7 @@ export const Api = {
     window.api['wad.getGraphics'](wadPath, lumpNames) as Promise<
       string[] | null
     >,
-  'wad.clearDataDir': () => window.api['wad.clearDataDir']() as Promise<void>,
+  'wad.clearDataDir': (subdir?: string) =>
+    window.api['wad.clearDataDir'](subdir) as Promise<boolean>,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;

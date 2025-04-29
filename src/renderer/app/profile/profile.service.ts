@@ -1,5 +1,7 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Wrench, Play, Trash, Check, Star } from 'lucide-angular';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 import type { Profile } from '../../../shared/config';
 import { Api } from '../api/api';
 import {
@@ -12,6 +14,7 @@ import type { ProfileItem } from './profile-item/profile-item.interface';
   providedIn: 'root',
 })
 export class ProfileService {
+  public readonly httpClient = inject(HttpClient);
   public readonly selectedProfile = signal<Profile | undefined>(undefined);
   public readonly allProfiles = signal<Profile[]>([]);
   public readonly displayProfiles = computed<ProfileItem[]>(() => {
@@ -116,5 +119,15 @@ export class ProfileService {
       return `phobos-data://get-file?${params.toString()}`;
     }
     return '';
+  }
+
+  public async saveImageToAppDir(path: string): Promise<string | null> {
+    const params = new URLSearchParams({ path });
+    const result = await lastValueFrom(
+      this.httpClient.get<string | null>(
+        `phobos-data://save-to-app-data?${params.toString()}`
+      )
+    );
+    return result;
   }
 }
