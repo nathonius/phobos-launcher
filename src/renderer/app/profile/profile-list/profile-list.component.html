@@ -14,7 +14,11 @@
         (input)="searchQuery.set($any($event.target).value)"
       />
     </label>
-    <select class="select select-bordered min-w-40" [(value)]="sort">
+    <select
+      class="select select-bordered min-w-40"
+      [value]="sort()"
+      (change)="handleSort($any($event.target).value)"
+    >
       <option disabled selected>Sort by...</option>
       <option value="alphabetical">Alphabetical</option>
       <option value="date_added">Date created</option>
