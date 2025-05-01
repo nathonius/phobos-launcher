@@ -36,7 +36,9 @@ let idCount = 0;
     class: 'flex flex-col w-full gap-2 items-center',
   },
 })
-export class AutocompleteComponent<T> implements ControlValueAccessor {
+export class AutocompleteComponent<T extends { id: string | number }>
+  implements ControlValueAccessor
+{
   public readonly autofocusInput = input(false, {
     transform: booleanAttribute,
   });
@@ -45,6 +47,7 @@ export class AutocompleteComponent<T> implements ControlValueAccessor {
   public readonly inputId = input<string>();
   public readonly icon = input<LucideIconData>();
   public readonly labelKey = input('label');
+  public readonly valueKey = input('value');
   public readonly valueChange = output<T | null>();
   public readonly query = output<string>();
   public readonly loading = input<boolean>(false);

@@ -1,0 +1,45 @@
+<div class="flex gap-2 justify-between">
+  <h2 class="text-5xl font-doom text-shadow-3d">
+    {{ categoryName() }}
+  </h2>
+  <div class="flex gap-2 items-center">
+    <label for="profile-search" class="input min-w-2xs">
+      <lucide-angular [img]="icons.Search" />
+      <input
+        id="profile-search"
+        type="text"
+        placeholder="Search"
+        class="grow"
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+      />
+    </label>
+    <select class="select select-bordered min-w-40" [(value)]="sort">
+      <option disabled selected>Sort by...</option>
+      <option value="alphabetical">Alphabetical</option>
+      <option value="date_added">Date created</option>
+      <option value="last_played">Last played</option>
+      <option value="rating">Rating</option>
+    </select>
+    <button
+      type="button"
+      class="btn btn-ghost"
+      (click)="
+        sortDirection() === 'asc'
+          ? handleSortDirectionChange('desc')
+          : handleSortDirectionChange('asc')
+      "
+    >
+      <lucide-icon
+        [img]="sortDirection() === 'asc' ? icons.SortAsc : icons.SortDesc"
+      />
+    </button>
+  </div>
+</div>
+@if (profileService.loadingProfiles()) {
+<div class="loading loading-ring loading-lg"></div>
+} @else { @let items = profileItems(); @if (items.length > 0) {
+<profile-item-grid [items]="profileItems()" (action)="handleAction($event)" />
+} @else {
+<p>No profiles.</p>
+} }

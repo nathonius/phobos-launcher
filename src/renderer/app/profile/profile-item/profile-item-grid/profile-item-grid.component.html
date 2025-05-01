@@ -1,72 +1,75 @@
-<div class="item-grid gap-5">
-  @for (item of items(); track item.name) {
-  <div class="item-wrapper flex flex-col gap-2 items-center">
+<cdk-virtual-scroll-viewport appendOnly [itemSize]="itemSize()" class="h-full">
+  <div class="item-grid gap-5 h-full">
     <div
-      class="item-content w-full relative grow flex flex-col bg-base-200 hover:bg-base-300 rounded-sm"
+      *cdkVirtualFor="let item of items()"
+      class="item-wrapper flex flex-col gap-2 items-center"
     >
-      <button
-        class="item-target relative w-full grow flex flex-col items-center justify-center border-0 p-0 m-0"
-        type="button"
-        (click)="action.emit({item, action: 'primary'})"
-      >
-        @if (item.icon) {
-        <img class="item-image" [src]="item.icon" />
-        } @else {
-        <div
-          class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
-          fittext
-          [ngStyle]="{
-            'background-image': item.background ?? backgrounds.RockWall
-          }"
-          [compressor]="1"
-        >
-          {{ item.name }}
-        </div>
-        }
-      </button>
       <div
-        class="item-controls absolute bottom-0 item-controls flex w-full justify-between"
+        class="item-content w-full relative grow flex flex-col bg-base-200 hover:bg-base-300 rounded-sm"
       >
-        <div class="flex gap-1">
-          @for (itemAction of item.actions; track itemAction.name) {
+        <button
+          class="item-target relative w-full grow flex flex-col items-center justify-center border-0 p-0 m-0"
+          type="button"
+          (click)="action.emit({item, action: 'primary'})"
+        >
+          @if (item.icon) {
+          <img class="item-image" [src]="item.icon" />
+          } @else {
           <div
-            [class]="{
-              tooltip: !!itemAction.icon,
-              'tooltip-accent': !!itemAction.icon
+            class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
+            fittext
+            [ngStyle]="{
+              'background-image': item.background ?? backgrounds.RockWall
             }"
-            [attr.data-tip]="itemAction.label"
+            [compressor]="1"
           >
-            <button
-              class="btn btn-sm btn-square btn-accent"
-              (click)="action.emit({item, action: itemAction.name})"
+            {{ item.name }}
+          </div>
+          }
+        </button>
+        <div
+          class="item-controls absolute bottom-0 item-controls flex w-full justify-between"
+        >
+          <div class="flex gap-1">
+            @for (itemAction of item.actions; track itemAction.name) {
+            <div
+              [class]="{
+                tooltip: !!itemAction.icon,
+                'tooltip-accent': !!itemAction.icon
+              }"
+              [attr.data-tip]="itemAction.label"
             >
-              @if (itemAction.icon) {
-              <lucide-icon [img]="itemAction.icon" />
-              } @else {
-              {{ itemAction.label }}
-              }
-            </button>
+              <button
+                class="btn btn-sm btn-square btn-accent"
+                (click)="action.emit({item, action: itemAction.name})"
+              >
+                @if (itemAction.icon) {
+                <lucide-icon [img]="itemAction.icon" />
+                } @else {
+                {{ itemAction.label }}
+                }
+              </button>
+            </div>
+            }
           </div>
-          }
-        </div>
-        <div class="flex gap-1">
-          @for (itemStatus of item.statuses; track itemStatus.name) {
-          <div
-            [class]="{
-              tooltip: !!itemStatus.icon,
-              'tooltip-success': !!itemStatus.icon
-            }"
-            [attr.data-tip]="itemStatus.name"
-          >
-            <span class="btn btn-sm btn-square btn-success cursor-default">
-              <lucide-icon [img]="itemStatus.icon" />
-            </span>
+          <div class="flex gap-1">
+            @for (itemStatus of item.statuses; track itemStatus.name) {
+            <div
+              [class]="{
+                tooltip: !!itemStatus.icon,
+                'tooltip-success': !!itemStatus.icon
+              }"
+              [attr.data-tip]="itemStatus.name"
+            >
+              <span class="btn btn-sm btn-square btn-success cursor-default">
+                <lucide-icon [img]="itemStatus.icon" />
+              </span>
+            </div>
+            }
           </div>
-          }
         </div>
       </div>
+      <span class="item-label">{{ item.name }}</span>
     </div>
-    <span class="item-label">{{ item.name }}</span>
   </div>
-  }
-</div>
+</cdk-virtual-scroll-viewport>

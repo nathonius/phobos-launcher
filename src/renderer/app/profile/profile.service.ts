@@ -17,6 +17,7 @@ export class ProfileService {
   public readonly httpClient = inject(HttpClient);
   public readonly selectedProfile = signal<Profile | undefined>(undefined);
   public readonly allProfiles = signal<Profile[]>([]);
+  public readonly loadingProfiles = signal<boolean>(false);
   public readonly displayProfiles = computed<ProfileItem[]>(() => {
     const profiles = this.allProfiles();
     return profiles.map((p) => {
@@ -58,6 +59,7 @@ export class ProfileService {
   }
 
   public async getAllProfiles(selectProfile?: Profile): Promise<Profile[]> {
+    this.loadingProfiles.set(true);
     const profiles = await Api['profile.getProfiles']();
     this.allProfiles.set(profiles);
     if (selectProfile) {
@@ -70,6 +72,7 @@ export class ProfileService {
         this.selectedProfile.set(stillExists);
       }
     }
+    this.loadingProfiles.set(false);
     return profiles;
   }
 

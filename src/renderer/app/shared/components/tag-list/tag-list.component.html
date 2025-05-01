@@ -17,14 +17,14 @@
     (change)="handleSubmit($any($event.target).value)"
   >
     <option #placeholderOption disabled selected>{{ placeholder() }}</option>
-    @for (option of availableOptions(); track option) {
+    @for (option of availableOptions(); track option.value) {
     <option value="{{ option.value }}">{{ option.label }}</option>
     }
   </select>
   }
 </form>
 <div class="flex flex-wrap gap-2">
-  @for (tag of displayValues(); track $index) {
+  @for (tag of displayValues(); track tag) {
   <app-tag
     [label]="tag"
     [variant]="variant()"

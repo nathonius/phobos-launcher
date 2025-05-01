@@ -70,7 +70,6 @@ type ProfileForm = FormGroup<{
     RatingComponent,
   ],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block grow overflow-auto',
@@ -191,6 +190,9 @@ export class ProfileComponent implements OnInit {
     control: keyof ProfileForm['controls'],
     save = false
   ): void {
+    if (value === null) {
+      return;
+    }
     (
       this.profileForm.controls[control] as FormControl<
         number | string | boolean | string[] | Cvar[]
@@ -261,20 +263,20 @@ export class ProfileComponent implements OnInit {
     } = this.profileForm.value;
     return {
       id: profileId,
-      name,
-      engine,
-      base,
-      files,
-      icon,
-      categories,
-      cvars,
-      parents,
-      tags,
+      name: name ?? '',
+      engine: engine ?? '',
+      base: base ?? '',
+      files: files ?? [],
+      icon: icon ?? '',
+      categories: categories ?? [],
+      cvars: cvars ?? [],
+      parents: parents ?? [],
+      tags: tags ?? [],
       created: originalProfile?.created ?? new Date().toISOString(),
       lastPlayed: originalProfile?.lastPlayed ?? null,
-      complete,
-      background,
-      rating,
+      complete: complete ?? false,
+      background: background ?? '',
+      rating: rating ?? null,
     };
   }
 }

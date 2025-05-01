@@ -26,32 +26,19 @@ import { CategoryComponent } from '../category/category.component';
 import { NavbarService } from '../shared/services/navbar.service';
 import { HomeViewState } from '../shared/constants';
 import { ViewService } from '../shared/services/view.service';
-import { toSorted } from '../shared/functions/toSorted';
-import { Api } from '../api/api';
-import { ProfileItemGridComponent } from '../profile/profile-item/profile-item-grid/profile-item-grid.component';
-import type {
-  ProfileItem,
-  ProfileItemEvent,
-} from '../profile/profile-item/profile-item.interface';
-
-type ProfileSort = 'alphabetical' | 'date_added' | 'last_played' | 'rating';
-const VALID_SORT_ARRAY: ProfileSort[] = [
-  'alphabetical',
-  'date_added',
-  'last_played',
-  'rating',
-];
+import type { ProfileItemEvent } from '../profile/profile-item/profile-item.interface';
+import { ProfileListComponent } from '../profile/profile-list/profile-list.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   imports: [
     ReactiveFormsModule,
-    ProfileItemGridComponent,
     ProfileComponent,
     CategoryComponent,
     LucideAngularModule,
     FormsModule,
+    ProfileListComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -77,67 +64,7 @@ export class HomeComponent implements OnInit {
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
-  protected readonly sort = signal<null | ProfileSort>(null);
-  protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
   protected readonly loadingProfiles = signal<boolean>(false);
-  protected readonly profileItems = computed(() => {
-    const allItems = this.profileService.displayProfiles();
-    const selectedCategory = this.categoryService.selectedCategory();
-    const sort = this.sort();
-    const sortDirection = this.sortDirection() === 'asc' ? 1 : -1;
-    const query = this.searchQuery();
-    let filtered: ProfileItem[];
-    if (selectedCategory === undefined || selectedCategory.id === 'all') {
-      filtered = allItems;
-    } else {
-      filtered = allItems.filter((p) =>
-        ((p as unknown as Profile).categories ?? []).includes(
-          selectedCategory.id
-        )
-      );
-    }
-    if (query) {
-      filtered = filtered.filter(
-        (profile) =>
-          profile.name.toLowerCase().includes(query) ||
-          (profile.tags ?? []).some((t) => t.toLowerCase().includes(query))
-      );
-    }
-    if (sort === 'alphabetical') {
-      return toSorted(filtered, (a, b) =>
-        a.name > b.name ? sortDirection : sortDirection * -1
-      );
-    } else if (sort === 'last_played') {
-      return toSorted(
-        filtered,
-        (a, b) =>
-          (new Date(a.lastPlayed ?? 0).valueOf() -
-            new Date(b.lastPlayed ?? 0).valueOf()) *
-          sortDirection
-      );
-    } else if (sort === 'date_added') {
-      return toSorted(
-        filtered,
-        (a, b) =>
-          (new Date(a.created ?? 0).valueOf() -
-            new Date(b.created ?? 0).valueOf()) *
-          sortDirection
-      );
-    } else if (sort === 'rating') {
-      return toSorted(filtered, (a, b) => {
-        if ((a.rating ?? null) === null) {
-          return 1;
-        }
-        if ((b.rating ?? null) === null) {
-          return -1;
-        }
-        const result = a.rating > b.rating ? 1 : 0;
-        return result * sortDirection;
-      });
-    } else {
-      return filtered;
-    }
-  });
   private readonly navbarService = inject(NavbarService);
 
   constructor() {
@@ -165,19 +92,6 @@ export class HomeComponent implements OnInit {
         categories.push({ ...c, img });
       }
       this.categories.set(categories);
-    });
-    Api['settings.get']('home.sort').then((v) => {
-      if (
-        typeof v === 'string' &&
-        VALID_SORT_ARRAY.includes(v as ProfileSort)
-      ) {
-        this.sort.set(v as ProfileSort);
-      }
-    });
-    Api['settings.get']('home.sortDirection').then((v) => {
-      if (typeof v === 'string' && ['asc', 'desc'].includes(v)) {
-        this.sortDirection.set(v as 'asc' | 'desc');
-      }
     });
   }
 
@@ -215,16 +129,6 @@ export class HomeComponent implements OnInit {
       icon: '',
     });
     this.editCategory();
-  }
-
-  protected handleSort(event: ProfileSort) {
-    this.sort.set(event);
-    Api['settings.set']('home.sort', event);
-  }
-
-  protected handleSortDirectionChange(event: 'asc' | 'desc') {
-    this.sortDirection.set(event);
-    Api['settings.set']('home.sortDirection', event);
   }
 
   protected handleAction(event: ProfileItemEvent) {

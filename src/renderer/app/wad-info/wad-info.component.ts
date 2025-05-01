@@ -45,8 +45,11 @@ export class WadInfoComponent {
       if (!path) {
         return;
       }
-      if (!path.endsWith('.wad') && !path.endsWith('.pk3')) {
-        console.warn(`Reading non-wad files is not yet supported.`);
+      if (
+        !path.toLowerCase().endsWith('.wad') &&
+        !path.toLowerCase().endsWith('.pk3')
+      ) {
+        console.warn(`Reading non-wad/pk3 files is not yet supported.`);
         return;
       }
       const info = await Api['wad.getInfo'](path);

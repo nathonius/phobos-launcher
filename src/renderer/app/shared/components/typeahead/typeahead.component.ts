@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
 
 type TypeaheadFilter<T> = (query: string, options: T[]) => T[];
 
+/**
+ * @deprecated I think this is unused, and it's the same functionality as autocomplete. Theoretically.
+ */
 @Component({
   selector: 'typeahead',
   imports: [FormsModule, CdkListboxModule],
