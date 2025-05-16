@@ -118,6 +118,7 @@ export class HomeComponent implements OnInit {
       complete: false,
       background: '',
       rating: null,
+      completedDate: null,
     });
     this.viewService.homeState.set(HomeViewState.ProfileEdit);
   }

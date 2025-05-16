@@ -15,22 +15,22 @@ import type {
 import { ProfileItemGridComponent } from '../profile-item/profile-item-grid/profile-item-grid.component';
 import { CategoryService } from '../../category/category.service';
 import { ProfileService } from '../profile.service';
-import { toSorted } from '../../shared/functions/toSorted';
-import type { Profile } from '../../../../shared/config';
+import { timestampSort, toSorted } from '../../shared/functions/toSorted';
+import type {
+  Profile,
+  ProfileSort,
+  SortDirection,
+} from '../../../../shared/config';
 import { Api } from '../../api/api';
 import { ViewService } from '../../shared/services/view.service';
 import { HomeViewState } from '../../shared/constants';
 
-export type ProfileSort =
-  | 'alphabetical'
-  | 'date_added'
-  | 'last_played'
-  | 'rating';
 export const VALID_SORT_ARRAY: ProfileSort[] = [
   'alphabetical',
   'date_added',
   'last_played',
   'rating',
+  'date_completed',
 ];
 
 @Component({
@@ -45,7 +45,7 @@ export const VALID_SORT_ARRAY: ProfileSort[] = [
 export class ProfileListComponent {
   protected readonly searchQuery = signal<string>('');
   protected readonly sort = signal<null | ProfileSort>(null);
-  protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
+  protected readonly sortDirection = signal<SortDirection>('asc');
   protected readonly categoryName = computed(
     () => this.categoryService.selectedCategory()?.name ?? 'All'
   );
@@ -77,20 +77,16 @@ export class ProfileListComponent {
         a.name > b.name ? sortDirection : sortDirection * -1
       );
     } else if (sort === 'last_played') {
-      return toSorted(
-        filtered,
-        (a, b) =>
-          (new Date(a.lastPlayed ?? 0).valueOf() -
-            new Date(b.lastPlayed ?? 0).valueOf()) *
-          sortDirection
+      return toSorted(filtered, (a, b) =>
+        timestampSort(a, b, 'lastPlayed', sortDirection)
       );
     } else if (sort === 'date_added') {
-      return toSorted(
-        filtered,
-        (a, b) =>
-          (new Date(a.created ?? 0).valueOf() -
-            new Date(b.created ?? 0).valueOf()) *
-          sortDirection
+      return toSorted(filtered, (a, b) =>
+        timestampSort(a, b, 'created', sortDirection)
+      );
+    } else if (sort === 'date_completed') {
+      return toSorted(filtered, (a, b) =>
+        timestampSort(a, b, 'completedDate', sortDirection)
       );
     } else if (sort === 'rating') {
       return toSorted(filtered, (a, b) => {
@@ -127,7 +123,7 @@ export class ProfileListComponent {
     });
     Api['settings.get']('home.sortDirection').then((v) => {
       if (typeof v === 'string' && ['asc', 'desc'].includes(v)) {
-        this.sortDirection.set(v as 'asc' | 'desc');
+        this.sortDirection.set(v as SortDirection);
       }
     });
   }
@@ -137,7 +133,7 @@ export class ProfileListComponent {
     Api['settings.set']('home.sort', event);
   }
 
-  protected handleSortDirectionChange(event: 'asc' | 'desc') {
+  protected handleSortDirectionChange(event: SortDirection) {
     this.sortDirection.set(event);
     Api['settings.set']('home.sortDirection', event);
   }

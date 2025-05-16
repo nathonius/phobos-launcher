@@ -7,6 +7,19 @@ export function asBase64Image(
   }`;
 }
 
+export function correctObjectShape<T extends object>(
+  source: T,
+  defaultValue: T
+): T {
+  const result: T = { ...defaultValue };
+  for (const [k, v] of Object.entries(defaultValue)) {
+    if (source[k as keyof T] !== undefined) {
+      result[k as keyof T] = v;
+    }
+  }
+  return result;
+}
+
 // Magic number.
 const DJB_IV = 5381;
 export function simpleHash(str: string) {

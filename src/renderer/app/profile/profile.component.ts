@@ -240,6 +240,18 @@ export class ProfileComponent implements OnInit {
     this.sgdbDialog()?.close();
   }
 
+  private completedDate(
+    originalProfle: Profile | undefined,
+    complete: boolean | undefined
+  ): string | null {
+    if (originalProfle?.completedDate) {
+      return originalProfle.completedDate;
+    } else if (complete) {
+      return new Date().toISOString();
+    }
+    return null;
+  }
+
   private getProfile(): Profile {
     // TODO: Validate profile
     const originalProfile = this.profile();
@@ -247,6 +259,7 @@ export class ProfileComponent implements OnInit {
     if (!profileId) {
       profileId = uuid();
     }
+    const now = new Date().toISOString();
     const {
       engine,
       base,
@@ -272,11 +285,12 @@ export class ProfileComponent implements OnInit {
       cvars: cvars ?? [],
       parents: parents ?? [],
       tags: tags ?? [],
-      created: originalProfile?.created ?? new Date().toISOString(),
+      created: originalProfile?.created ?? now,
       lastPlayed: originalProfile?.lastPlayed ?? null,
       complete: complete ?? false,
       background: background ?? '',
       rating: rating ?? null,
+      completedDate: this.completedDate(originalProfile, complete),
     };
   }
 }

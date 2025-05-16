@@ -13,9 +13,12 @@ import { SGDBService } from './services/sgdb.service';
 import { ImportService } from './services/import.service';
 import { EngineService } from './services/engine.service';
 import { WadService } from './services/wad.service';
+import { PhobosStore } from './store';
+import { BasesService } from './services/bases.service';
 
 export class Phobos {
   public readonly store = new Store();
+  public phobosStore!: PhobosStore;
   public userDataService!: UserDataService;
   public profileService!: ProfileService;
   public categoryService!: CategoryService;
@@ -24,6 +27,7 @@ export class Phobos {
   public engineService!: EngineService;
   public importService!: ImportService;
   public wadService!: WadService;
+  public basesService!: BasesService;
   public readonly attachedHandlers: Channel[] = [];
   private window: BrowserWindow | null = null;
   private initialized = false;
@@ -49,18 +53,23 @@ export class Phobos {
 
     // Attach API/IPC handlers, create window
     app.on('ready', () => {
+      // Init store
+      this.phobosStore = new PhobosStore();
+
       // Init services
-      this.profileService = new ProfileService(this.store);
-      this.categoryService = new CategoryService(this.store);
-      this.settingsService = new SettingsService(this.store);
-      this.engineService = new EngineService(this.store);
+      this.profileService = new ProfileService(this.phobosStore, this.store);
+      this.categoryService = new CategoryService(this.phobosStore, this.store);
+      this.settingsService = new SettingsService(this.phobosStore, this.store);
+      this.engineService = new EngineService(this.phobosStore, this.store);
       this.steamGridService = new SGDBService();
       this.importService = new ImportService(this);
       this.userDataService = new UserDataService(
         app.getPath('userData'),
+        this.phobosStore,
         this.store
       );
       this.wadService = new WadService();
+      this.basesService = new BasesService(this.phobosStore);
 
       // Log in case some channels were missed
       for (const c of ALL_CHANNELS) {
@@ -68,6 +77,7 @@ export class Phobos {
           console.warn(`Missing handler for channel ${c}`);
         }
       }
+
       this.createWindow();
     });
 

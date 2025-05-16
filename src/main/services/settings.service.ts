@@ -1,29 +1,49 @@
 import type Store from 'electron-store';
-import type { JSONValue } from '../../shared/json';
 import { ipcHandler, PhobosApi } from '../api';
+import type { PhobosStore } from '../store';
+import type { Settings } from '../../shared/config';
 
 export class SettingsService extends PhobosApi {
-  public constructor(private readonly store: Store) {
+  public constructor(
+    private readonly store: PhobosStore,
+    private readonly oldStore: Store
+  ) {
     super();
   }
 
   @ipcHandler('settings.getAll')
-  public getSettings() {
-    return this.store.get('settings');
+  public async getSettings() {
+    const settingsEntries = await this.store.settings.iterator().all();
+    const settings = Object.fromEntries(settingsEntries) as unknown as Settings;
+    return settings;
+  }
+
+  /**
+   * @deprecated - Uses the old store, should only be used for migration.
+   */
+  public _getSettings() {
+    return this.oldStore.get('settings');
   }
 
   @ipcHandler('settings.get')
-  public getSetting(key: string) {
-    return this.store.get(`settings.${key}`);
+  public getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
+    return this.store.settings.get(key) as Promise<Settings[K]>;
+  }
+
+  public getSettingSync<K extends keyof Settings>(key: K): Settings[K] {
+    return this.store.settings.getSync(key) as Settings[K];
   }
 
   @ipcHandler('settings.set')
-  public saveSetting(key: string, value: JSONValue) {
-    this.store.set(`settings.${key}`, value);
+  public saveSetting<K extends keyof Settings>(key: K, value: Settings[K]) {
+    return this.store.settings.put(key, value);
   }
 
+  /**
+   * @deprecated - Uses the old store. Should no longer be used.
+   */
   @ipcHandler('settings.openConfig')
-  public openConfig() {
-    this.store.openInEditor();
+  public _openConfig() {
+    this.oldStore.openInEditor();
   }
 }

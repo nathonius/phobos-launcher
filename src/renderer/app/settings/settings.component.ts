@@ -9,7 +9,6 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Check, LucideAngularModule, AlertTriangle } from 'lucide-angular';
 import { NgClass } from '@angular/common';
-import type { ValidTheme } from '../shared/services/theme.service';
 import { ThemeService, THEME_MAP } from '../shared/services/theme.service';
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
@@ -19,7 +18,7 @@ import { CategoryService } from '../category/category.service';
 import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
-import type { Cvar } from '../../../shared/config';
+import type { AppTheme, Cvar } from '../../../shared/config';
 import type { JSONValue } from '../../../shared/json';
 
 @Component({
@@ -86,7 +85,7 @@ export class SettingsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.settingsForm.controls.theme.valueChanges.subscribe((val) => {
-      this.themeService.setTheme(val as ValidTheme | null);
+      this.themeService.setTheme(val as AppTheme | null);
     });
     this.settingsForm.controls.steamGridApiKey.valueChanges.subscribe((val) => {
       this.steamGridService.setKey(val ? val : null);

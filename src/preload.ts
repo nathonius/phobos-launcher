@@ -1,7 +1,13 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import type { Channel } from './shared/public-api';
-import type { Category, Engine, Profile } from './shared/config';
-import type { JSONValue } from './shared/json';
+import type {
+  BaseWad,
+  Category,
+  Engine,
+  Profile,
+  Settings,
+  UUID,
+} from './shared/config';
 import type {
   SGDBDimensionOptions,
   SGDBGame,
@@ -11,9 +17,12 @@ import type {
 } from './shared/lib/SGDB';
 
 export const clientApi = {
+  'bases.getAll': () => ipcRenderer.invoke('bases.getAll'),
+  'bases.save': (base: BaseWad) => ipcRenderer.invoke('bases.save', base),
   'settings.getAll': () => ipcRenderer.invoke('settings.getAll'),
-  'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
-  'settings.set': (key: string, value: JSONValue) =>
+  'settings.get': <K extends keyof Settings>(key: K) =>
+    ipcRenderer.invoke('settings.get', key) as Promise<Settings[K]>,
+  'settings.set': <K extends keyof Settings>(key: K, value: Settings[K]) =>
     ipcRenderer.invoke('settings.set', key, value),
   'settings.openConfig': () => ipcRenderer.invoke('settings.openConfig'),
   'category.getByName': (name: string) =>
@@ -21,18 +30,18 @@ export const clientApi = {
   'category.getCategories': () => ipcRenderer.invoke('category.getCategories'),
   'category.save': (category: Category) =>
     ipcRenderer.invoke('category.save', category),
-  'category.delete': (categoryId: string) =>
+  'category.delete': (categoryId: UUID) =>
     ipcRenderer.invoke('category.delete', categoryId),
   'engine.getEngines': () => ipcRenderer.invoke('engine.getEngines'),
   'engine.save': (engine: Engine) => ipcRenderer.invoke('engine.save', engine),
-  'engine.delete': (engineId: string) =>
+  'engine.delete': (engineId: UUID) =>
     ipcRenderer.invoke('engine.delete', engineId),
   'profile.getProfiles': () => ipcRenderer.invoke('profile.getProfiles'),
   'profile.launchCustom': (profile: Profile) =>
     ipcRenderer.invoke('profile.launchCustom', profile),
   'profile.save': (profile: Profile) =>
     ipcRenderer.invoke('profile.save', profile),
-  'profile.delete': (profileId: string) =>
+  'profile.delete': (profileId: UUID) =>
     ipcRenderer.invoke('profile.delete', profileId),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>

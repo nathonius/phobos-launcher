@@ -1,4 +1,6 @@
 export const ALL_CHANNELS = [
+  'bases.getAll',
+  'bases.save',
   'settings.getAll',
   'settings.get',
   'settings.set',

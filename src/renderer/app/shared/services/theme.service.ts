@@ -1,45 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Api } from '../../api/api';
+import type { AppTheme } from '../../../../shared/config';
 
-export type ValidTheme =
-  | 'light'
-  | 'dark'
-  | 'cupcake'
-  | 'bumblebee'
-  | 'emerald'
-  | 'corporate'
-  | 'synthwave'
-  | 'retro'
-  | 'cyberpunk'
-  | 'valentine'
-  | 'halloween'
-  | 'garden'
-  | 'forest'
-  | 'aqua'
-  | 'lofi'
-  | 'pastel'
-  | 'fantasy'
-  | 'wireframe'
-  | 'black'
-  | 'luxury'
-  | 'dracula'
-  | 'cmyk'
-  | 'autumn'
-  | 'business'
-  | 'acid'
-  | 'lemonade'
-  | 'night'
-  | 'coffee'
-  | 'winter'
-  | 'dim'
-  | 'nord'
-  | 'sunset'
-  | 'caramellatte'
-  | 'abyss'
-  | 'silk';
-
-export const THEME_MAP: Record<ValidTheme, string> = {
+export const THEME_MAP: Record<AppTheme, string> = {
   abyss: 'Abyss',
   acid: 'Acid',
   aqua: 'Aqua',
@@ -83,16 +47,16 @@ export const THEME_MAP: Record<ValidTheme, string> = {
 export class ThemeService {
   public readonly theme = computed(() => this._theme());
   private readonly doc = inject(DOCUMENT);
-  private readonly _theme = signal<ValidTheme | null>(null);
+  private readonly _theme = signal<AppTheme | null>(null);
 
   constructor() {
     Api['settings.get']('theme').then((themeSetting) => {
-      const theme = (themeSetting ?? null) as ValidTheme | null;
+      const theme = (themeSetting ?? null) as AppTheme | null;
       this.setTheme(theme);
     });
   }
 
-  public setTheme(theme: ValidTheme | null) {
+  public setTheme(theme: AppTheme | null) {
     this.doSetTheme(theme);
     this._theme.set(theme);
     void Api['settings.set']('theme', theme);

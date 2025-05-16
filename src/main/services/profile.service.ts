@@ -1,9 +1,10 @@
 import { spawn } from 'node:child_process';
 import type Store from 'electron-store';
 import filenamify from 'filenamify';
-import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
+import type { Cvar, Profile, UUID } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
+import type { PhobosStore } from '../store';
 
 export interface FsError extends Error {
   code: string;
@@ -12,49 +13,47 @@ export interface FsError extends Error {
 type CvarContext = Record<string, string>;
 
 export class ProfileService extends PhobosApi {
-  public constructor(private readonly store: Store) {
+  public constructor(
+    private readonly store: PhobosStore,
+    private readonly oldStore: Store
+  ) {
     super();
   }
 
   @ipcHandler('profile.getProfiles')
-  getProfiles(): Profile[] {
-    return this.store.get('profiles', []) as Profile[];
+  getProfiles(): Promise<Profile[]> {
+    return this.store.profiles.values().all();
   }
 
-  getProfileByName(name: string): Profile | null {
-    return this.getProfiles().find((p) => p.name === name) ?? null;
+  /**
+   * @deprecated - Uses old store, should only be used for migration
+   */
+  _getProfiles(): Profile[] {
+    return this.oldStore.get('profiles', []) as Profile[];
+  }
+
+  getProfileByName(name: string): Promise<Profile | null> {
+    return this.getProfiles().then(
+      (profiles) => profiles.find((p) => p.name === name) ?? null
+    );
   }
 
   @ipcHandler('profile.save')
-  saveProfile(config: Profile): void {
-    const profiles = this.getProfiles();
-    // Find existing profile
-    const matchingProfileIndex = profiles.findIndex((p) => p.id === config.id);
-    if (matchingProfileIndex !== -1) {
-      profiles[matchingProfileIndex] = config;
-    } else {
-      profiles.unshift(config);
-    }
-    this.store.set('profiles', profiles);
+  saveProfile(config: Profile): Promise<void> {
+    return this.store.profiles.put(config.id, config);
   }
 
   @ipcHandler('profile.delete')
-  deleteProfileById(id: string): void {
-    const profiles = this.getProfiles();
-    const profileIndex = profiles.findIndex((p) => p.id === id);
-    if (profileIndex !== -1) {
-      profiles.splice(profileIndex, 1);
-      this.store.set('profiles', profiles);
-    }
+  deleteProfileById(id: UUID): Promise<void> {
+    return this.store.profiles.del(id);
   }
 
   @ipcHandler('profile.launchCustom')
-  launchProfile(config: Profile | string) {
-    const allProfiles = this.getProfiles();
+  async launchProfile(config: Profile | UUID) {
     // Get the matching profile for this ID or profile
     let profile: Profile;
     if (typeof config === 'string') {
-      const matchingProfile = allProfiles.find((p) => p.id === config);
+      const matchingProfile = await this.store.profiles.get(config);
       if (!matchingProfile) {
         return;
       }
@@ -64,15 +63,15 @@ export class ProfileService extends PhobosApi {
     }
 
     // Set profile last played
-    this.saveProfile({ ...profile, lastPlayed: new Date().toISOString() });
+    await this.saveProfile({
+      ...profile,
+      lastPlayed: new Date().toISOString(),
+    });
 
     // Prepare args
     // TODO: Logic to actually parse these settings should live elsewhere
-    const engines = getPhobos().engineService.getEngines();
-    const bases = (getPhobos().settingsService.getSetting('bases') ??
-      []) as UniqueFileRecord[];
-    const base = bases.find((b) => b.id === profile.base);
-    const engine = engines.find((e) => e.id === profile.engine);
+    const engine = await this.store.engines.get(profile.engine);
+    const base = await this.store.bases.get(profile.base);
     if (!base || !engine) {
       // TODO: Handle this error condition
       return;
@@ -90,10 +89,10 @@ export class ProfileService extends PhobosApi {
     ) ?? []) as Cvar[];
 
     const cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
-    for (const parentId of profile.parents) {
-      const parent = this.getProfileById(parentId);
+    const parents = await this.store.profiles.getMany(profile.parents);
+    for (const parent of parents) {
       files.push(...this.getProfileFiles(parent));
-      cvars.push(...this.prepareCvars(parent.cvars, cvarCtx));
+      cvars.push(...this.prepareCvars(parent?.cvars ?? [], cvarCtx));
     }
     files.push(...this.getProfileFiles(profile));
     cvars.push(...this.prepareCvars(profile.cvars, cvarCtx));
@@ -104,10 +103,6 @@ export class ProfileService extends PhobosApi {
       ...files,
       ...cvars,
     ]);
-  }
-
-  private getProfileById(id: string) {
-    return this.getProfiles().find((p) => p.id === id);
   }
 
   private getProfileFiles(profile: Profile | undefined): string[] {

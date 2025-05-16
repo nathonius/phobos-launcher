@@ -25,8 +25,7 @@ export class BasesComponent {
   constructor() {
     this.navbarService.setCallbacks({});
     effect(async () => {
-      const bases = ((await Api['settings.get']('bases')) ??
-        []) as UniqueFileRecord[];
+      const bases = await Api['bases.getAll']();
       this.baseWads.set(bases);
     });
   }

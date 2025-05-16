@@ -1,6 +1,12 @@
-import type { Category, Engine, Profile } from '../../../shared/config';
+import type {
+  BaseWad,
+  Category,
+  Engine,
+  Profile,
+  Settings,
+  UUID,
+} from '../../../shared/config';
 import type { Channel } from '../../../shared/public-api';
-import type { JSONValue } from '../../../shared/json';
 import type {
   SGDBDimensionOptions,
   SGDBGame,
@@ -22,10 +28,13 @@ declare global {
  * A wrapper around the window api to type the responses
  */
 export const Api = {
+  'bases.save': (base: BaseWad) =>
+    window.api['bases.save'](base) as Promise<void>,
+  'bases.getAll': () => window.api['bases.getAll']() as Promise<BaseWad[]>,
   'settings.getAll': () => window.api['settings.getAll']() as Promise<unknown>,
-  'settings.get': (key: string) =>
-    window.api['settings.get'](key) as Promise<unknown>,
-  'settings.set': (key: string, value: JSONValue) =>
+  'settings.get': <K extends keyof Settings>(key: K) =>
+    window.api['settings.get'](key),
+  'settings.set': <K extends keyof Settings>(key: K, value: Settings[K]) =>
     window.api['settings.set'](key, value) as Promise<void>,
   'settings.openConfig': () => window.api['settings.openConfig'](),
   'category.getByName': (name: string) =>
@@ -34,13 +43,13 @@ export const Api = {
     window.api['category.getCategories']() as Promise<Category[]>,
   'category.save': (category: Category) =>
     window.api['category.save'](category) as Promise<void>,
-  'category.delete': (categoryId: string) =>
+  'category.delete': (categoryId: UUID) =>
     window.api['category.delete'](categoryId) as Promise<void>,
   'engine.getEngines': () =>
     window.api['engine.getEngines']() as Promise<Engine[]>,
   'engine.save': (engine: Engine) =>
     window.api['engine.save'](engine) as Promise<void>,
-  'engine.delete': (engineId: string) =>
+  'engine.delete': (engineId: UUID) =>
     window.api['engine.delete'](engineId) as Promise<void>,
   'profile.getProfiles': () =>
     window.api['profile.getProfiles']() as Promise<Profile[]>,
@@ -48,7 +57,7 @@ export const Api = {
     window.api['profile.launchCustom'](profile) as Promise<void>,
   'profile.save': (profile: Profile) =>
     window.api['profile.save'](profile) as Promise<void>,
-  'profile.delete': (profileId: string) =>
+  'profile.delete': (profileId: UUID) =>
     window.api['profile.delete'](profileId) as Promise<void>,
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),

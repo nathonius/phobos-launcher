@@ -1,44 +1,42 @@
 import type Store from 'electron-store';
-import type { Category } from '../../shared/config';
+import type { Category, UUID } from '../../shared/config';
 import { ipcHandler, PhobosApi } from '../api';
+import type { PhobosStore } from '../store';
 
 export class CategoryService extends PhobosApi {
-  public constructor(private readonly store: Store) {
+  public constructor(
+    private readonly store: PhobosStore,
+    private readonly oldStore: Store
+  ) {
     super();
   }
 
   @ipcHandler('category.getCategories')
-  getCategories(): Category[] {
-    return this.store.get('categories', []) as Category[];
+  getCategories(): Promise<Category[]> {
+    return this.store.categories.values().all();
+  }
+
+  /**
+   * @deprecated - Uses old store, should only be used for migration
+   */
+  _getCategories(): Category[] {
+    return this.oldStore.get('categories', []) as Category[];
   }
 
   @ipcHandler('category.getByName')
-  getCategoryByName(name: string): Category | null {
-    return this.getCategories().find((p) => p.name === name) ?? null;
+  getCategoryByName(name: string): Promise<Category | null> {
+    return this.getCategories().then(
+      (categories) => categories.find((c) => c.name === name) ?? null
+    );
   }
 
   @ipcHandler('category.save')
-  saveCategory(config: Category): void {
-    const categories = this.getCategories();
-    // Find existing category
-    const matchingCategoryIndex = categories.findIndex(
-      (p) => p.id === config.id
-    );
-    if (matchingCategoryIndex !== -1) {
-      categories[matchingCategoryIndex] = config;
-    } else {
-      categories.unshift(config);
-    }
-    this.store.set('categories', categories);
+  saveCategory(config: Category): Promise<void> {
+    return this.store.categories.put(config.id, config);
   }
 
   @ipcHandler('category.delete')
-  deleteCategoryById(id: string): void {
-    const categories = this.getCategories();
-    const categoryIndex = categories.findIndex((p) => p.id === id);
-    if (categoryIndex !== -1) {
-      categories.splice(categoryIndex, 1);
-      this.store.set('categories', categories);
-    }
+  deleteCategoryById(id: UUID): Promise<void> {
+    return this.store.categories.del(id);
   }
 }

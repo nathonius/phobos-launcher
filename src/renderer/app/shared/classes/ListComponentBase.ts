@@ -3,6 +3,8 @@ import { ArrowDown, ArrowUp, File, Folder, Plus, Trash } from 'lucide-angular';
 
 export abstract class ListComponentBase<T = string> {
   public abstract readonly valueChange: OutputEmitterRef<T[]>;
+  public abstract readonly singleValueChange: OutputEmitterRef<T>;
+
   public abstract readonly values: Signal<T[]>;
   protected readonly icons = {
     File,
@@ -23,6 +25,7 @@ export abstract class ListComponentBase<T = string> {
     const newValues = [...this.values()];
     newValues[index] = value;
     this.valueChange.emit(newValues);
+    this.singleValueChange.emit(value);
   }
 
   handleReorderUp(index: number): void {

@@ -9,6 +9,8 @@ import { filenamifyPath } from 'filenamify';
 import { ipcHandler, PhobosApi } from '../api';
 import { asBase64Image, simpleHash } from '../util';
 import { getPhobos } from '../../main';
+import type { PhobosStore } from '../store';
+import type { CompressedImage } from '../../shared/config';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -20,30 +22,31 @@ const JIMP_SUPPORTED_FORMATS = [
   '.tiff',
 ];
 
-interface CompressedImage {
-  originalPath: string;
-  compressedPath: string;
-  modifiedMs: number;
-  neverReplace: boolean;
-}
-
 export class UserDataService extends PhobosApi {
   public static readonly scheme = 'phobos-data';
   private readonly dataPath: string;
-  private readonly store: Store;
+  private readonly oldStore: Store;
+  private readonly store: PhobosStore;
   private readonly jimp = createJimp({
     formats: [...defaultFormats],
     plugins: defaultPlugins,
   });
-  constructor(dataPath: string, store: Store) {
+  constructor(dataPath: string, store: PhobosStore, oldStore: Store) {
     super();
     this.dataPath = dataPath;
+    this.oldStore = oldStore;
     this.store = store;
     protocol.handle(UserDataService.scheme, async (req) => {
       const url = new URL(req.url);
       switch (url.hostname) {
         case 'save-to-app-data': {
           const filePath = url.searchParams.get('path');
+          if (!filePath) {
+            return new Response(null, {
+              status: 400,
+              statusText: 'path parameter is required',
+            });
+          }
           const compress = url.searchParams.get('compress') ?? '';
           const extension = extname(filePath).toLowerCase();
           if (
@@ -65,7 +68,7 @@ export class UserDataService extends PhobosApi {
               };
               // Store the compressed image as the original path
               const compressedKey = `internal.processed-image.${compressed.compressedPath}`;
-              this.store.set(compressedKey, compressedImageConfig);
+              this.oldStore.set(compressedKey, compressedImageConfig);
               // Return the path of the copied image
               return new Response(JSON.stringify(compressed.compressedPath));
             } catch (err) {
@@ -86,6 +89,12 @@ export class UserDataService extends PhobosApi {
         }
         case 'get-file': {
           const filePath = url.searchParams.get('path');
+          if (!filePath) {
+            return new Response(null, {
+              status: 400,
+              statusText: 'path parameter is required',
+            });
+          }
           const compress = url.searchParams.get('compress') ?? '';
           const extension = extname(filePath).toLowerCase();
           if (
@@ -115,9 +124,8 @@ export class UserDataService extends PhobosApi {
   }
 
   public wadDataDir(): string {
-    const userTempDir = getPhobos().settingsService.getSetting(
-      'tempDataPath'
-    ) as string | null;
+    const userTempDir =
+      getPhobos().settingsService.getSettingSync('tempDataPath');
     const dataPath = userTempDir ?? this.dataPath;
     return join(dataPath, 'extracted-graphics');
   }
@@ -127,11 +135,11 @@ export class UserDataService extends PhobosApi {
   ): Promise<ArrayBuffer | Buffer<ArrayBufferLike>> {
     const compressedKey = `internal.processed-image.${path}`;
     const fileStats = await stat(path);
-    const maybeCompressed = this.store.get(
+    const maybeCompressed = this.oldStore.get(
       compressedKey
     ) as CompressedImage | null;
     const compressedExists =
-      Boolean(maybeCompressed?.compressedPath) &&
+      maybeCompressed?.compressedPath !== undefined &&
       Boolean(await stat(maybeCompressed.compressedPath));
 
     if (compressedExists && fileStats.mtimeMs === maybeCompressed.modifiedMs) {
@@ -148,7 +156,7 @@ export class UserDataService extends PhobosApi {
       path,
       fileStats.mtimeMs
     );
-    this.store.set(compressedKey, compressed);
+    this.oldStore.set(compressedKey, compressed);
     return buffer;
   }
 
