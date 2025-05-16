@@ -14,6 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [0.0.9] - 2025-05-16
+
+### Changed
+
+- Rating options for profiles
+- Sort by rating
+- Zip maker for more platforms
+
+### Fixed
+
+- Improved performance when there are many profiles in the selected category
+- Corrected sorting
+
 ## [0.0.8] - 2025-04-16
 
 ### Changed
@@ -88,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
+[0.0.9]: https://github.com/nathonius/phobos-launcher/compare/0.0.8...0.0.9
 [0.0.8]: https://github.com/nathonius/phobos-launcher/compare/0.0.7...0.0.8
 [0.0.7]: https://github.com/nathonius/phobos-launcher/compare/0.0.6...0.0.7
 [0.0.6]: https://github.com/nathonius/phobos-launcher/compare/0.0.5...0.0.6
