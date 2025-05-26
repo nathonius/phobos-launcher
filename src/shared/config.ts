@@ -105,6 +105,7 @@ export interface PhobosStore {
   profiles: Profile[];
   internal: {
     'processed-image': Record<string, CompressedImage>;
+    migrations: Record<string, boolean | undefined>;
   };
 }
 

@@ -1,6 +1,6 @@
 import type { Category } from '../../shared/config';
 import { ipcHandler, PhobosApi } from '../api';
-import { getStore } from '../store';
+import { getStore } from '../store/store';
 
 export class CategoryService extends PhobosApi {
   public constructor() {

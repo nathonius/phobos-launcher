@@ -3,7 +3,7 @@ import filenamify from 'filenamify';
 import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
-import { getStore } from '../store';
+import { getStore } from '../store/store';
 
 export interface FsError extends Error {
   code: string;

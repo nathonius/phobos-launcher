@@ -1,6 +1,6 @@
 import type { Engine } from '../../shared/config';
 import { ipcHandler, PhobosApi } from '../api';
-import { getStore } from '../store';
+import { getStore } from '../store/store';
 
 export class EngineService extends PhobosApi {
   public constructor() {

@@ -12,7 +12,8 @@ import { SGDBService } from './services/sgdb.service';
 import { ImportService } from './services/import.service';
 import { EngineService } from './services/engine.service';
 import { WadService } from './services/wad.service';
-import { getStore, initStore } from './store';
+import { getStore, initStore } from './store/store';
+import { executeMigrations } from './store/migrations';
 
 export class Phobos {
   public userDataService!: UserDataService;
@@ -52,6 +53,7 @@ export class Phobos {
     app.on('ready', async () => {
       // Set up store; nothing that reads from it should be called before this
       await initStore();
+      await executeMigrations(getStore());
 
       // Init services
       this.profileService = new ProfileService();

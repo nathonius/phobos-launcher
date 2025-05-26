@@ -1,7 +1,7 @@
 import { get, set } from 'lodash-es';
 import type { JSONValue } from '../../shared/json';
 import { ipcHandler, PhobosApi } from '../api';
-import { getStore, openInEditor } from '../store';
+import { getStore, openInEditor } from '../store/store';
 import type { PhobosStore } from '../../shared/config';
 
 export class SettingsService extends PhobosApi {

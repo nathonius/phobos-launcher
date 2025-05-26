@@ -5,12 +5,11 @@ import { dialog, protocol, net } from 'electron';
 import { defaultFormats, defaultPlugins } from 'jimp';
 import { createJimp } from '@jimp/core';
 import { filenamifyPath } from 'filenamify';
-import { get, set } from 'lodash-es';
 import { ipcHandler, PhobosApi } from '../api';
 import { asBase64Image, simpleHash } from '../util';
 import { getPhobos } from '../../main';
 import type { CompressedImage } from '../../shared/config';
-import { getStore } from '../store';
+import { getStore } from '../store/store';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -60,9 +59,9 @@ export class UserDataService extends PhobosApi {
                 neverReplace: true,
               };
               // Store the compressed image as the original path
-              const compressedKey = `processed-image.${compressed.compressedPath}`;
               await getStore().update(({ internal }) => {
-                set(internal, compressedKey, compressedImageConfig);
+                internal['processed-image'][compressed.compressedPath] =
+                  compressedImageConfig;
               });
               // Return the path of the copied image
               return new Response(JSON.stringify(compressed.compressedPath));
@@ -127,9 +126,8 @@ export class UserDataService extends PhobosApi {
     path: string
   ): Promise<ArrayBuffer | Buffer<ArrayBufferLike>> {
     const store = getStore();
-    const compressedKey = `processed-image.${path}`;
     const fileStats = await stat(path);
-    const maybeCompressed = get(store.data.internal, compressedKey) as
+    const maybeCompressed = store.data.internal['processed-image'][path] as
       | CompressedImage
       | undefined;
     let compressedExists = false;
@@ -152,7 +150,7 @@ export class UserDataService extends PhobosApi {
       fileStats.mtimeMs
     );
     await store.update(({ internal }) => {
-      set(internal, compressedKey, compressed);
+      internal['processed-image'][path] = compressed;
     });
     return buffer;
   }
