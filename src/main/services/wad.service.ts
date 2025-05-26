@@ -40,9 +40,9 @@ export class WadService extends PhobosApi {
     let dir: string;
     try {
       if (wadPath.toLowerCase().endsWith('.pk3')) {
-        dir = await pk3Extract(wadPath, lumpNames);
+        dir = (await pk3Extract(wadPath, lumpNames)) ?? '';
       } else {
-        dir = await deutexExtract(wadPath);
+        dir = (await deutexExtract(wadPath)) ?? '';
       }
     } catch (err) {
       console.error(`Could not read graphics for ${wadPath}`);
@@ -84,13 +84,13 @@ export class WadService extends PhobosApi {
     if (mapinfoLump) {
       let result: RegExpExecArray | null = mapname.exec(mapinfoLump);
       while (result !== null) {
-        wadInfo.maps.push(result.groups.mapname);
+        wadInfo.maps.push(result.groups!.mapname);
         result = mapname.exec(mapinfoLump);
       }
     } else if (zmapinfoLump) {
       let result: RegExpExecArray | null = mapname.exec(zmapinfoLump);
       while (result !== null) {
-        wadInfo.maps.push(result.groups.mapname);
+        wadInfo.maps.push(result.groups!.mapname);
         result = mapname.exec(zmapinfoLump);
       }
     }

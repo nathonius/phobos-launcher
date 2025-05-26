@@ -20,6 +20,9 @@ export function imageToCanvas(image: Picture, palette: Rgb[], block = 4) {
   canvas.width = cw;
   canvas.height = ch;
   const context = canvas.getContext('2d');
+  if (!context) {
+    throw new Error('Failed to get canvas for image');
+  }
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const c = columns[x][y];
@@ -39,5 +42,5 @@ export async function canvasToBuffer(canvas: HTMLCanvasElement) {
     resolve(b);
   });
   const blob: Blob | null = await promise;
-  return await blob.arrayBuffer();
+  return await blob?.arrayBuffer();
 }

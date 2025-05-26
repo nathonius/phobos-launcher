@@ -54,7 +54,7 @@ export class SgdbDialogComponent {
   protected readonly images = resource({
     request: () => this.selectedGame(),
     loader: ({ request }) => {
-      if (request !== undefined) {
+      if (request !== undefined && request !== null) {
         this.queryInProgress.set(true);
         return Api['sgdb.getImages'](request, ['grid', 'icon', 'logo']).finally(
           () => {

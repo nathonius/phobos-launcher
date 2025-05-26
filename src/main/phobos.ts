@@ -1,7 +1,6 @@
 import { join } from 'node:path';
 import { setTimeout, clearTimeout } from 'node:timers';
 import { app, BrowserWindow, protocol } from 'electron';
-import Store from 'electron-store';
 
 import { ALL_CHANNELS, type Channel } from '../shared/public-api'; // This import MUST be relative
 import { DEFAULT_WINDOW_SETTINGS } from '../main';
@@ -13,9 +12,9 @@ import { SGDBService } from './services/sgdb.service';
 import { ImportService } from './services/import.service';
 import { EngineService } from './services/engine.service';
 import { WadService } from './services/wad.service';
+import { getStore, initStore } from './store';
 
 export class Phobos {
-  public readonly store = new Store();
   public userDataService!: UserDataService;
   public profileService!: ProfileService;
   public categoryService!: CategoryService;
@@ -32,7 +31,9 @@ export class Phobos {
   constructor(
     private readonly basePath: string,
     private readonly serve = false
-  ) {}
+  ) {
+    initStore();
+  }
 
   /**
    * Set up handlers, listeners
@@ -48,18 +49,18 @@ export class Phobos {
     ]);
 
     // Attach API/IPC handlers, create window
-    app.on('ready', () => {
+    app.on('ready', async () => {
+      // Set up store; nothing that reads from it should be called before this
+      await initStore();
+
       // Init services
-      this.profileService = new ProfileService(this.store);
-      this.categoryService = new CategoryService(this.store);
-      this.settingsService = new SettingsService(this.store);
-      this.engineService = new EngineService(this.store);
+      this.profileService = new ProfileService();
+      this.categoryService = new CategoryService();
+      this.settingsService = new SettingsService();
+      this.engineService = new EngineService();
       this.steamGridService = new SGDBService();
       this.importService = new ImportService(this);
-      this.userDataService = new UserDataService(
-        app.getPath('userData'),
-        this.store
-      );
+      this.userDataService = new UserDataService(app.getPath('userData'));
       this.wadService = new WadService();
 
       // Log in case some channels were missed
@@ -87,9 +88,10 @@ export class Phobos {
   }
 
   public createWindow(): BrowserWindow {
+    const windowSettings = this.getWindowSettings();
     // Create the browser window.
     this.window = new BrowserWindow({
-      ...this.getWindowSettings(),
+      ...windowSettings,
       title: 'Phobos Launcher',
       webPreferences: {
         preload: join(this.basePath, 'preload.js'),
@@ -119,7 +121,9 @@ export class Phobos {
     this.window.on('resized', () => {
       clearTimeout(this.windowSettingsTimeout);
       this.windowSettingsTimeout = setTimeout(() => {
-        this.store.set('window', this.window?.getBounds());
+        getStore().update((data) => {
+          data.window = this.window?.getBounds() ?? null;
+        });
       }, 500);
     });
 
@@ -127,9 +131,6 @@ export class Phobos {
   }
 
   private getWindowSettings(): Electron.Rectangle {
-    return this.store.get(
-      'window',
-      DEFAULT_WINDOW_SETTINGS()
-    ) as Electron.Rectangle;
+    return getStore().data.window ?? DEFAULT_WINDOW_SETTINGS();
   }
 }

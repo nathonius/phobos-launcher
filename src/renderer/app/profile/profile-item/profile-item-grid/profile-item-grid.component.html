@@ -19,7 +19,7 @@
             class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
             fittext
             [ngStyle]="{
-              'background-image': item.background ?? backgrounds.RockWall
+              'background-image': item.background || backgrounds.RockWall
             }"
             [compressor]="1"
           >

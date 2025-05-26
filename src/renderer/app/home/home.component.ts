@@ -18,6 +18,7 @@ import {
   SortDesc,
   Search,
 } from 'lucide-angular';
+import { NgClass } from '@angular/common';
 import type { Category, Profile } from '../../../shared/config';
 import { ProfileService } from '../profile/profile.service';
 import { ProfileComponent } from '../profile/profile.component';
@@ -28,6 +29,7 @@ import { HomeViewState } from '../shared/constants';
 import { ViewService } from '../shared/services/view.service';
 import type { ProfileItemEvent } from '../profile/profile-item/profile-item.interface';
 import { ProfileListComponent } from '../profile/profile-list/profile-list.component';
+import { getNext, getPrev } from '../shared/functions/rotate';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +41,7 @@ import { ProfileListComponent } from '../profile/profile-list/profile-list.compo
     LucideAngularModule,
     FormsModule,
     ProfileListComponent,
+    NgClass,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -65,6 +68,18 @@ export class HomeComponent implements OnInit {
   protected readonly categoryService = inject(CategoryService);
   protected readonly categories = signal<(Category & { img: string })[]>([]);
   protected readonly loadingProfiles = signal<boolean>(false);
+  protected readonly selectedCategoryIndex = computed(() => {
+    const selectedCategory = this.categoryService.selectedCategory();
+    const categories = this.categories();
+    if (selectedCategory === undefined) {
+      return 0;
+    }
+    const index = categories.findIndex((c) => c.id === selectedCategory.id);
+    if (index === -1) {
+      return 0;
+    }
+    return index;
+  });
   private readonly navbarService = inject(NavbarService);
 
   constructor() {
@@ -142,6 +157,18 @@ export class HomeComponent implements OnInit {
     } else if (event.action === 'launch' && profile) {
       this.profileService.launch(profile);
     }
+  }
+
+  protected nextCategory() {
+    const index = this.selectedCategoryIndex();
+    const categories = this.categories();
+    this.handleSelectCategory(getNext(categories, index));
+  }
+
+  protected prevCategory() {
+    const index = this.selectedCategoryIndex();
+    const categories = this.categories();
+    this.handleSelectCategory(getPrev(categories, index));
   }
 
   protected handleSelectCategory(category: Category) {

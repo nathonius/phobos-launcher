@@ -219,11 +219,11 @@ export class ImportService extends PhobosApi {
             c
           )
         )
-        .filter((c) => Boolean(c));
+        .filter((c) => Boolean(c)) as Category[];
       console.log(profile.resources);
       const files = profile.resources
         .map((r) => this.resolvePath(r, basePath))
-        .filter((r) => Boolean(r));
+        .filter((r) => Boolean(r)) as string[];
       const parents = (profile.inheritProfiles ?? [])
         .map((p) =>
           this.resolveUniqueRecord<Profile>(
@@ -231,7 +231,7 @@ export class ImportService extends PhobosApi {
             p
           )
         )
-        .filter((p) => Boolean(p));
+        .filter((p) => Boolean(p)) as Profile[];
       const icon =
         this.resolvePath(
           profile.iconPath,
@@ -251,6 +251,8 @@ export class ImportService extends PhobosApi {
         created: new Date().toISOString(),
         lastPlayed: null,
         complete: false,
+        rating: null,
+        background: '',
       };
       newProfiles.push(newProfile);
     }
