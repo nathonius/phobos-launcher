@@ -27,12 +27,16 @@ export const BUTTON = {
   Platform: 16,
 } as const;
 
+export type BUTTON_NAME = keyof typeof BUTTON;
+
 export const AXES = {
   LeftX: 0,
   LeftY: 1,
   RightX: 2,
   RightY: 3,
 } as const;
+
+export type AXES_NAME = keyof typeof AXES;
 
 @Injectable({
   providedIn: 'root',
@@ -159,7 +163,7 @@ export class GamepadService {
     const axes: Record<
       keyof typeof AXES,
       WritableSignal<number>
-    > = Object.entries(BUTTON).reduce<
+    > = Object.entries(AXES).reduce<
       Record<keyof typeof AXES, WritableSignal<number>>
     >((acc, cur) => {
       const [k, v] = cur;
