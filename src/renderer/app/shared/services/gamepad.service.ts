@@ -6,6 +6,7 @@ import {
   linkedSignal,
   signal,
 } from '@angular/core';
+import { Api } from '../../api/api';
 
 export const BUTTON = {
   A: 0,
@@ -42,6 +43,7 @@ export type AXES_NAME = keyof typeof AXES;
   providedIn: 'root',
 })
 export class GamepadService {
+  public readonly gamepadEnabled = signal<boolean>(false);
   public readonly gamepadConnected = computed<boolean>(
     () => this.gamepad() !== null
   );
@@ -92,11 +94,12 @@ export class GamepadService {
 
     // Start / stop the gamepad loop
     effect(() => {
+      const enabled = this.gamepadEnabled();
       const gamepad = this.gamepad();
       const gamepadConnected = this.gamepadConnected();
       if (gamepadConnected !== this.loopFlag) {
         this.loopFlag = gamepadConnected;
-        if (gamepadConnected) {
+        if (gamepadConnected && enabled) {
           console.debug(`Starting gamepad loop for ${gamepad}`);
           window.requestAnimationFrame(() => this.gamepadLoop(gamepad));
         } else {
@@ -104,10 +107,15 @@ export class GamepadService {
         }
       }
     });
+
+    Api['settings.get']('gamepadEnabled').then((enabled) => {
+      this.gamepadEnabled.set(enabled);
+    });
   }
 
   private gamepadLoop(gp: string | null) {
-    if (!gp || this.loopFlag === false) {
+    const gamepadEnabled = this.gamepadEnabled();
+    if (!gp || this.loopFlag === false || !gamepadEnabled) {
       this.loopFlag = false;
       return;
     }

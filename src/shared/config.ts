@@ -85,21 +85,24 @@ export type ProfileSort =
 
 export type SortDirection = 'asc' | 'desc';
 
+export interface PhobosSettings {
+  theme: AppTheme;
+  defaultCvars: Cvar[];
+  deutexPath: string;
+  tempDataPath: string;
+  steamGridApiKey: string;
+  home: {
+    sort: ProfileSort;
+    sortDirection: SortDirection;
+  };
+  // TODO: Move bases to top level
+  bases: Base[];
+  gamepadEnabled: boolean;
+}
+
 export interface PhobosStore {
   window: Electron.Rectangle | null;
-  settings: {
-    theme: AppTheme;
-    defaultCvars: Cvar[];
-    deutexPath: string;
-    tempDataPath: string;
-    steamGridApiKey: string;
-    home: {
-      sort: ProfileSort;
-      sortDirection: SortDirection;
-    };
-    // TODO: Move bases to top level
-    bases: Base[];
-  };
+  settings: PhobosSettings;
   categories: Category[];
   engines: Engine[];
   profiles: Profile[];

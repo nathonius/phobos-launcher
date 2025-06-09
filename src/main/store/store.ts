@@ -22,6 +22,7 @@ export const STORE_DEFAULT_VALUE: PhobosStore = {
     steamGridApiKey: '',
     tempDataPath: '',
     theme: 'synthwave',
+    gamepadEnabled: false,
   },
   internal: {
     'processed-image': {},

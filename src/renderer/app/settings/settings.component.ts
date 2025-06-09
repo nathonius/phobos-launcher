@@ -19,8 +19,8 @@ import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
 import type { AppTheme, Cvar } from '../../../shared/config';
-import type { JSONValue } from '../../../shared/json';
 import { GamepadTesterComponent } from '../shared/components/gamepad-tester/gamepad-tester.component';
+import { GamepadService } from '../shared/services/gamepad.service';
 
 @Component({
   selector: 'app-settings',
@@ -47,12 +47,14 @@ export class SettingsComponent implements OnInit {
   protected readonly steamGridService = inject(SteamGridService);
   protected readonly categoryService = inject(CategoryService);
   protected readonly profileService = inject(ProfileService);
+  protected readonly gamepadService = inject(GamepadService);
   protected readonly settingsForm = new FormGroup({
     theme: new FormControl<string | null>(null),
     steamGridApiKey: new FormControl<string | null>(null),
     deutexPath: new FormControl<string | null>(null),
     tempDataPath: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
+    gamepadEnabled: new FormControl<boolean>(false, { nonNullable: true }),
   });
   protected readonly defaultCvars = signal<Cvar[]>([]);
   protected readonly clearDataStatus = signal<
@@ -72,17 +74,27 @@ export class SettingsComponent implements OnInit {
     });
     effect(() => {
       const defaultCvars = this.defaultCvars();
-      Api['settings.set']('defaultCvars', defaultCvars as unknown as JSONValue);
+      Api['settings.set']('defaultCvars', defaultCvars);
     });
-    Api['settings.get']('defaultCvars').then((cvars: Cvar[] | null) => {
-      this.defaultCvars.set(cvars ?? []);
-    });
-    Api['settings.get']('deutexPath').then((path: string | null) => {
-      this.settingsForm.controls.deutexPath.setValue(path ?? null);
-    });
-    Api['settings.get']('tempDataPath').then((path: string | null) => {
-      this.settingsForm.controls.tempDataPath.setValue(path);
-    });
+    Api['settings.getAll']().then(
+      ({
+        defaultCvars,
+        deutexPath,
+        tempDataPath,
+        gamepadEnabled,
+        steamGridApiKey,
+      }) => {
+        this.settingsForm.controls.deutexPath.reset(deutexPath ?? null);
+        this.settingsForm.controls.tempDataPath.reset(tempDataPath ?? null);
+        this.settingsForm.controls.gamepadEnabled.reset(
+          gamepadEnabled ?? false
+        );
+        this.settingsForm.controls.steamGridApiKey.reset(
+          steamGridApiKey ?? null
+        );
+        this.defaultCvars.set(defaultCvars ?? []);
+      }
+    );
   }
 
   public ngOnInit(): void {
@@ -93,10 +105,14 @@ export class SettingsComponent implements OnInit {
       this.steamGridService.setKey(val ? val : null);
     });
     this.settingsForm.controls.deutexPath.valueChanges.subscribe((val) => {
-      Api['settings.set']('deutexPath', val);
+      Api['settings.set']('deutexPath', val ?? '');
     });
     this.settingsForm.controls.tempDataPath.valueChanges.subscribe((val) => {
-      Api['settings.set']('tempDataPath', val);
+      Api['settings.set']('tempDataPath', val ?? '');
+    });
+    this.settingsForm.controls.gamepadEnabled.valueChanges.subscribe((val) => {
+      Api['settings.set']('gamepadEnabled', val);
+      this.gamepadService.gamepadEnabled.set(val);
     });
   }
 

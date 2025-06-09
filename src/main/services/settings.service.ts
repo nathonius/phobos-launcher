@@ -2,7 +2,7 @@ import { get, set } from 'lodash-es';
 import type { JSONValue } from '../../shared/json';
 import { ipcHandler, PhobosApi } from '../api';
 import { getStore, openInEditor } from '../store/store';
-import type { PhobosStore } from '../../shared/config';
+import type { PhobosSettings } from '../../shared/config';
 
 export class SettingsService extends PhobosApi {
   public constructor() {
@@ -10,13 +10,13 @@ export class SettingsService extends PhobosApi {
   }
 
   @ipcHandler('settings.getAll')
-  public getSettings() {
+  public getSettings(): PhobosSettings {
     return getStore().data.settings;
   }
 
   @ipcHandler('settings.get')
   public getSetting(key: string) {
-    return get(getStore().data.settings, key as keyof PhobosStore['settings']);
+    return get(getStore().data.settings, key as keyof PhobosSettings);
   }
 
   @ipcHandler('settings.set')
