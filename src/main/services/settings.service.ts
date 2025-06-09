@@ -1,29 +1,33 @@
-import type Store from 'electron-store';
+import { get, set } from 'lodash-es';
 import type { JSONValue } from '../../shared/json';
 import { ipcHandler, PhobosApi } from '../api';
+import { getStore, openInEditor } from '../store/store';
+import type { PhobosSettings } from '../../shared/config';
 
 export class SettingsService extends PhobosApi {
-  public constructor(private readonly store: Store) {
+  public constructor() {
     super();
   }
 
   @ipcHandler('settings.getAll')
-  public getSettings() {
-    return this.store.get('settings');
+  public getSettings(): PhobosSettings {
+    return getStore().data.settings;
   }
 
   @ipcHandler('settings.get')
   public getSetting(key: string) {
-    return this.store.get(`settings.${key}`);
+    return get(getStore().data.settings, key as keyof PhobosSettings);
   }
 
   @ipcHandler('settings.set')
   public saveSetting(key: string, value: JSONValue) {
-    this.store.set(`settings.${key}`, value);
+    return getStore().update(({ settings }) => {
+      set(settings, key, value);
+    });
   }
 
   @ipcHandler('settings.openConfig')
   public openConfig() {
-    this.store.openInEditor();
+    return openInEditor();
   }
 }

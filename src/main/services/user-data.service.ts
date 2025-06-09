@@ -4,11 +4,12 @@ import { pathToFileURL } from 'node:url';
 import { dialog, protocol, net } from 'electron';
 import { defaultFormats, defaultPlugins } from 'jimp';
 import { createJimp } from '@jimp/core';
-import type Store from 'electron-store';
 import { filenamifyPath } from 'filenamify';
 import { ipcHandler, PhobosApi } from '../api';
 import { asBase64Image, simpleHash } from '../util';
 import { getPhobos } from '../../main';
+import type { CompressedImage } from '../../shared/config';
+import { getStore } from '../store/store';
 
 // TODO: Figure out how to include the jimp wasm webp plugin
 const JIMP_SUPPORTED_FORMATS = [
@@ -20,30 +21,24 @@ const JIMP_SUPPORTED_FORMATS = [
   '.tiff',
 ];
 
-interface CompressedImage {
-  originalPath: string;
-  compressedPath: string;
-  modifiedMs: number;
-  neverReplace: boolean;
-}
-
 export class UserDataService extends PhobosApi {
   public static readonly scheme = 'phobos-data';
   private readonly dataPath: string;
-  private readonly store: Store;
   private readonly jimp = createJimp({
     formats: [...defaultFormats],
     plugins: defaultPlugins,
   });
-  constructor(dataPath: string, store: Store) {
+  constructor(dataPath: string) {
     super();
     this.dataPath = dataPath;
-    this.store = store;
     protocol.handle(UserDataService.scheme, async (req) => {
       const url = new URL(req.url);
       switch (url.hostname) {
         case 'save-to-app-data': {
           const filePath = url.searchParams.get('path');
+          if (!filePath) {
+            return new Response(null, { status: 400 });
+          }
           const compress = url.searchParams.get('compress') ?? '';
           const extension = extname(filePath).toLowerCase();
           if (
@@ -64,8 +59,10 @@ export class UserDataService extends PhobosApi {
                 neverReplace: true,
               };
               // Store the compressed image as the original path
-              const compressedKey = `internal.processed-image.${compressed.compressedPath}`;
-              this.store.set(compressedKey, compressedImageConfig);
+              await getStore().update(({ internal }) => {
+                internal['processed-image'][compressed.compressedPath] =
+                  compressedImageConfig;
+              });
               // Return the path of the copied image
               return new Response(JSON.stringify(compressed.compressedPath));
             } catch (err) {
@@ -86,6 +83,9 @@ export class UserDataService extends PhobosApi {
         }
         case 'get-file': {
           const filePath = url.searchParams.get('path');
+          if (!filePath) {
+            return new Response(null, { status: 400 });
+          }
           const compress = url.searchParams.get('compress') ?? '';
           const extension = extname(filePath).toLowerCase();
           if (
@@ -125,16 +125,17 @@ export class UserDataService extends PhobosApi {
   async getOrCreateCompressed(
     path: string
   ): Promise<ArrayBuffer | Buffer<ArrayBufferLike>> {
-    const compressedKey = `internal.processed-image.${path}`;
+    const store = getStore();
     const fileStats = await stat(path);
-    const maybeCompressed = this.store.get(
-      compressedKey
-    ) as CompressedImage | null;
-    const compressedExists =
-      Boolean(maybeCompressed?.compressedPath) &&
-      Boolean(await stat(maybeCompressed.compressedPath));
+    const maybeCompressed = store.data.internal['processed-image'][path] as
+      | CompressedImage
+      | undefined;
+    let compressedExists = false;
+    if (maybeCompressed?.compressedPath) {
+      compressedExists = Boolean(await stat(maybeCompressed.compressedPath));
+    }
 
-    if (compressedExists && fileStats.mtimeMs === maybeCompressed.modifiedMs) {
+    if (compressedExists && fileStats.mtimeMs === maybeCompressed?.modifiedMs) {
       return (
         await net.fetch(pathToFileURL(maybeCompressed.compressedPath).href)
       ).arrayBuffer();
@@ -148,7 +149,9 @@ export class UserDataService extends PhobosApi {
       path,
       fileStats.mtimeMs
     );
-    this.store.set(compressedKey, compressed);
+    await store.update(({ internal }) => {
+      internal['processed-image'][path] = compressed;
+    });
     return buffer;
   }
 

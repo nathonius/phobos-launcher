@@ -90,8 +90,8 @@ export class CategoryComponent implements OnInit {
     const { name, icon } = this.categoryForm.value;
     return {
       id: categoryId,
-      name: name,
-      icon: icon,
+      name: name!,
+      icon: icon!,
     };
   }
 }

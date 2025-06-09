@@ -23,7 +23,7 @@ export class RatingComponent {
   public readonly radioIcon = input.required<TemplateRef<any>>();
   public readonly value = input<number | null>(null);
   public readonly _value = linkedSignal<number | null>(() => this.value());
-  public readonly valueChange = output<number>();
+  public readonly valueChange = output<number | null>();
 
   constructor() {
     effect(() => {

@@ -1,7 +1,7 @@
 <form-section label="Settings">
   <form class="min-w-[30rem]" [formGroup]="settingsForm">
     <fieldset class="fieldset">
-      <legend class="fieldset-legend">Appearance</legend>
+      <legend class="fieldset-legend">App behavior</legend>
       <label class="fieldset-label" for="theme-select">Theme</label>
       <select id="theme-select" class="select" formControlName="theme">
         <option [ngValue]="null">Default</option>
@@ -9,6 +9,15 @@
         <option [ngValue]="theme[0]">{{ theme[1] }}</option>
         }
       </select>
+      <label class="label">
+        <input
+          type="checkbox"
+          id="gamepadEnabled"
+          class="checkbox"
+          formControlName="gamepadEnabled"
+        />
+        Gamepad support (experimental)
+      </label>
     </fieldset>
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Integrations</legend>
@@ -108,3 +117,6 @@
     </fieldset>
   </form>
 </form-section>
+@if (settingsForm.controls.gamepadEnabled.value === true) {
+<gamepad-tester />
+}

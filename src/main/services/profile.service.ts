@@ -1,9 +1,9 @@
 import { spawn } from 'node:child_process';
-import type Store from 'electron-store';
 import filenamify from 'filenamify';
 import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
+import { getStore } from '../store/store';
 
 export interface FsError extends Error {
   code: string;
@@ -12,13 +12,13 @@ export interface FsError extends Error {
 type CvarContext = Record<string, string>;
 
 export class ProfileService extends PhobosApi {
-  public constructor(private readonly store: Store) {
+  public constructor() {
     super();
   }
 
   @ipcHandler('profile.getProfiles')
   getProfiles(): Profile[] {
-    return this.store.get('profiles', []) as Profile[];
+    return getStore().data.profiles;
   }
 
   getProfileByName(name: string): Profile | null {
@@ -26,26 +26,27 @@ export class ProfileService extends PhobosApi {
   }
 
   @ipcHandler('profile.save')
-  saveProfile(config: Profile): void {
-    const profiles = this.getProfiles();
-    // Find existing profile
-    const matchingProfileIndex = profiles.findIndex((p) => p.id === config.id);
-    if (matchingProfileIndex !== -1) {
-      profiles[matchingProfileIndex] = config;
-    } else {
-      profiles.unshift(config);
-    }
-    this.store.set('profiles', profiles);
+  saveProfile(config: Profile) {
+    return getStore().update(({ profiles }) => {
+      const matchingProfileIndex = profiles.findIndex(
+        (p) => p.id === config.id
+      );
+      if (matchingProfileIndex !== -1) {
+        profiles[matchingProfileIndex] = config;
+      } else {
+        profiles.unshift(config);
+      }
+    });
   }
 
   @ipcHandler('profile.delete')
-  deleteProfileById(id: string): void {
-    const profiles = this.getProfiles();
-    const profileIndex = profiles.findIndex((p) => p.id === id);
-    if (profileIndex !== -1) {
-      profiles.splice(profileIndex, 1);
-      this.store.set('profiles', profiles);
-    }
+  deleteProfileById(id: string) {
+    return getStore().update(({ profiles }) => {
+      const profileIndex = profiles.findIndex((p) => p.id === id);
+      if (profileIndex !== -1) {
+        profiles.splice(profileIndex, 1);
+      }
+    });
   }
 
   @ipcHandler('profile.launchCustom')
@@ -93,7 +94,7 @@ export class ProfileService extends PhobosApi {
     for (const parentId of profile.parents) {
       const parent = this.getProfileById(parentId);
       files.push(...this.getProfileFiles(parent));
-      cvars.push(...this.prepareCvars(parent.cvars, cvarCtx));
+      cvars.push(...this.prepareCvars(parent?.cvars ?? [], cvarCtx));
     }
     files.push(...this.getProfileFiles(profile));
     cvars.push(...this.prepareCvars(profile.cvars, cvarCtx));

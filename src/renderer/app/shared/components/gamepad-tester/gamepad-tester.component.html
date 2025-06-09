@@ -1,0 +1,16 @@
+@let connected = gamepadService.gamepadConnected();
+<p>Gamepad connected: {{ connected }}</p>
+@if (connected) {
+<h2>Buttons</h2>
+<ul>
+  <li>A: {{ gamepadService.buttons.A() }}</li>
+  <li>B: {{ gamepadService.buttons.B() }}</li>
+  <li>X: {{ gamepadService.buttons.X() }}</li>
+  <li>Y: {{ gamepadService.buttons.Y() }}</li>
+  <li>L1: {{ gamepadService.buttons.L1() }}</li>
+  <li>L2: {{ gamepadService.buttons.L2() }}</li>
+  <li>R1: {{ gamepadService.buttons.R1() }}</li>
+  <li>R2: {{ gamepadService.buttons.R2() }}</li>
+</ul>
+<h2>Sticks</h2>
+}

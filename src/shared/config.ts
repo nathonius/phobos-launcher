@@ -25,17 +25,91 @@ export interface Engine extends UniqueFileRecord {
   config: string;
 }
 
+export type Base = UniqueFileRecord;
+
 export interface Category {
   id: string;
   name: string;
   icon: string;
 }
 
-export interface Settings {
-  engines: Engine[];
-  iwads: FileRecord[];
-  profiles: string[];
+export interface CompressedImage {
+  originalPath: string;
+  compressedPath: string;
+  modifiedMs: number;
+  neverReplace: boolean;
+}
+
+export type AppTheme =
+  | 'light'
+  | 'dark'
+  | 'cupcake'
+  | 'bumblebee'
+  | 'emerald'
+  | 'corporate'
+  | 'synthwave'
+  | 'retro'
+  | 'cyberpunk'
+  | 'valentine'
+  | 'halloween'
+  | 'garden'
+  | 'forest'
+  | 'aqua'
+  | 'lofi'
+  | 'pastel'
+  | 'fantasy'
+  | 'wireframe'
+  | 'black'
+  | 'luxury'
+  | 'dracula'
+  | 'cmyk'
+  | 'autumn'
+  | 'business'
+  | 'acid'
+  | 'lemonade'
+  | 'night'
+  | 'coffee'
+  | 'winter'
+  | 'dim'
+  | 'nord'
+  | 'sunset'
+  | 'caramellatte'
+  | 'abyss'
+  | 'silk';
+
+export type ProfileSort =
+  | 'alphabetical'
+  | 'date_added'
+  | 'last_played'
+  | 'rating';
+
+export type SortDirection = 'asc' | 'desc';
+
+export interface PhobosSettings {
+  theme: AppTheme;
+  defaultCvars: Cvar[];
+  deutexPath: string;
+  tempDataPath: string;
+  steamGridApiKey: string;
+  home: {
+    sort: ProfileSort;
+    sortDirection: SortDirection;
+  };
+  // TODO: Move bases to top level
+  bases: Base[];
+  gamepadEnabled: boolean;
+}
+
+export interface PhobosStore {
+  window: Electron.Rectangle | null;
+  settings: PhobosSettings;
   categories: Category[];
+  engines: Engine[];
+  profiles: Profile[];
+  internal: {
+    'processed-image': Record<string, CompressedImage>;
+    migrations: Record<string, boolean | undefined>;
+  };
 }
 
 export interface Profile {
