@@ -3,6 +3,7 @@ export const ALL_CHANNELS = [
   'settings.get',
   'settings.set',
   'settings.openConfig',
+  'settings.migrateResourcePath',
   'sgdb.queryGames',
   'sgdb.getImages',
   'sgdb.downloadImage',

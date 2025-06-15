@@ -19,8 +19,10 @@ import { ProfileService } from '../profile/profile.service';
 import { NavbarService } from '../shared/services/navbar.service';
 import { KeyValueListComponent } from '../shared/components/key-value-list/key-value-list.component';
 import type { AppTheme, Cvar } from '../../../shared/config';
+
 import { GamepadTesterComponent } from '../shared/components/gamepad-tester/gamepad-tester.component';
 import { GamepadService } from '../shared/services/gamepad.service';
+import { FileListComponent } from '../shared/components/file-list/file-list.component';
 
 @Component({
   selector: 'app-settings',
@@ -32,6 +34,7 @@ import { GamepadService } from '../shared/services/gamepad.service';
     LucideAngularModule,
     NgClass,
     GamepadTesterComponent,
+    FileListComponent,
   ],
   templateUrl: './settings.component.html',
   styles: ``,
@@ -55,8 +58,12 @@ export class SettingsComponent implements OnInit {
     tempDataPath: new FormControl<string | null>(null),
     importPath: new FormControl<string>('', { nonNullable: true }),
     gamepadEnabled: new FormControl<boolean>(false, { nonNullable: true }),
+    useResourcePathIfPossible: new FormControl<boolean>(true, {
+      nonNullable: true,
+    }),
   });
   protected readonly defaultCvars = signal<Cvar[]>([]);
+  protected readonly resourcePaths = signal<string[]>([]);
   protected readonly clearDataStatus = signal<
     'CLEARING' | 'CLEARED' | 'ERROR' | null
   >(null);
@@ -76,6 +83,10 @@ export class SettingsComponent implements OnInit {
       const defaultCvars = this.defaultCvars();
       Api['settings.set']('defaultCvars', defaultCvars);
     });
+    effect(() => {
+      const resourcePaths = this.resourcePaths();
+      Api['settings.set']('resourcePaths', resourcePaths);
+    });
     Api['settings.getAll']().then(
       ({
         defaultCvars,
@@ -83,16 +94,22 @@ export class SettingsComponent implements OnInit {
         tempDataPath,
         gamepadEnabled,
         steamGridApiKey,
+        resourcePaths,
+        useResourcePathIfPossible,
       }) => {
         this.settingsForm.controls.deutexPath.reset(deutexPath ?? null);
         this.settingsForm.controls.tempDataPath.reset(tempDataPath ?? null);
         this.settingsForm.controls.gamepadEnabled.reset(
           gamepadEnabled ?? false
         );
+        this.settingsForm.controls.useResourcePathIfPossible.reset(
+          useResourcePathIfPossible ?? true
+        );
         this.settingsForm.controls.steamGridApiKey.reset(
           steamGridApiKey ?? null
         );
         this.defaultCvars.set(defaultCvars ?? []);
+        this.resourcePaths.set(resourcePaths ?? []);
       }
     );
   }
@@ -114,6 +131,11 @@ export class SettingsComponent implements OnInit {
       Api['settings.set']('gamepadEnabled', val);
       this.gamepadService.gamepadEnabled.set(val);
     });
+    this.settingsForm.controls.useResourcePathIfPossible.valueChanges.subscribe(
+      (val) => {
+        Api['settings.set']('useResourcePathIfPossible', val);
+      }
+    );
   }
 
   public async startImport() {
@@ -125,6 +147,10 @@ export class SettingsComponent implements OnInit {
 
   public handleCvarChange(values: Cvar[]): void {
     this.defaultCvars.set(values);
+  }
+
+  public handleResourcePathChange(values: string[]): void {
+    this.resourcePaths.set(values);
   }
 
   public async handleClearDataDir(): Promise<void> {
@@ -142,5 +168,10 @@ export class SettingsComponent implements OnInit {
     } else {
       this.clearDataStatus.set('ERROR');
     }
+  }
+
+  public async handleMigrateResources(): Promise<void> {
+    await Api['settings.migrateResourcePath']();
+    // TODO: Refresh everything after this finishes
   }
 }

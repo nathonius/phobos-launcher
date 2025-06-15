@@ -98,6 +98,8 @@ export interface PhobosSettings {
   // TODO: Move bases to top level
   bases: Base[];
   gamepadEnabled: boolean;
+  resourcePaths: string[];
+  useResourcePathIfPossible: boolean;
 }
 
 export interface PhobosStore {

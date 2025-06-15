@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
+import { isAbsolute } from 'node:path';
 import filenamify from 'filenamify';
-import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
+import type { Cvar, Profile } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
 import { getStore } from '../store/store';
@@ -64,14 +65,16 @@ export class ProfileService extends PhobosApi {
       profile = config;
     }
 
+    const resourcePaths =
+      getPhobos().settingsService.getSetting('resourcePaths');
+
     // Set profile last played
     this.saveProfile({ ...profile, lastPlayed: new Date().toISOString() });
 
     // Prepare args
     // TODO: Logic to actually parse these settings should live elsewhere
     const engines = getPhobos().engineService.getEngines();
-    const bases = (getPhobos().settingsService.getSetting('bases') ??
-      []) as UniqueFileRecord[];
+    const bases = getPhobos().settingsService.getSetting('bases') ?? [];
     const base = bases.find((b) => b.id === profile.base);
     const engine = engines.find((e) => e.id === profile.engine);
     if (!base || !engine) {
@@ -79,27 +82,29 @@ export class ProfileService extends PhobosApi {
       return;
     }
     const configArg = engine.config ? ['-config', engine.config] : [];
-    const baseArg = ['-iwad', base.path];
+    const baseArg = ['-iwad', this.resolveResource(base.path, resourcePaths)];
 
     // TODO: Probably worth deduplicating these files
     const files: string[] = [];
     const cvarCtx: CvarContext = {
       slug: filenamify(profile.name, { replacement: '' }),
     };
-    const defaultCvars = (getPhobos().settingsService.getSetting(
-      'defaultCvars'
-    ) ?? []) as Cvar[];
+    const defaultCvars =
+      getPhobos().settingsService.getSetting('defaultCvars') ?? [];
 
     const cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
     for (const parentId of profile.parents) {
       const parent = this.getProfileById(parentId);
-      files.push(...this.getProfileFiles(parent));
+      files.push(...this.getProfileFiles(parent, resourcePaths));
       cvars.push(...this.prepareCvars(parent?.cvars ?? [], cvarCtx));
     }
-    files.push(...this.getProfileFiles(profile));
+    files.push(...this.getProfileFiles(profile, resourcePaths));
     cvars.push(...this.prepareCvars(profile.cvars, cvarCtx));
+    const command = this.resolveResource(engine.path, resourcePaths);
+    console.error(command);
+    console.error([...configArg, ...baseArg, ...files, ...cvars]);
 
-    const _process = spawn(engine.path, [
+    const _process = spawn(this.resolveResource(engine.path, resourcePaths), [
       ...configArg,
       ...baseArg,
       ...files,
@@ -111,8 +116,16 @@ export class ProfileService extends PhobosApi {
     return this.getProfiles().find((p) => p.id === id);
   }
 
-  private getProfileFiles(profile: Profile | undefined): string[] {
-    return profile?.files.flatMap((f) => ['-file', f]) ?? [];
+  private getProfileFiles(
+    profile: Profile | undefined,
+    resourcePaths: string[]
+  ): string[] {
+    return (
+      profile?.files.flatMap((f) => [
+        '-file',
+        this.resolveResource(f, resourcePaths),
+      ]) ?? []
+    );
   }
 
   private prepareCvars(cvars: Cvar[], ctx: CvarContext): string[] {
@@ -128,5 +141,12 @@ export class ProfileService extends PhobosApi {
     return (
       cvars.flatMap((v) => ['+set', template(v.var), template(v.value)]) ?? []
     );
+  }
+
+  private resolveResource(path: string, resourcePaths: string[]): string {
+    if (isAbsolute(path)) {
+      return path;
+    }
+    return getPhobos().userDataService.resolveResourcePath(path, resourcePaths);
   }
 }

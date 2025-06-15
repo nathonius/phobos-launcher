@@ -36,6 +36,8 @@ export const Api = {
     value: PhobosSettings[K]
   ) => window.api['settings.set'](key, value as JSONValue) as Promise<void>,
   'settings.openConfig': () => window.api['settings.openConfig'](),
+  'settings.migrateResourcePath': () =>
+    window.api['settings.migrateResourcePath'](),
   'category.getByName': (name: string) =>
     window.api['category.getByName'](name) as Promise<string[]>,
   'category.getCategories': () =>

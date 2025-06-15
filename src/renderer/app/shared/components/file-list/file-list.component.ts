@@ -36,6 +36,8 @@ export class FileListComponent extends ListComponentBase<string> {
   public readonly valueChange = output<string[]>();
   public readonly valueSelected = output<string>();
   public readonly values = input.required<string[]>();
+  public readonly file = input(true, { transform: booleanAttribute });
+  public readonly directory = input(false, { transform: booleanAttribute });
   protected readonly radioName = `file-list-radio-${radioNumber++}`;
   protected readonly dragging = signal(false);
   private dragTimeout: number | undefined = undefined;

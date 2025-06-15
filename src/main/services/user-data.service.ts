@@ -1,5 +1,13 @@
 import { readFile, writeFile, stat, mkdir } from 'node:fs/promises';
-import { resolve, extname, join, basename, dirname } from 'node:path';
+import {
+  resolve,
+  extname,
+  join,
+  basename,
+  dirname,
+  relative,
+  isAbsolute,
+} from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { dialog, protocol, net } from 'electron';
 import { defaultFormats, defaultPlugins } from 'jimp';
@@ -112,6 +120,45 @@ export class UserDataService extends PhobosApi {
           return new Response('Unknown endpoint.', { status: 400 });
       }
     });
+  }
+
+  /**
+   * Migrate as much config as possible to use the configured resource paths
+   */
+  @ipcHandler('settings.migrateResourcePath')
+  public async migrateResourcePath() {
+    const phobos = getPhobos();
+    const resourcePaths =
+      phobos.settingsService.getSetting('resourcePaths') ?? [];
+    if (resourcePaths.length === 0) {
+      return;
+    }
+
+    // Profiles
+    const profiles = phobos.profileService.getProfiles();
+    for (const profile of profiles) {
+      for (let i = 0; i < profile.files.length; i += 1) {
+        profile.files[i] = this.asChildOfResourcePath(
+          profile.files[i],
+          resourcePaths
+        );
+      }
+      await phobos.profileService.saveProfile(profile);
+    }
+
+    // Engines
+    const engines = phobos.engineService.getEngines();
+    for (const engine of engines) {
+      engine.path = this.asChildOfResourcePath(engine.path, resourcePaths);
+      await phobos.engineService.saveEngine(engine);
+    }
+
+    // Bases
+    const bases = phobos.settingsService.getSetting('bases');
+    for (const baseWad of bases) {
+      baseWad.path = this.asChildOfResourcePath(baseWad.path, resourcePaths);
+    }
+    await phobos.settingsService.saveSetting('bases', bases);
   }
 
   public wadDataDir(): string {
@@ -232,6 +279,33 @@ export class UserDataService extends PhobosApi {
     await mkdir(join(path, 'graphics'), { recursive: true });
     await mkdir(join(path, 'lumps'), { recursive: true });
 
+    return path;
+  }
+
+  public asChildOfResourcePath(path: string, resourcePaths: string[]): string {
+    const matchingResource = resourcePaths.find((p) => {
+      const delta = relative(p, path);
+      return !delta.startsWith('..') && !isAbsolute(delta);
+    });
+
+    if (matchingResource) {
+      return relative(matchingResource, path);
+    }
+    return path;
+  }
+
+  public resolveResourcePath(path: string, resourcePaths: string[]): string {
+    if (isAbsolute(path)) {
+      return path;
+    }
+    const matchingResource = resourcePaths.find((p) => {
+      const delta = resolve(p, path);
+      return !delta.startsWith('..') && isAbsolute(delta);
+    });
+
+    if (matchingResource) {
+      return resolve(matchingResource, path);
+    }
     return path;
   }
 }

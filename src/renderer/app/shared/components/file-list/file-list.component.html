@@ -28,6 +28,8 @@
       }
       <td class="w-full">
         <file-input
+          [file]="file()"
+          [directory]="directory()"
           [value]="path"
           [controls]="inputControls"
           (valueChange)="handleChange($index, $event)"
@@ -38,6 +40,8 @@
           #inputControls
           reorder="true"
           removable="true"
+          [file]="file()"
+          [directory]="directory()"
           (reorderUp)="handleReorderUp($index)"
           (reorderDown)="handleReorderDown($index)"
           (remove)="handleRemove($index)"

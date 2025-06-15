@@ -15,12 +15,15 @@ export class SettingsService extends PhobosApi {
   }
 
   @ipcHandler('settings.get')
-  public getSetting(key: string) {
-    return get(getStore().data.settings, key as keyof PhobosSettings);
+  public getSetting<K extends keyof PhobosSettings>(key: K): PhobosSettings[K] {
+    return get(getStore().data.settings, key);
   }
 
   @ipcHandler('settings.set')
-  public saveSetting(key: string, value: JSONValue) {
+  public saveSetting<K extends keyof PhobosSettings>(
+    key: K,
+    value: JSONValue | PhobosSettings[K]
+  ) {
     return getStore().update(({ settings }) => {
       set(settings, key, value);
     });

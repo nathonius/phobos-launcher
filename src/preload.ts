@@ -15,6 +15,8 @@ export const clientApi = {
   'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
   'settings.set': (key: string, value: JSONValue) =>
     ipcRenderer.invoke('settings.set', key, value),
+  'settings.migrateResourcePath': () =>
+    ipcRenderer.invoke('settings.migrateResourcePath'),
   'settings.openConfig': () => ipcRenderer.invoke('settings.openConfig'),
   'category.getByName': (name: string) =>
     ipcRenderer.invoke('category.getByName', name),

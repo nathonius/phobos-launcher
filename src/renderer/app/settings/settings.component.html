@@ -9,6 +9,30 @@
         <option [ngValue]="theme[0]">{{ theme[1] }}</option>
         }
       </select>
+      <span class="fieldset-label pl-4">Resource paths</span>
+      <label class="label">
+        <input
+          type="checkbox"
+          id="resourcePathIfPossible"
+          class="checkbox"
+          formControlName="useResourcePathIfPossible"
+        />
+        Use resource path if possible
+      </label>
+      <button class="btn btn-accent btn-lg" (click)="handleMigrateResources()">
+        Migrate all profiles to use resource paths
+      </button>
+      <p class="fieldset-label pl-4">
+        Paths added here can be used when defining profiles, engines, and base
+        wads. If a path is not absolute, these directories will be checked
+        first, like a $PATH variable.
+      </p>
+      <file-list
+        directory="true"
+        file="false"
+        [values]="resourcePaths()"
+        (valueChange)="handleResourcePathChange($event)"
+      />
       <label class="label">
         <input
           type="checkbox"

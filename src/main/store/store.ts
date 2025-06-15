@@ -23,6 +23,8 @@ export const STORE_DEFAULT_VALUE: PhobosStore = {
     tempDataPath: '',
     theme: 'synthwave',
     gamepadEnabled: false,
+    resourcePaths: [],
+    useResourcePathIfPossible: true,
   },
   internal: {
     'processed-image': {},
