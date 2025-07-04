@@ -8,6 +8,7 @@ import {
   BACKGROUND_TEXTURES,
   BACKGROUND_TEXTURES_CONST,
 } from '../shared/images/background-textures/background-textures';
+import { logger } from '../shared/logger';
 import type { ProfileItem } from './profile-item/profile-item.interface';
 
 @Injectable({
@@ -79,17 +80,26 @@ export class ProfileService {
   public async save(profile?: Profile) {
     const _profile = profile ?? this.selectedProfile();
     if (_profile) {
+      logger.info('Saving profile', {
+        profile: { id: _profile.id, name: _profile.name },
+      });
       await Api['profile.save'](_profile);
     }
     await this.getAllProfiles(_profile);
   }
 
   public async deleteProfile(profile: Profile) {
+    logger.info('Deleting profile', {
+      profile: { id: profile.id, name: profile.name },
+    });
     await Api['profile.delete'](profile.id);
     await this.getAllProfiles();
   }
 
   public launch(profile: Profile) {
+    logger.info('Launching profile', {
+      profile: { id: profile.id, name: profile.name },
+    });
     void Api['profile.launchCustom'](profile);
 
     // Set last played date locally, so we don't have to refetch all profiles

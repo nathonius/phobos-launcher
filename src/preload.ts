@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
+import type { LogEntry } from 'winston';
 import type { Channel } from './shared/public-api';
 import type { Category, Engine, Profile } from './shared/config';
 import type { JSONValue } from './shared/json';
@@ -58,6 +59,15 @@ export const clientApi = {
     ipcRenderer.invoke('wad.getGraphics', wadPath, lumpNames),
   'wad.clearDataDir': (subdir?: string) =>
     ipcRenderer.invoke('wad.clearDataDir', subdir),
+  'logger.log': (entry: LogEntry) => ipcRenderer.invoke('logger.log', entry),
+  'logger.debug': (message: any, ...meta: any[]) =>
+    ipcRenderer.invoke('logger.debug', message, ...meta),
+  'logger.warn': (message: any, ...meta: any[]) =>
+    ipcRenderer.invoke('logger.warn', message, ...meta),
+  'logger.info': (message: any, ...meta: any[]) =>
+    ipcRenderer.invoke('logger.info', message, ...meta),
+  'logger.error': (message: any, ...meta: any[]) =>
+    ipcRenderer.invoke('logger.error', message, ...meta),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;
 export type ClientApi = typeof clientApi;

@@ -1,3 +1,4 @@
+import type { LogEntry } from 'winston';
 import type {
   Category,
   Engine,
@@ -94,5 +95,15 @@ export const Api = {
     >,
   'wad.clearDataDir': (subdir?: string) =>
     window.api['wad.clearDataDir'](subdir) as Promise<boolean>,
+  'logger.log': (entry: LogEntry): Promise<void> =>
+    window.api['logger.log'](entry),
+  'logger.debug': (message: any, ...meta: any[]): Promise<void> =>
+    window.api['logger.debug'](message, ...meta),
+  'logger.info': (message: any, ...meta: any[]): Promise<void> =>
+    window.api['logger.info'](message, ...meta),
+  'logger.warn': (message: any, ...meta: any[]): Promise<void> =>
+    window.api['logger.warn'](message, ...meta),
+  'logger.error': (message: any, ...meta: any[]): Promise<void> =>
+    window.api['logger.error'](message, ...meta),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 } satisfies Record<Channel, Function>;

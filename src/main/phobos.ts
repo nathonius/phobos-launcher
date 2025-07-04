@@ -14,8 +14,10 @@ import { EngineService } from './services/engine.service';
 import { WadService } from './services/wad.service';
 import { getStore, initStore } from './store/store';
 import { executeMigrations } from './store/migrations';
+import { IpcLogger } from './logger';
 
 export class Phobos {
+  public ipcLogger!: IpcLogger;
   public userDataService!: UserDataService;
   public profileService!: ProfileService;
   public categoryService!: CategoryService;
@@ -56,6 +58,7 @@ export class Phobos {
       await executeMigrations(getStore());
 
       // Init services
+      this.ipcLogger = new IpcLogger();
       this.profileService = new ProfileService();
       this.categoryService = new CategoryService();
       this.settingsService = new SettingsService();
