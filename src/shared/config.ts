@@ -123,6 +123,7 @@ export interface Profile {
    * ISO timestamp
    */
   lastPlayed: string | null;
+  modified: string | null;
   engine: string;
   base: string;
   icon: string;

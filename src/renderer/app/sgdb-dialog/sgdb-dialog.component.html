@@ -24,6 +24,10 @@
       </div>
     </ng-template>
     } @else {
+    <button class="btn btn-ghost mb-1" (click)="selectedGame.set(null)">
+      <lucide-icon class="h-4 w-4" [img]="icons.ArrowLeft" />
+      Back
+    </button>
     <app-autocomplete
       labelKey="id"
       orientation="horizontal"

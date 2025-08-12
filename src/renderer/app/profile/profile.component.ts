@@ -122,7 +122,7 @@ export class ProfileComponent implements OnInit {
         (p) => p.id !== currentProfile?.id
       );
       this.engineOptions.set(engines);
-      this.baseOptions.set((bases ?? []) as UniqueFileRecord[]);
+      this.baseOptions.set(bases ?? []);
       this.allParentProfileOptions.set(profiles);
     });
     effect(() => {
@@ -228,7 +228,7 @@ export class ProfileComponent implements OnInit {
   }
 
   protected openSgdbDialog() {
-    this.sgdbDialog()?.open();
+    this.sgdbDialog()?.open(this.profile()?.name);
   }
 
   protected async steamGridSelectGrid(grid: SGDBImage | null) {
@@ -273,6 +273,7 @@ export class ProfileComponent implements OnInit {
       parents: parents ?? [],
       tags: tags ?? [],
       created: originalProfile?.created ?? new Date().toISOString(),
+      modified: new Date().toISOString(),
       lastPlayed: originalProfile?.lastPlayed ?? null,
       complete: complete ?? false,
       background: background ?? '',

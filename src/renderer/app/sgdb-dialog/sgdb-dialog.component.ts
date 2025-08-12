@@ -7,7 +7,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { Search } from 'lucide-angular';
+import { ArrowLeft, LucideAngularModule, Search } from 'lucide-angular';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import type {
   SGDBGame,
@@ -19,7 +19,7 @@ import { wait } from '../shared/functions/debounce';
 
 @Component({
   selector: 'sgdb-dialog',
-  imports: [AutocompleteComponent],
+  imports: [AutocompleteComponent, LucideAngularModule],
   templateUrl: './sgdb-dialog.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +28,7 @@ export class SgdbDialogComponent {
   public readonly imageSelected = output<SGDBImage>();
   protected readonly icons = {
     Search,
+    ArrowLeft,
   };
   protected readonly dialog =
     viewChild<ElementRef<HTMLDialogElement>>('sgdbDialog');
@@ -67,8 +68,12 @@ export class SgdbDialogComponent {
     defaultValue: [],
   });
 
-  public open() {
+  public open(query?: string) {
     this.dialog()?.nativeElement.showModal();
+    if (query) {
+      this.queryAutocomplete()?.setQuery(query);
+      this.query.set(query);
+    }
   }
 
   public close() {

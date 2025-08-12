@@ -30,10 +30,10 @@ declare global {
 export const Api = {
   'settings.getAll': () =>
     window.api['settings.getAll']() as Promise<PhobosSettings>,
-  'settings.get': <K extends keyof PhobosSettings>(key: K) =>
+  'settings.get': <K extends keyof PhobosSettings>(key: K | string) =>
     window.api['settings.get'](key) as Promise<PhobosSettings[K]>,
   'settings.set': <K extends keyof PhobosSettings>(
-    key: K,
+    key: K | string,
     value: PhobosSettings[K]
   ) => window.api['settings.set'](key, value as JSONValue) as Promise<void>,
   'settings.openConfig': () => window.api['settings.openConfig'](),

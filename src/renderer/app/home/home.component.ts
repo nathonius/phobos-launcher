@@ -129,6 +129,7 @@ export class HomeComponent implements OnInit {
       parents: [],
       tags: [],
       created: new Date().toISOString(),
+      modified: null,
       lastPlayed: null,
       complete: false,
       background: '',

@@ -24,11 +24,13 @@ import { HomeViewState } from '../../shared/constants';
 export type ProfileSort =
   | 'alphabetical'
   | 'date_added'
+  | 'date_modified'
   | 'last_played'
   | 'rating';
 export const VALID_SORT_ARRAY: ProfileSort[] = [
   'alphabetical',
   'date_added',
+  'date_modified',
   'last_played',
   'rating',
 ];
@@ -90,6 +92,14 @@ export class ProfileListComponent {
         (a, b) =>
           (new Date(a.created ?? 0).valueOf() -
             new Date(b.created ?? 0).valueOf()) *
+          sortDirection
+      );
+    } else if (sort === 'date_modified') {
+      return toSorted(
+        filtered,
+        (a, b) =>
+          (new Date(a.modified ?? 0).valueOf() -
+            new Date(b.modified ?? 0).valueOf()) *
           sortDirection
       );
     } else if (sort === 'rating') {
