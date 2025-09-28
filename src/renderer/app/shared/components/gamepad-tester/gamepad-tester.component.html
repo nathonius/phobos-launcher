@@ -1,6 +1,24 @@
 @let connected = gamepadService.gamepadConnected();
 <p>Gamepad connected: {{ connected }}</p>
 @if (connected) {
+<h2>Sticks</h2>
+<div gamepad class="flex flex-col gap-2">
+  <div class="flex gap-2">
+    <button padSelectable class="btn btn-primary">A</button>
+    <button padSelectable class="btn btn-primary">B</button>
+    <button padSelectable class="btn btn-primary">C</button>
+  </div>
+  <div class="flex gap-2">
+    <button padSelectable class="btn btn-primary">D</button>
+    <button padSelectable class="btn btn-primary">E</button>
+    <button padSelectable class="btn btn-primary">F</button>
+  </div>
+  <div class="flex gap-2">
+    <button padSelectable class="btn btn-primary">G</button>
+    <button padSelectable class="btn btn-primary">H</button>
+    <button padSelectable class="btn btn-primary">I</button>
+  </div>
+</div>
 <h2>Buttons</h2>
 <ul>
   <li>A: {{ gamepadService.buttons.A() }}</li>
@@ -12,5 +30,4 @@
   <li>R1: {{ gamepadService.buttons.R1() }}</li>
   <li>R2: {{ gamepadService.buttons.R2() }}</li>
 </ul>
-<h2>Sticks</h2>
 }
