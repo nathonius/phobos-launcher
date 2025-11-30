@@ -37,15 +37,15 @@ export class SgdbDialogComponent {
     viewChild<AutocompleteComponent<SGDBGame>>('queryInput');
   protected readonly query = signal<string>('');
   protected readonly games = resource<SGDBGameWithIcon[], string>({
-    request: () => this.query(),
-    loader: async ({ request, abortSignal }) => {
-      if (request === '' || request.length < 3) {
+    params: () => this.query(),
+    loader: async ({ params, abortSignal }) => {
+      if (params === '' || params.length < 3) {
         return [];
       }
       this.queryInProgress.set(true);
       // Debouncing: 300 ms
       await wait(400, abortSignal);
-      return (await Api['sgdb.queryGames'](request, true).finally(() => {
+      return (await Api['sgdb.queryGames'](params, true).finally(() => {
         this.queryInProgress.set(false);
       })) as SGDBGameWithIcon[];
     },
@@ -53,11 +53,11 @@ export class SgdbDialogComponent {
   });
   protected readonly selectedGame = signal<SGDBGame | null>(null);
   protected readonly images = resource({
-    request: () => this.selectedGame(),
-    loader: ({ request }) => {
-      if (request !== undefined && request !== null) {
+    params: () => this.selectedGame(),
+    loader: ({ params }) => {
+      if (params !== undefined && params !== null) {
         this.queryInProgress.set(true);
-        return Api['sgdb.getImages'](request, ['grid', 'icon', 'logo']).finally(
+        return Api['sgdb.getImages'](params, ['grid', 'icon', 'logo']).finally(
           () => {
             this.queryInProgress.set(false);
           }
