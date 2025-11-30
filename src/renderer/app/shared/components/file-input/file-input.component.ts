@@ -13,6 +13,7 @@ import {
   output,
   signal,
   viewChild,
+  DOCUMENT,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import {
@@ -24,7 +25,6 @@ import {
   ArrowDown,
   Globe,
 } from 'lucide-angular';
-import { DOCUMENT } from '@angular/common';
 import { Api } from '../../../api/api';
 import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
 

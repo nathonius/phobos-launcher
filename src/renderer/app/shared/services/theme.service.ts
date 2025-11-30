@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal, DOCUMENT } from '@angular/core';
 import { Api } from '../../api/api';
 import type { AppTheme } from '../../../../shared/config';
 

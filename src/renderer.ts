@@ -1,7 +1,4 @@
-import {
-  enableProdMode,
-  provideExperimentalZonelessChangeDetection,
-} from '@angular/core';
+import { enableProdMode, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -15,8 +12,5 @@ if (APP_CONFIG.production) {
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideExperimentalZonelessChangeDetection(),
-    provideHttpClient(withFetch()),
-  ],
+  providers: [provideZonelessChangeDetection(), provideHttpClient(withFetch())],
 }).catch((err) => console.error(err));
