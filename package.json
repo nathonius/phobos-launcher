@@ -21,6 +21,7 @@
     "@analogjs/vite-plugin-angular": "^1.14.1",
     "@angular/build": "^19.2.5",
     "@angular/cli": "^19.2.5",
+    "@angular/compiler": "^19.2.16",
     "@angular/compiler-cli": "^19.2.4",
     "@electron-forge/cli": "^7.8.0",
     "@electron-forge/maker-deb": "^7.8.0",
