@@ -1,5 +1,4 @@
-import { Directive, ElementRef, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Directive, ElementRef, inject, DOCUMENT } from '@angular/core';
 import { elementInViewport } from '../functions/inViewport';
 import { relativeAngle, relativeDeltaAngle } from '../functions/angles';
 
