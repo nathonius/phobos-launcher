@@ -90,7 +90,7 @@ export class ProfileService extends PhobosApi {
       'defaultCvars'
     ) ?? []) as Cvar[];
 
-    const cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
+    let cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
     for (const parentId of profile.parents) {
       const parent = this.getProfileById(parentId);
       files.push(...this.getProfileFiles(parent));
@@ -98,6 +98,11 @@ export class ProfileService extends PhobosApi {
     }
     files.push(...this.getProfileFiles(profile));
     cvars.push(...this.prepareCvars(profile.cvars, cvarCtx));
+
+    // Don't use cvars for prboom style doom engines
+    if (engine.style === 'prboom') {
+      cvars = [];
+    }
 
     const _process = spawn(engine.path, [
       ...configArg,

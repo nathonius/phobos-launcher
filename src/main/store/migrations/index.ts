@@ -1,8 +1,9 @@
 import type { PhobosDb } from '../store';
+import { addEngineStyle } from './add-engine-style';
 import type { Migration } from './migration';
 import { fixProcessedImagesKeys } from './processed-images-keys';
 
-const migrations: Migration[] = [fixProcessedImagesKeys];
+const migrations: Migration[] = [fixProcessedImagesKeys, addEngineStyle];
 
 export async function executeMigrations(store: PhobosDb) {
   // Ensure the migrations object is actually defined
