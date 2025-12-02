@@ -23,6 +23,7 @@ export interface Cvar {
 
 export interface Engine extends UniqueFileRecord {
   config: string;
+  style: 'zdoom' | 'prboom';
 }
 
 export type Base = UniqueFileRecord;

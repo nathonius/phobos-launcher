@@ -47,6 +47,7 @@ export class EnginesComponent {
       config: '',
       name: '',
       path: '',
+      style: 'zdoom',
     };
     this.handleChange(newEngine);
   }
@@ -71,6 +72,14 @@ export class EnginesComponent {
     const engine = this.engines().find((e) => e.id === id);
     if (engine) {
       engine.config = config;
+      this.handleChange(engine);
+    }
+  }
+
+  handleStyleChange(style: Engine['style'], id: string) {
+    const engine = this.engines().find((e) => e.id === id);
+    if (engine) {
+      engine.style = style;
       this.handleChange(engine);
     }
   }
