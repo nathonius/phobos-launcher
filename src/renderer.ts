@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { APP_CONFIG } from './renderer/environments/environment';
-import { AppComponent } from './renderer/app/app.component';
+import { AppComponent } from './renderer/app/v2/app.component';
 
 import './index.css';
 

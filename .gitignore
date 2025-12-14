@@ -93,3 +93,4 @@ vite.renderer.config.mts.timestamp*
 out/
 
 game-icons/
+controller-glyphs/
