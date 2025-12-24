@@ -1,9 +1,11 @@
 import { join } from 'node:path';
+import { writeFile } from 'node:fs/promises';
 import type { Low } from 'lowdb/lib';
 import { app, shell } from 'electron';
 import { JSONFilePreset } from 'lowdb/node';
 
 import type { PhobosStore } from '../../shared/config';
+import { DEFAULT_THEME } from '../../renderer/app/shared/services/theme.service';
 
 export type PhobosDb = Low<PhobosStore>;
 
@@ -21,8 +23,10 @@ export const STORE_DEFAULT_VALUE: PhobosStore = {
     },
     steamGridApiKey: '',
     tempDataPath: '',
-    theme: 'synthwave',
+    theme: DEFAULT_THEME,
     gamepadEnabled: false,
+    dataDirs: [],
+    useDataDirs: true,
   },
   internal: {
     'processed-image': {},
@@ -58,4 +62,17 @@ export async function initStore(path?: string): Promise<PhobosDb> {
   store = db;
   await store.read();
   return storePromise;
+}
+
+export async function backupStore(path?: string): Promise<string> {
+  const timestamp = new Date().valueOf();
+  const defaultPath = join(
+    app.getPath('userData'),
+    `config-backup-${timestamp}.json`
+  );
+  const backupPath = path ?? defaultPath;
+  const store = getStore();
+  const backup = JSON.stringify(store.data);
+  await writeFile(backupPath, backup);
+  return backupPath;
 }

@@ -36,6 +36,8 @@ export const Api = {
     key: K | string,
     value: PhobosSettings[K]
   ) => window.api['settings.set'](key, value as JSONValue) as Promise<void>,
+  'settings.patch': (value: Partial<PhobosSettings>): Promise<PhobosSettings> =>
+    window.api['settings.patch'](value),
   'settings.openConfig': () => window.api['settings.openConfig'](),
   'category.getByName': (name: string) =>
     window.api['category.getByName'](name) as Promise<string[]>,
@@ -59,14 +61,26 @@ export const Api = {
     window.api['profile.save'](profile) as Promise<void>,
   'profile.delete': (profileId: string) =>
     window.api['profile.delete'](profileId) as Promise<void>,
+  'profile.updateAllPaths': (profileId: string) =>
+    window.api['profile.updateAllPaths'](profileId),
+  'profile.updateAllProfilesPaths': () =>
+    window.api['profile.updateAllProfilesPaths'](),
+  'profile.absolutizeAllProfilesPaths': () =>
+    window.api['profile.absolutizeAllProfilesPaths'](),
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),
+  'fileSystem.getShortestPathForFile': (originalPath: string) =>
+    window.api['fileSystem.getShortestPathForFile'](
+      originalPath
+    ) as Promise<string>,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     window.api['fileSystem.showOpenDialog'](
       config
     ) as Promise<Electron.OpenDialogReturnValue>,
   'fileSystem.getBase64Image': (path: string) =>
     window.api['fileSystem.getBase64Image'](path) as Promise<string>,
+  'fileSystem.fileExists': (path: string) =>
+    window.api['fileSystem.fileExists'](path) as Promise<boolean>,
   'sgdb.queryGames': (query: string, withIcons?: boolean) =>
     window.api['sgdb.queryGames'](query, withIcons) as Promise<
       SGDBGame[] | SGDBGameWithIcon[]

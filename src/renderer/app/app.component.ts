@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import {
   Check,
   Cog,
-  Home,
+  House,
   LucideAngularModule,
   Package,
   Plus,
@@ -47,7 +47,7 @@ export class AppComponent {
     Settings,
     Cog,
     Package,
-    Home,
+    House,
     Trash,
     Plus,
     Save,

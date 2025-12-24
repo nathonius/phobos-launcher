@@ -7,21 +7,32 @@ import {
 } from '@angular/core';
 import { LucideAngularModule, Plus, Trash } from 'lucide-angular';
 import { v4 as uuid } from 'uuid';
+import { NgClass } from '@angular/common';
 import type { Engine } from '../../../shared/config';
 import { Api } from '../api/api';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
 import { NavbarService } from '../shared/services/navbar.service';
 
+type DisplayEngine = Engine & {
+  fileExists: boolean;
+};
+
 @Component({
   selector: 'app-engines',
-  imports: [FormSectionComponent, FileInputComponent, LucideAngularModule],
+  imports: [
+    FormSectionComponent,
+    FileInputComponent,
+    LucideAngularModule,
+    NgClass,
+  ],
   templateUrl: './engines.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnginesComponent {
   public readonly engines = signal<Engine[]>([]);
+  public readonly displayEngines = signal<DisplayEngine[]>([]);
   public readonly icons = {
     Plus,
     Trash,
@@ -32,6 +43,15 @@ export class EnginesComponent {
     effect(async () => {
       const engines = await Api['engine.getEngines']();
       this.engines.set(engines);
+    });
+    effect(async () => {
+      const engines = this.engines();
+      const displayEngines: DisplayEngine[] = [];
+      for (const engine of engines) {
+        const fileExists = await Api['fileSystem.fileExists'](engine.path);
+        displayEngines.push({ ...engine, fileExists });
+      }
+      this.displayEngines.set(displayEngines);
     });
   }
 

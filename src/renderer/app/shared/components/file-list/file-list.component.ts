@@ -11,9 +11,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { LucideAngularModule } from 'lucide-angular';
 import { FileInputComponent } from '../file-input/file-input.component';
-import { Api } from '../../../api/api';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
+import { handleDragEvent } from '../../functions/getFilePath';
 
 let radioNumber = 0;
 
@@ -36,6 +36,9 @@ export class FileListComponent extends ListComponentBase<string> {
   public readonly valueChange = output<string[]>();
   public readonly valueSelected = output<string>();
   public readonly values = input.required<string[]>();
+  public readonly getShortestPath = input(false, {
+    transform: booleanAttribute,
+  });
   protected readonly radioName = `file-list-radio-${radioNumber++}`;
   protected readonly dragging = signal(false);
   private dragTimeout: number | undefined = undefined;
@@ -65,29 +68,12 @@ export class FileListComponent extends ListComponentBase<string> {
     }, 100);
   }
 
-  handleDrop(event: DragEvent) {
-    // Prevent default behavior (Prevent file from being opened)
-    event.preventDefault();
-
-    if (event.dataTransfer?.items) {
-      // Use DataTransferItemList interface to access the file(s)
-      [...event.dataTransfer.items].forEach((item) => {
-        // If dropped items aren't files, reject them
-        if (item.kind === 'file') {
-          const file = item.getAsFile();
-          if (file) {
-            const path = Api['fileSystem.getPathForFile'](file);
-            this.handleAdd(path);
-          }
-        }
-      });
-    } else {
-      // Use DataTransfer interface to access the file(s)
-      [...(event.dataTransfer?.files ?? [])].forEach((file) => {
-        const path = Api['fileSystem.getPathForFile'](file);
-        this.handleAdd(path);
-      });
-    }
+  async handleDrop(event: DragEvent) {
+    await handleDragEvent(
+      event,
+      this.getShortestPath(),
+      this.handleAdd.bind(this)
+    );
     this.dragging.set(false);
   }
 }

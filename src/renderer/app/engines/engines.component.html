@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (engine of engines(); track engine.id) {
+      @for (engine of displayEngines(); track engine.id) {
       <tr>
         <td class="w-[20%]">
           <input
@@ -31,7 +31,10 @@
           </select>
         </td>
         <td class="w-[35%]">
-          <div class="input w-full">
+          <div
+            class="input w-full"
+            [ngClass]="{ 'input-error': !engine.fileExists }"
+          >
             <file-input
               class="grow"
               directory="false"
@@ -43,6 +46,11 @@
               (valueChange)="handlePathChange($event, engine.id)"
             />
           </div>
+          @if (!engine.fileExists) {
+          <span class="text-error"
+            >Could not locate engine, please check path.</span
+          >
+          }
         </td>
         <td class="w-[20%]">
           <div class="input w-full">

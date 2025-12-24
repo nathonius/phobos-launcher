@@ -3,6 +3,7 @@
     #textInput
     type="text"
     class="grow"
+    [ngClass]="{ 'input-error': error() }"
     [attr.id]="inputId()"
     [placeholder]="_placeholder()"
     [value]="filePath()"

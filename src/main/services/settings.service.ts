@@ -26,6 +26,14 @@ export class SettingsService extends PhobosApi {
     });
   }
 
+  @ipcHandler('settings.patch')
+  public async patchSettings(value: Partial<PhobosSettings>) {
+    await getStore().update((store) => {
+      store.settings = { ...store.settings, ...value };
+    });
+    return getStore().data.settings;
+  }
+
   @ipcHandler('settings.openConfig')
   public openConfig() {
     return openInEditor();

@@ -16,6 +16,7 @@ import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 let radioNumber = 0;
+type ErrorFn<T> = (val: T) => boolean;
 
 @Component({
   selector: 'key-value-list',
@@ -48,6 +49,7 @@ export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly valueLabel = input('Value');
   public readonly valueType = input<'text' | 'file'>('text');
   public readonly addLabel = input.required<string>();
+  public readonly errorFn = input<ErrorFn<T>>();
   protected readonly templateValues = computed(
     () => this.values() as Record<string, string>[]
   );

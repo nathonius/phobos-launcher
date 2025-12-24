@@ -40,6 +40,8 @@ export const THEME_MAP: Record<AppTheme, string> = {
   wireframe: 'Wireframe',
 };
 
+export const DEFAULT_THEME: AppTheme = 'synthwave';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -50,7 +52,7 @@ export class ThemeService {
 
   constructor() {
     Api['settings.get']('theme').then((themeSetting) => {
-      const theme = (themeSetting ?? null) as AppTheme | null;
+      const theme = themeSetting ?? DEFAULT_THEME;
       this.setTheme(theme);
     });
   }
@@ -58,7 +60,7 @@ export class ThemeService {
   public setTheme(theme: AppTheme | null) {
     this.doSetTheme(theme);
     this._theme.set(theme);
-    void Api['settings.set']('theme', theme);
+    void Api['settings.set']('theme', theme ?? DEFAULT_THEME);
   }
 
   private doSetTheme(value: string | null) {

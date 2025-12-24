@@ -1,11 +1,16 @@
 import type { PhobosDb } from '../store';
 import { addEngineStyle } from './add-engine-style';
 import type { Migration } from './migration';
+import { moveProfileImages } from './move-profile-images';
 import { fixProcessedImagesKeys } from './processed-images-keys';
 
-const migrations: Migration[] = [fixProcessedImagesKeys, addEngineStyle];
+const migrations: Migration[] = [
+  fixProcessedImagesKeys,
+  addEngineStyle,
+  moveProfileImages,
+];
 
-export async function executeMigrations(store: PhobosDb) {
+export async function executeMigrations(store: PhobosDb, userDataPath: string) {
   // Ensure the migrations object is actually defined
   if (!store.data.internal.migrations) {
     console.log(
@@ -21,7 +26,7 @@ export async function executeMigrations(store: PhobosDb) {
     if (!store.data.internal.migrations[migration.key]) {
       await store.update((data) => {
         try {
-          migration.fn(data);
+          migration.fn(data, userDataPath);
           data.internal.migrations[migration.key] = true;
           console.log(`Migration ${migration.key} completed.`);
         } catch (err) {

@@ -11,8 +11,8 @@
   </thead>
   <tbody>
     @let k = key(); @let v = value(); @for (pair of templateValues(); track
-    $index) {
-    <tr class="w-full">
+    $index) { @let rowHasError = errorFn() ? errorFn()!($any(pair)) : false;
+    <tr class="w-full" [ngClass]="{ 'bg-error': rowHasError }">
       @if (selectable()) {
       <td>
         <input

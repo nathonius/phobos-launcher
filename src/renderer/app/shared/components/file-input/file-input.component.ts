@@ -14,6 +14,7 @@ import {
   signal,
   viewChild,
   DOCUMENT,
+  model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import {
@@ -25,12 +26,15 @@ import {
   ArrowDown,
   Globe,
 } from 'lucide-angular';
+import type { FormValueControl } from '@angular/forms/signals';
+import { NgClass } from '@angular/common';
 import { Api } from '../../../api/api';
 import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
+import { handleDragEvent } from '../../functions/getFilePath';
 
 @Component({
   selector: 'file-input',
-  imports: [LucideAngularModule, FileInputControlsComponent],
+  imports: [LucideAngularModule, FileInputControlsComponent, NgClass],
   templateUrl: './file-input.component.html',
   providers: [
     {
@@ -41,12 +45,15 @@ import { FileInputControlsComponent } from '../file-input-controls/file-input-co
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileInputComponent implements ControlValueAccessor {
+export class FileInputComponent
+  implements ControlValueAccessor, FormValueControl<string>
+{
   public readonly inputId = input<string>();
-  public readonly value = input<string>();
+  public readonly value = model<string>('');
   public readonly placeholder = input<string>();
   public readonly controls = input<FileInputControlsComponent>();
 
+  public readonly error = input(false, { transform: booleanAttribute });
   public readonly directory = input(true, { transform: booleanAttribute });
   public readonly file = input(true, { transform: booleanAttribute });
   public readonly web = input(false, { transform: booleanAttribute });
@@ -54,6 +61,9 @@ export class FileInputComponent implements ControlValueAccessor {
   public readonly remove = output();
   public readonly reorder = input(false, { transform: booleanAttribute });
   public readonly droppable = input(false, { transform: booleanAttribute });
+  public readonly getShortestPath = input(false, {
+    transform: booleanAttribute,
+  });
   public readonly valueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();
@@ -159,26 +169,13 @@ export class FileInputComponent implements ControlValueAccessor {
     }
   }
 
-  handleDrop(event: DragEvent) {
+  async handleDrop(event: DragEvent) {
     if (this.droppable()) {
-      // Prevent default behavior (Prevent file from being opened)
-      event.preventDefault();
-
-      if (event.dataTransfer?.items.length ?? 0 > 0) {
-        const item = event.dataTransfer!.items[0];
-        if (item.kind === 'file') {
-          const file = item.getAsFile();
-          if (file) {
-            const path = Api['fileSystem.getPathForFile'](file);
-            this.writeValue(path);
-          }
-        }
-      } else if (event.dataTransfer?.files.length ?? 0 > 0) {
-        const file = event.dataTransfer!.files[0];
-        // Use DataTransfer interface to access the file(s)
-        const path = Api['fileSystem.getPathForFile'](file);
-        this.writeValue(path);
-      }
+      await handleDragEvent(
+        event,
+        this.getShortestPath(),
+        this.writeValue.bind(this)
+      );
       this.dragging.set(false);
     }
   }

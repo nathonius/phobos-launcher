@@ -1,7 +1,12 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import type { LogEntry } from 'winston';
+import { type LogEntry } from 'winston';
 import type { Channel } from './shared/public-api';
-import type { Category, Engine, Profile } from './shared/config';
+import type {
+  Category,
+  Engine,
+  PhobosSettings,
+  Profile,
+} from './shared/config';
 import type { JSONValue } from './shared/json';
 import type {
   SGDBDimensionOptions,
@@ -16,6 +21,8 @@ export const clientApi = {
   'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
   'settings.set': (key: string, value: JSONValue) =>
     ipcRenderer.invoke('settings.set', key, value),
+  'settings.patch': (value: Partial<PhobosSettings>) =>
+    ipcRenderer.invoke('settings.patch', value),
   'settings.openConfig': () => ipcRenderer.invoke('settings.openConfig'),
   'category.getByName': (name: string) =>
     ipcRenderer.invoke('category.getByName', name),
@@ -35,11 +42,21 @@ export const clientApi = {
     ipcRenderer.invoke('profile.save', profile),
   'profile.delete': (profileId: string) =>
     ipcRenderer.invoke('profile.delete', profileId),
+  'profile.updateAllPaths': (profileId: string) =>
+    ipcRenderer.invoke('profile.updateAllPaths', profileId),
+  'profile.updateAllProfilesPaths': () =>
+    ipcRenderer.invoke('profile.updateAllProfilesPaths'),
+  'profile.absolutizeAllProfilesPaths': () =>
+    ipcRenderer.invoke('profile.absolutizeAllProfilesPaths'),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
+  'fileSystem.getShortestPathForFile': (originalPath: string) =>
+    ipcRenderer.invoke('fileSystem.getShortestPathForFile', originalPath),
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     ipcRenderer.invoke('fileSystem.showOpenDialog', config),
   'fileSystem.getBase64Image': (path: string) =>
     ipcRenderer.invoke('fileSystem.getBase64Image', path),
+  'fileSystem.fileExists': (path: string) =>
+    ipcRenderer.invoke('fileSystem.fileExists', path),
   'sgdb.queryGames': (query: string, withIcons?: boolean) =>
     ipcRenderer.invoke('sgdb.queryGames', query, withIcons),
   'sgdb.getImages': (

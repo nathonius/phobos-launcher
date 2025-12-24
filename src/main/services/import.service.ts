@@ -132,6 +132,7 @@ export class ImportService extends PhobosApi {
         config: engine.config,
         name: engine.name,
         path,
+        style: 'zdoom',
       };
       if (
         currentEngines.find(
@@ -253,6 +254,7 @@ export class ImportService extends PhobosApi {
         complete: false,
         rating: null,
         background: '',
+        modified: new Date().toISOString(),
       };
       newProfiles.push(newProfile);
     }
