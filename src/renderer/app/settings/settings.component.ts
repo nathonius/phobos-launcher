@@ -122,6 +122,10 @@ export class SettingsComponent {
     });
   }
 
+  public openConfig() {
+    Api['settings.openConfig']();
+  }
+
   public async startImport() {
     const path = this.settingsForm.importPath().value();
     await Api['import.arachnotron'](path);

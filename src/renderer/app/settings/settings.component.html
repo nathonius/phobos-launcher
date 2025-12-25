@@ -147,6 +147,10 @@
         (valueChange)="handleCvarChange($event)"
       />
     </fieldset>
+
+    <button type="button" class="btn" (click)="openConfig()">
+      Open config json
+    </button>
   </form>
 </form-section>
 @if (settingsForm.gamepadEnabled().value() === true) {
