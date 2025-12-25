@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import {
   Check,
   Cog,
-  Home,
+  House,
   LucideAngularModule,
   Package,
   Plus,
@@ -47,7 +47,7 @@ export class AppComponent {
     Settings,
     Cog,
     Package,
-    Home,
+    House,
     Trash,
     Plus,
     Save,
@@ -56,16 +56,4 @@ export class AppComponent {
     Rocket,
     RotateCcw,
   };
-
-  public constructor() {
-    window.addEventListener('gamepadconnected', (e) => {
-      console.log(
-        'Gamepad connected at index %d: %s. %d buttons, %d axes.',
-        e.gamepad.index,
-        e.gamepad.id,
-        e.gamepad.buttons.length,
-        e.gamepad.axes.length
-      );
-    });
-  }
 }

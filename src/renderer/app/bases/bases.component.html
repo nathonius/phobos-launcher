@@ -6,7 +6,8 @@
     valuePlaceholder="WAD Path"
     valueType="file"
     addLabel="Add base"
-    [values]="baseWads()"
+    [errorFn]="rowHasError"
+    [values]="displayBases()"
     (valueChange)="handleChange($event)"
   />
 </form-section>

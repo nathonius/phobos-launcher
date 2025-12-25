@@ -1,4 +1,3 @@
-import type { OnInit } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,10 +5,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Check, LucideAngularModule, AlertTriangle } from 'lucide-angular';
+import { ReactiveFormsModule } from '@angular/forms';
+import { form, Field } from '@angular/forms/signals';
+import { Check, LucideAngularModule, TriangleAlert } from 'lucide-angular';
 import { NgClass } from '@angular/common';
-import { ThemeService, THEME_MAP } from '../shared/services/theme.service';
+import {
+  ThemeService,
+  THEME_MAP,
+  DEFAULT_THEME,
+} from '../shared/services/theme.service';
 import { SteamGridService } from '../shared/services/steam-grid.service';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -21,6 +25,19 @@ import { KeyValueListComponent } from '../shared/components/key-value-list/key-v
 import type { AppTheme, Cvar } from '../../../shared/config';
 import { GamepadTesterComponent } from '../shared/components/gamepad-tester/gamepad-tester.component';
 import { GamepadService } from '../shared/services/gamepad.service';
+import { FileListComponent } from '../shared/components/file-list/file-list.component';
+
+interface SettingsData {
+  theme: AppTheme;
+  steamGridApiKey: string;
+  deutexPath: string;
+  tempDataPath: string;
+  importPath: string;
+  gamepadEnabled: boolean;
+  defaultCvars: Cvar[];
+  dataDirs: string[];
+  useDataDirs: boolean;
+}
 
 @Component({
   selector: 'app-settings',
@@ -32,15 +49,17 @@ import { GamepadService } from '../shared/services/gamepad.service';
     LucideAngularModule,
     NgClass,
     GamepadTesterComponent,
+    Field,
+    FileListComponent,
   ],
   templateUrl: './settings.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   protected readonly icons = {
     Check,
-    AlertTriangle,
+    TriangleAlert,
   };
   protected readonly themeOptions = Object.entries(THEME_MAP);
   protected readonly themeService = inject(ThemeService);
@@ -48,15 +67,19 @@ export class SettingsComponent implements OnInit {
   protected readonly categoryService = inject(CategoryService);
   protected readonly profileService = inject(ProfileService);
   protected readonly gamepadService = inject(GamepadService);
-  protected readonly settingsForm = new FormGroup({
-    theme: new FormControl<string | null>(null),
-    steamGridApiKey: new FormControl<string | null>(null),
-    deutexPath: new FormControl<string | null>(null),
-    tempDataPath: new FormControl<string | null>(null),
-    importPath: new FormControl<string>('', { nonNullable: true }),
-    gamepadEnabled: new FormControl<boolean>(false, { nonNullable: true }),
+  protected loading = true;
+  protected readonly settingsModel = signal<SettingsData>({
+    theme: DEFAULT_THEME,
+    deutexPath: '',
+    gamepadEnabled: false,
+    importPath: '',
+    steamGridApiKey: '',
+    tempDataPath: '',
+    defaultCvars: [],
+    dataDirs: [],
+    useDataDirs: true,
   });
-  protected readonly defaultCvars = signal<Cvar[]>([]);
+  protected readonly settingsForm = form(this.settingsModel);
   protected readonly clearDataStatus = signal<
     'CLEARING' | 'CLEARED' | 'ERROR' | null
   >(null);
@@ -64,67 +87,76 @@ export class SettingsComponent implements OnInit {
 
   public constructor() {
     this.navbarService.setCallbacks({});
-    effect(() => {
-      const key = this.steamGridService.apiKey();
-      this.settingsForm.controls.steamGridApiKey.reset(key);
+    Api['settings.getAll']().then((settings) => {
+      this.settingsModel.set({
+        deutexPath: settings.deutexPath ?? '',
+        gamepadEnabled: settings.gamepadEnabled ?? false,
+        importPath: '',
+        steamGridApiKey: settings.steamGridApiKey ?? '',
+        tempDataPath: settings.tempDataPath ?? '',
+        theme: settings.theme ?? DEFAULT_THEME,
+        defaultCvars: settings.defaultCvars ?? [],
+        dataDirs: settings.dataDirs ?? [],
+        useDataDirs: settings.useDataDirs ?? true,
+      });
+      this.loading = false;
     });
     effect(() => {
-      const theme = this.themeService.theme();
-      this.settingsForm.controls.theme.reset(theme);
-    });
-    effect(() => {
-      const defaultCvars = this.defaultCvars();
-      Api['settings.set']('defaultCvars', defaultCvars);
-    });
-    Api['settings.getAll']().then(
-      ({
-        defaultCvars,
-        deutexPath,
-        tempDataPath,
-        gamepadEnabled,
-        steamGridApiKey,
-      }) => {
-        this.settingsForm.controls.deutexPath.reset(deutexPath ?? null);
-        this.settingsForm.controls.tempDataPath.reset(tempDataPath ?? null);
-        this.settingsForm.controls.gamepadEnabled.reset(
-          gamepadEnabled ?? false
-        );
-        this.settingsForm.controls.steamGridApiKey.reset(
-          steamGridApiKey ?? null
-        );
-        this.defaultCvars.set(defaultCvars ?? []);
+      const formValue = this.settingsForm().value();
+      if (!this.loading) {
+        Api['settings.patch']({
+          deutexPath: formValue.deutexPath,
+          gamepadEnabled: formValue.gamepadEnabled,
+          steamGridApiKey: formValue.steamGridApiKey,
+          tempDataPath: formValue.tempDataPath,
+          theme: formValue.theme,
+          defaultCvars: formValue.defaultCvars,
+          dataDirs: formValue.dataDirs,
+          useDataDirs: formValue.useDataDirs,
+        });
       }
-    );
+    });
+    effect(() => {
+      const theme = this.settingsForm.theme().value();
+      this.themeService.setTheme(theme);
+    });
   }
 
-  public ngOnInit(): void {
-    this.settingsForm.controls.theme.valueChanges.subscribe((val) => {
-      this.themeService.setTheme(val as AppTheme | null);
-    });
-    this.settingsForm.controls.steamGridApiKey.valueChanges.subscribe((val) => {
-      this.steamGridService.setKey(val ? val : null);
-    });
-    this.settingsForm.controls.deutexPath.valueChanges.subscribe((val) => {
-      Api['settings.set']('deutexPath', val ?? '');
-    });
-    this.settingsForm.controls.tempDataPath.valueChanges.subscribe((val) => {
-      Api['settings.set']('tempDataPath', val ?? '');
-    });
-    this.settingsForm.controls.gamepadEnabled.valueChanges.subscribe((val) => {
-      Api['settings.set']('gamepadEnabled', val);
-      this.gamepadService.gamepadEnabled.set(val);
-    });
+  public openConfig() {
+    Api['settings.openConfig']();
   }
 
   public async startImport() {
-    const path = this.settingsForm.controls.importPath.value;
+    const path = this.settingsForm.importPath().value();
     await Api['import.arachnotron'](path);
     await this.categoryService.getAllCategories();
     await this.profileService.getAllProfiles();
   }
 
+  public async migrateAllPaths() {
+    if (this.loading === false) {
+      this.loading = true;
+      await Api['profile.updateAllProfilesPaths']();
+      await this.profileService.getAllProfiles();
+      this.loading = false;
+    }
+  }
+
+  public async absolutizeAllPaths() {
+    if (this.loading === false) {
+      this.loading = true;
+      await Api['profile.absolutizeAllProfilesPaths']();
+      await this.profileService.getAllProfiles();
+      this.loading = false;
+    }
+  }
+
   public handleCvarChange(values: Cvar[]): void {
-    this.defaultCvars.set(values);
+    this.settingsForm.defaultCvars().value.set(values);
+  }
+
+  public handleDataDirsChange(values: string[]): void {
+    this.settingsForm.dataDirs().value.set(values);
   }
 
   public async handleClearDataDir(): Promise<void> {

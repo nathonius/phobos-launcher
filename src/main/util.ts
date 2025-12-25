@@ -1,3 +1,5 @@
+import { access } from 'node:fs/promises';
+
 export function asBase64Image(
   data: Buffer<ArrayBufferLike> | string,
   extension = 'png'
@@ -21,4 +23,13 @@ export function simpleHash(str: string) {
 export function normalizePathSep(value: string, targetSep = '/'): string {
   const otherSep = targetSep === '/' ? '\\' : '/';
   return value.replaceAll(otherSep, targetSep);
+}
+
+export async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+  } catch {
+    return false;
+  }
+  return true;
 }

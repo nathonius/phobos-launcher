@@ -1,12 +1,20 @@
-import { readFile, writeFile, stat, mkdir } from 'node:fs/promises';
-import { resolve, extname, join, basename, dirname } from 'node:path';
+import { readFile, writeFile, stat, mkdir, access } from 'node:fs/promises';
+import {
+  resolve,
+  extname,
+  join,
+  basename,
+  dirname,
+  isAbsolute,
+  relative,
+} from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { dialog, protocol, net } from 'electron';
 import { defaultFormats, defaultPlugins } from 'jimp';
 import { createJimp } from '@jimp/core';
 import { filenamifyPath } from 'filenamify';
 import { ipcHandler, PhobosApi } from '../api';
-import { asBase64Image, simpleHash } from '../util';
+import { asBase64Image, fileExists, simpleHash } from '../util';
 import { getPhobos } from '../../main';
 import type { CompressedImage } from '../../shared/config';
 import { getStore } from '../store/store';
@@ -23,7 +31,7 @@ const JIMP_SUPPORTED_FORMATS = [
 
 export class UserDataService extends PhobosApi {
   public static readonly scheme = 'phobos-data';
-  private readonly dataPath: string;
+  public readonly dataPath: string;
   private readonly jimp = createJimp({
     formats: [...defaultFormats],
     plugins: defaultPlugins,
@@ -86,14 +94,20 @@ export class UserDataService extends PhobosApi {
           if (!filePath) {
             return new Response(null, { status: 400 });
           }
+
+          const absolutePath = isAbsolute(filePath)
+            ? filePath
+            : resolve(dataPath, filePath);
+
           const compress = url.searchParams.get('compress') ?? '';
-          const extension = extname(filePath).toLowerCase();
+          const extension = extname(absolutePath).toLowerCase();
           if (
             JIMP_SUPPORTED_FORMATS.includes(extension) &&
             compress !== 'false'
           ) {
             try {
-              return new Response(await this.getOrCreateCompressed(filePath));
+              const compressed = await this.getOrCreateCompressed(absolutePath);
+              return new Response(compressed as ArrayBuffer);
             } catch (err) {
               // If something fails, fall back to returning the original file
               console.error(`COULD NOT LOAD COMPRESSED FILE`);
@@ -101,7 +115,9 @@ export class UserDataService extends PhobosApi {
             }
           }
 
-          const imageResponse = await net.fetch(pathToFileURL(filePath).href);
+          const imageResponse = await net.fetch(
+            pathToFileURL(absolutePath).href
+          );
 
           const buffer: ArrayBuffer | Buffer<ArrayBufferLike> =
             await imageResponse.arrayBuffer();
@@ -214,6 +230,31 @@ export class UserDataService extends PhobosApi {
     return dialog.showOpenDialog(args ?? {});
   }
 
+  @ipcHandler('fileSystem.getShortestPathForFile')
+  async getPathForFile(originalPath: string): Promise<string> {
+    const useDataDirs = (getPhobos().settingsService.getSetting(
+      'useDataDirs'
+    ) ?? true) as boolean;
+    const dataDirs = (getPhobos().settingsService.getSetting('dataDirs') ??
+      []) as string[];
+
+    if (!useDataDirs) {
+      return originalPath;
+    }
+
+    return await this.resolveShortestPath(originalPath, dataDirs);
+  }
+
+  @ipcHandler('fileSystem.fileExists')
+  async fileExists(path: string): Promise<boolean> {
+    try {
+      await access(path);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   async writeDataFile(path: string, value: ArrayBuffer) {
     const fullPath = resolve(this.dataPath, path);
     await writeFile(resolve(this.dataPath, path), Buffer.from(value));
@@ -233,5 +274,35 @@ export class UserDataService extends PhobosApi {
     await mkdir(join(path, 'lumps'), { recursive: true });
 
     return path;
+  }
+
+  async resolveShortestPath(
+    originalPath: string,
+    dataDirs: string[]
+  ): Promise<string> {
+    const absolutePath = await this.resolveFilePath(originalPath, dataDirs);
+    for (const dataDir of dataDirs) {
+      const relativePath = relative(dataDir, absolutePath);
+      if (!relativePath.startsWith('..')) {
+        return relativePath;
+      }
+    }
+    return originalPath;
+  }
+
+  async resolveFilePath(
+    originalPath: string,
+    dataDirs: string[]
+  ): Promise<string> {
+    if (isAbsolute(originalPath) && (await fileExists(originalPath))) {
+      return originalPath;
+    }
+    for (const dataDir of dataDirs) {
+      const realPath = join(dataDir, originalPath);
+      if (await fileExists(realPath)) {
+        return realPath;
+      }
+    }
+    return originalPath;
   }
 }

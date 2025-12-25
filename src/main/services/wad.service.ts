@@ -39,10 +39,16 @@ export class WadService extends PhobosApi {
   public async getGraphic(wadPath: string, lumpNames: string[]) {
     let dir: string;
     try {
-      if (wadPath.toLowerCase().endsWith('.pk3')) {
-        dir = (await pk3Extract(wadPath, lumpNames)) ?? '';
+      const dataDirs = (getPhobos().settingsService.getSetting('dataDirs') ??
+        []) as string[];
+      const realWadPath = await getPhobos().userDataService.resolveFilePath(
+        wadPath,
+        dataDirs
+      );
+      if (realWadPath.toLowerCase().endsWith('.pk3')) {
+        dir = (await pk3Extract(realWadPath, lumpNames)) ?? '';
       } else {
-        dir = (await deutexExtract(wadPath)) ?? '';
+        dir = (await deutexExtract(realWadPath)) ?? '';
       }
     } catch (err) {
       console.error(`Could not read graphics for ${wadPath}`);
@@ -69,7 +75,14 @@ export class WadService extends PhobosApi {
 
   @ipcHandler('wad.getInfo')
   public async getInfo(wadPath: string): Promise<WadInfo | null> {
-    const wad = await this.getWad(wadPath);
+    const dataDirs = (getPhobos().settingsService.getSetting('dataDirs') ??
+      []) as string[];
+    const realWadPath = await getPhobos().userDataService.resolveFilePath(
+      wadPath,
+      dataDirs
+    );
+
+    const wad = await this.getWad(realWadPath);
     if (!wad) {
       return null;
     }

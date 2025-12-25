@@ -55,7 +55,7 @@ export class Phobos {
     app.on('ready', async () => {
       // Set up store; nothing that reads from it should be called before this
       await initStore();
-      await executeMigrations(getStore());
+      await executeMigrations(getStore(), app.getPath('userData'));
 
       // Init services
       this.ipcLogger = new IpcLogger();

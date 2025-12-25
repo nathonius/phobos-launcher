@@ -1,12 +1,44 @@
 <form-section label="Settings">
-  <form class="min-w-[30rem]" [formGroup]="settingsForm">
+  <form class="min-w-[30rem]">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">App behavior</legend>
+      <label class="label" for="data-dirs-input">Data Directories</label>
+      <file-list
+        id="data-dirs-input"
+        [values]="settingsForm.dataDirs().value()"
+        (valueChange)="handleDataDirsChange($event)"
+      />
+      <label class="label">
+        <input
+          type="checkbox"
+          id="useDataDirs"
+          class="checkbox"
+          [field]="settingsForm.useDataDirs"
+        />
+        Automatically use the shortest path to a given file from a data
+        directory, if possible.
+      </label>
+      <div class="flex gap-2">
+        <button
+          class="btn btn-warning"
+          type="button"
+          (click)="migrateAllPaths()"
+        >
+          Migrate all resource paths to use data dirs
+        </button>
+        <button
+          class="btn btn-warning"
+          type="button"
+          (click)="absolutizeAllPaths()"
+        >
+          Migrate all resource paths to absolute paths
+        </button>
+      </div>
       <label class="fieldset-label" for="theme-select">Theme</label>
-      <select id="theme-select" class="select" formControlName="theme">
-        <option [ngValue]="null">Default</option>
+      <select id="theme-select" class="select" [field]="settingsForm.theme">
+        <option [value]="null">Default</option>
         @for (theme of themeOptions; track theme[0]) {
-        <option [ngValue]="theme[0]">{{ theme[1] }}</option>
+        <option [value]="theme[0]">{{ theme[1] }}</option>
         }
       </select>
       <label class="label">
@@ -14,7 +46,7 @@
           type="checkbox"
           id="gamepadEnabled"
           class="checkbox"
-          formControlName="gamepadEnabled"
+          [field]="settingsForm.gamepadEnabled"
         />
         Gamepad support (experimental)
       </label>
@@ -28,7 +60,7 @@
         id="steamgriddb-api-input"
         class="input"
         type="text"
-        formControlName="steamGridApiKey"
+        [field]="settingsForm.steamGridApiKey"
       />
       <label class="fieldset-label" for="deutex-path-input">
         DeuTex path
@@ -36,7 +68,7 @@
       <file-input
         class="input"
         inputId="deutex-path-input"
-        formControlName="deutexPath"
+        [field]="settingsForm.deutexPath"
         file="true"
         directory="false"
       />
@@ -46,7 +78,7 @@
       <file-input
         class="input"
         inputId="temp-data-path-input"
-        formControlName="tempDataPath"
+        [field]="settingsForm.tempDataPath"
         file="false"
         directory="true"
       />
@@ -74,7 +106,7 @@
         } @case ('CLEARED') {
         <lucide-angular [img]="icons.Check" />
         } @case ('ERROR') {
-        <lucide-angular [img]="icons.AlertTriangle" />
+        <lucide-angular [img]="icons.TriangleAlert" />
         } } }
       </div>
     </fieldset>
@@ -89,7 +121,7 @@
           <file-input
             class="grow"
             id="arachnotron-path-input"
-            formControlName="importPath"
+            [field]="settingsForm.importPath"
             file="false"
             directory="true"
             reorder="false"
@@ -111,12 +143,16 @@
         addLabel="Add var"
         keyLabel="Variable"
         valueLabel="Value"
-        [values]="defaultCvars()"
+        [values]="settingsForm.defaultCvars().value()"
         (valueChange)="handleCvarChange($event)"
       />
     </fieldset>
+
+    <button type="button" class="btn" (click)="openConfig()">
+      Open config json
+    </button>
   </form>
 </form-section>
-@if (settingsForm.controls.gamepadEnabled.value === true) {
+@if (settingsForm.gamepadEnabled().value() === true) {
 <gamepad-tester />
 }
