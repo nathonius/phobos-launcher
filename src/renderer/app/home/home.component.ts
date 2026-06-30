@@ -11,13 +11,7 @@ import {
   untracked,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  LucideAngularModule,
-  Plus,
-  SortAsc,
-  SortDesc,
-  Search,
-} from 'lucide-angular';
+import { LucidePlus } from '@lucide/angular';
 import { NgClass } from '@angular/common';
 import type { Category, Profile } from '../../../shared/config';
 import { ProfileService } from '../profile/profile.service';
@@ -38,10 +32,10 @@ import { getNext, getPrev } from '../shared/functions/rotate';
     ReactiveFormsModule,
     ProfileComponent,
     CategoryComponent,
-    LucideAngularModule,
     FormsModule,
     ProfileListComponent,
     NgClass,
+    LucidePlus,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -53,12 +47,6 @@ export class HomeComponent implements OnInit {
   protected readonly showCategoryList = computed(() => {
     return true;
   });
-  protected readonly icons = {
-    Plus,
-    SortAsc,
-    SortDesc,
-    Search,
-  };
   protected readonly searchQuery = linkedSignal<string>(() => {
     this.categoryService.selectedCategory();
     return '';
@@ -91,7 +79,7 @@ export class HomeComponent implements OnInit {
       const selectedProfile = this.profileService.selectedProfile();
       if (selectedProfile === undefined) {
         const selectedCategory = untracked(() =>
-          this.categoryService.selectedCategory()
+          this.categoryService.selectedCategory(),
         );
         this.setNavActions(selectedCategory);
       }

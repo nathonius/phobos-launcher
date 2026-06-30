@@ -9,11 +9,10 @@ import {
   output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'rating',
-  imports: [LucideAngularModule, FormsModule, NgTemplateOutlet],
+  imports: [FormsModule, NgTemplateOutlet],
   templateUrl: './rating.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

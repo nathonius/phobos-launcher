@@ -2,7 +2,7 @@
   <thead>
     <tr>
       @if (selectable()) {
-      <th><!-- Selection --></th>
+        <th><!-- Selection --></th>
       }
       <th>{{ keyLabel() }}</th>
       <th>{{ valueLabel() }}</th>
@@ -10,80 +10,83 @@
     </tr>
   </thead>
   <tbody>
-    @let k = key(); @let v = value(); @for (pair of templateValues(); track
-    $index) { @let rowHasError = errorFn() ? errorFn()!($any(pair)) : false;
-    <tr class="w-full" [ngClass]="{ 'bg-error': rowHasError }">
-      @if (selectable()) {
-      <td>
-        <input
-          type="radio"
-          [name]="radioName"
-          class="radio"
-          (change)="handleSelect($index)"
-        />
-      </td>
-      }
-      <td [ngStyle]="{ width: keyColumnWidth() }">
-        <input
-          class="input w-full"
-          [ngClass]="{ 'font-mono': keyMono() }"
-          [placeholder]="keyPlaceholder()"
-          [value]="pair[k]"
-          (change)="handleKeyChange($index, $any($event.target).value)"
-        />
-      </td>
-      <td class="w-full whitespace-nowrap">
-        @if (valueType() === 'text') {
-        <input
-          class="input w-full"
-          [ngClass]="{ 'font-mono': valueMono() }"
-          [placeholder]="valuePlaceholder()"
-          [value]="pair[v]"
-          (change)="handleValueChange($index, $any($event.target).value)"
-        />
-        } @else {
-        <file-input
-          class="input w-full"
-          includeControls="true"
-          [placeholder]="valuePlaceholder()"
-          [value]="pair[v]"
-          (valueChange)="handleValueChange($index, $event)"
-        />
+    @let k = key();
+    @let v = value();
+    @for (pair of templateValues(); track $index) {
+      @let rowHasError = errorFn() ? errorFn()!($any(pair)) : false;
+      <tr class="w-full" [ngClass]="{ 'bg-error': rowHasError }">
+        @if (selectable()) {
+          <td>
+            <input
+              type="radio"
+              [name]="radioName"
+              class="radio"
+              (change)="handleSelect($index)"
+            />
+          </td>
         }
-      </td>
-      <td class="whitespace-nowrap">
-        @if (reorder()) {
-        <button
-          type="button"
-          class="btn btn-ghost btn-square"
-          (click)="handleReorderUp($index)"
-        >
-          <lucide-icon class="h-4 w-4" [img]="icons.ArrowUp" />
-        </button>
-        <button
-          type="button"
-          class="btn btn-ghost btn-square"
-          (click)="handleReorderDown($index)"
-        >
-          <lucide-icon class="h-4 w-4" [img]="icons.ArrowDown" />
-        </button>
-        } @if (removable()) {
-        <button
-          type="button"
-          class="btn btn-ghost btn-square"
-          (click)="handleRemove($index)"
-        >
-          <lucide-icon class="h-4 w-4" [img]="icons.Trash" />
-        </button>
-        }
-      </td>
-    </tr>
+        <td [ngStyle]="{ width: keyColumnWidth() }">
+          <input
+            class="input w-full"
+            [ngClass]="{ 'font-mono': keyMono() }"
+            [placeholder]="keyPlaceholder()"
+            [value]="pair[k]"
+            (change)="handleKeyChange($index, $any($event.target).value)"
+          />
+        </td>
+        <td class="w-full whitespace-nowrap">
+          @if (valueType() === "text") {
+            <input
+              class="input w-full"
+              [ngClass]="{ 'font-mono': valueMono() }"
+              [placeholder]="valuePlaceholder()"
+              [value]="pair[v]"
+              (change)="handleValueChange($index, $any($event.target).value)"
+            />
+          } @else {
+            <file-input
+              class="input w-full"
+              includeControls="true"
+              [placeholder]="valuePlaceholder()"
+              [value]="pair[v]"
+              (valueChange)="handleValueChange($index, $event)"
+            />
+          }
+        </td>
+        <td class="whitespace-nowrap">
+          @if (reorder()) {
+            <button
+              type="button"
+              class="btn btn-ghost btn-square"
+              (click)="handleReorderUp($index)"
+            >
+              <svg class="h-4 w-4" lucideArrowUp></svg>
+            </button>
+            <button
+              type="button"
+              class="btn btn-ghost btn-square"
+              (click)="handleReorderDown($index)"
+            >
+              <svg class="h-4 w-4" lucideArrowDown></svg>
+            </button>
+          }
+          @if (removable()) {
+            <button
+              type="button"
+              class="btn btn-ghost btn-square"
+              (click)="handleRemove($index)"
+            >
+              <svg class="h-4 w-4" lucideTrash></svg>
+            </button>
+          }
+        </td>
+      </tr>
     }
   </tbody>
   <tfoot>
     <tr>
       @if (selectable()) {
-      <td></td>
+        <td></td>
       }
       <td></td>
       <td></td>
@@ -94,7 +97,7 @@
           (click)="handleAdd()"
           [attr.data-tip]="addLabel()"
         >
-          <lucide-icon [img]="icons.Plus" />
+          <svg lucidePlus></svg>
         </button>
       </td>
     </tr>

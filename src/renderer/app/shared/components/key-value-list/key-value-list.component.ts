@@ -10,8 +10,13 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
 
-import { LucideAngularModule } from 'lucide-angular';
 import { NgClass, NgStyle } from '@angular/common';
+import {
+  LucideArrowDown,
+  LucideArrowUp,
+  LucidePlus,
+  LucideTrash,
+} from '@lucide/angular';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
@@ -21,11 +26,14 @@ type ErrorFn<T> = (val: T) => boolean;
 @Component({
   selector: 'key-value-list',
   imports: [
-    LucideAngularModule,
     FileInputComponent,
     ReactiveFormsModule,
     NgClass,
     NgStyle,
+    LucideArrowUp,
+    LucideArrowDown,
+    LucideTrash,
+    LucidePlus,
   ],
   templateUrl: './key-value-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +59,7 @@ export class KeyValueListComponent<T> extends ListComponentBase<T> {
   public readonly addLabel = input.required<string>();
   public readonly errorFn = input<ErrorFn<T>>();
   protected readonly templateValues = computed(
-    () => this.values() as Record<string, string>[]
+    () => this.values() as Record<string, string>[],
   );
   protected readonly radioName = `key-value-list-radio-${radioNumber++}`;
 

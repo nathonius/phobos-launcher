@@ -7,7 +7,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ArrowLeft, LucideAngularModule, Search } from 'lucide-angular';
+import { LucideArrowLeft, LucideSearch } from '@lucide/angular';
 import { AutocompleteComponent } from '../shared/components/autocomplete/autocomplete.component';
 import type {
   SGDBGame,
@@ -19,17 +19,14 @@ import { wait } from '../shared/functions/debounce';
 
 @Component({
   selector: 'sgdb-dialog',
-  imports: [AutocompleteComponent, LucideAngularModule],
+  imports: [AutocompleteComponent, LucideArrowLeft],
   templateUrl: './sgdb-dialog.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SgdbDialogComponent {
   public readonly imageSelected = output<SGDBImage>();
-  protected readonly icons = {
-    Search,
-    ArrowLeft,
-  };
+  protected readonly searchIcon = LucideSearch;
   protected readonly dialog =
     viewChild<ElementRef<HTMLDialogElement>>('sgdbDialog');
   protected readonly queryInProgress = signal<boolean>(false);
@@ -60,7 +57,7 @@ export class SgdbDialogComponent {
         return Api['sgdb.getImages'](params, ['grid', 'icon', 'logo']).finally(
           () => {
             this.queryInProgress.set(false);
-          }
+          },
         );
       }
       return Promise.resolve<SGDBImage[]>([]);

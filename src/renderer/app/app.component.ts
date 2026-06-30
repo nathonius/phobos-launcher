@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
-  Check,
-  Cog,
-  House,
-  LucideAngularModule,
-  Package,
-  Plus,
-  Rocket,
-  RotateCcw,
-  Save,
-  Settings,
-  Trash,
-  Wrench,
-} from 'lucide-angular';
+  LucideCog,
+  LucideDynamicIcon,
+  LucideHouse,
+  LucidePackage,
+  LucidePlus,
+  LucideRocket,
+  LucideRotateCcw,
+  LucideSave,
+  LucideSettings,
+  LucideTrash,
+  LucideWrench,
+} from '@lucide/angular';
 import { NgClass } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { NavbarService } from './shared/services/navbar.service';
@@ -31,8 +30,18 @@ import { ViewService } from './shared/services/view.service';
     SettingsComponent,
     EnginesComponent,
     BasesComponent,
-    LucideAngularModule,
     NgClass,
+    LucideSettings,
+    LucideCog,
+    LucidePackage,
+    LucideHouse,
+    LucideTrash,
+    LucidePlus,
+    LucideSave,
+    LucideWrench,
+    LucideRocket,
+    LucideRotateCcw,
+    LucideDynamicIcon,
   ],
   host: {
     class: 'flex flex-col h-screen w-screen overflow-hidden',
@@ -43,17 +52,4 @@ export class AppComponent {
   protected readonly navbarService = inject(NavbarService);
   protected readonly themeService = inject(ThemeService);
   protected readonly viewService = inject(ViewService);
-  protected readonly icons = {
-    Settings,
-    Cog,
-    Package,
-    House,
-    Trash,
-    Plus,
-    Save,
-    Wrench,
-    Check,
-    Rocket,
-    RotateCcw,
-  };
 }

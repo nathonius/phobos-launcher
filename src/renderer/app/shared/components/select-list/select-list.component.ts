@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideArrowDown, LucideArrowUp, LucideTrash } from '@lucide/angular';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 
 export interface SelectOption {
@@ -21,7 +21,7 @@ export interface SelectOption {
 
 @Component({
   selector: 'select-list',
-  imports: [LucideAngularModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideArrowUp, LucideArrowDown, LucideTrash],
   templateUrl: './select-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

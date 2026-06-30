@@ -14,14 +14,13 @@ import {
 import { CdkListboxModule } from '@angular/cdk/listbox';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import type { LucideIconData } from 'lucide-angular/src/icons/icons/types';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideDynamicIcon, type LucideIcon } from '@lucide/angular';
 
 let idCount = 0;
 
 @Component({
   selector: 'app-autocomplete',
-  imports: [CdkListboxModule, NgClass, NgTemplateOutlet, LucideAngularModule],
+  imports: [CdkListboxModule, NgClass, NgTemplateOutlet, LucideDynamicIcon],
   templateUrl: './autocomplete.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,16 +35,16 @@ let idCount = 0;
     class: 'flex flex-col w-full gap-2 items-center',
   },
 })
-export class AutocompleteComponent<T extends { id: string | number }>
-  implements ControlValueAccessor
-{
+export class AutocompleteComponent<
+  T extends { id: string | number },
+> implements ControlValueAccessor {
   public readonly autofocusInput = input(false, {
     transform: booleanAttribute,
   });
   public readonly placeholder = input('');
   public readonly options = input.required<T[]>();
   public readonly inputId = input<string>();
-  public readonly icon = input<LucideIconData>();
+  public readonly icon = input<LucideIcon>();
   public readonly labelKey = input('label');
   public readonly valueKey = input('value');
   public readonly valueChange = output<T | null>();

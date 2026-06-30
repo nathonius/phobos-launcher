@@ -7,7 +7,7 @@ import {
   output,
 } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { LucideAngularModule, X } from 'lucide-angular';
+import { LucideX } from '@lucide/angular';
 import type {
   DaisyButtonShape,
   DaisyButtonColor,
@@ -16,7 +16,7 @@ import type {
 
 @Component({
   selector: 'app-tag',
-  imports: [NgClass, LucideAngularModule],
+  imports: [NgClass, LucideX],
   templateUrl: './tag.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +30,6 @@ export class TagComponent {
   public readonly variant = input<DaisyButtonVariant>('default');
   public readonly color = input<DaisyButtonColor>('default');
   public readonly shape = input<DaisyButtonShape>('default');
-  protected readonly RemoveIcon = X;
   protected readonly classes = computed(() => {
     const classes: string[] = [];
     const variant = this.variant();

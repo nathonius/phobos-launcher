@@ -19,21 +19,21 @@
         <button
           class="item-target relative w-full grow flex flex-col items-center justify-center border-0 p-0 m-0"
           type="button"
-          (click)="action.emit({item, action: 'primary'})"
+          (click)="action.emit({ item, action: 'primary' })"
         >
           @if (item.icon) {
-          <img class="item-image" [src]="item.icon" />
+            <img class="item-image" [src]="item.icon" />
           } @else {
-          <div
-            class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
-            fittext
-            [ngStyle]="{
-              'background-image': item.background || backgrounds.RockWall
-            }"
-            [compressor]="1"
-          >
-            {{ item.name }}
-          </div>
+            <div
+              class="item-image-placeholder flex items-center justify-center p-2 text-shadow-3d font-accent font-bold"
+              fittext
+              [ngStyle]="{
+                'background-image': item.background || backgrounds['RockWall'],
+              }"
+              [compressor]="1"
+            >
+              {{ item.name }}
+            </div>
           }
         </button>
         <div
@@ -41,39 +41,39 @@
         >
           <div class="flex gap-1">
             @for (itemAction of item.actions; track itemAction.name) {
-            <div
-              [class]="{
-                tooltip: !!itemAction.icon,
-                'tooltip-accent': !!itemAction.icon
-              }"
-              [attr.data-tip]="itemAction.label"
-            >
-              <button
-                class="btn btn-sm btn-square btn-accent"
-                (click)="action.emit({item, action: itemAction.name})"
+              <div
+                [class]="{
+                  tooltip: !!itemAction.icon,
+                  'tooltip-accent': !!itemAction.icon,
+                }"
+                [attr.data-tip]="itemAction.label"
               >
-                @if (itemAction.icon) {
-                <lucide-icon [img]="itemAction.icon" />
-                } @else {
-                {{ itemAction.label }}
-                }
-              </button>
-            </div>
+                <button
+                  class="btn btn-sm btn-square btn-accent"
+                  (click)="action.emit({ item, action: itemAction.name })"
+                >
+                  @if (itemAction.icon) {
+                    <svg [lucideIcon]="itemAction.icon"></svg>
+                  } @else {
+                    {{ itemAction.label }}
+                  }
+                </button>
+              </div>
             }
           </div>
           <div class="flex gap-1">
             @for (itemStatus of item.statuses; track itemStatus.name) {
-            <div
-              [class]="{
-                tooltip: !!itemStatus.icon,
-                'tooltip-success': !!itemStatus.icon
-              }"
-              [attr.data-tip]="itemStatus.name"
-            >
-              <span class="btn btn-sm btn-square btn-success cursor-default">
-                <lucide-icon [img]="itemStatus.icon" />
-              </span>
-            </div>
+              <div
+                [class]="{
+                  tooltip: !!itemStatus.icon,
+                  'tooltip-success': !!itemStatus.icon,
+                }"
+                [attr.data-tip]="itemStatus.name"
+              >
+                <span class="btn btn-sm btn-square btn-success cursor-default">
+                  <svg [lucideIcon]="itemStatus.icon"></svg>
+                </span>
+              </div>
             }
           </div>
         </div>

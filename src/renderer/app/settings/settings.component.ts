@@ -6,9 +6,9 @@ import {
   signal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { form, Field } from '@angular/forms/signals';
-import { Check, LucideAngularModule, TriangleAlert } from 'lucide-angular';
+import { form, FormField } from '@angular/forms/signals';
 import { NgClass } from '@angular/common';
+import { LucideCheck, LucideTriangleAlert } from '@lucide/angular';
 import {
   ThemeService,
   THEME_MAP,
@@ -46,21 +46,18 @@ interface SettingsData {
     FormSectionComponent,
     FileInputComponent,
     KeyValueListComponent,
-    LucideAngularModule,
     NgClass,
     GamepadTesterComponent,
-    Field,
+    FormField,
     FileListComponent,
+    LucideCheck,
+    LucideTriangleAlert,
   ],
   templateUrl: './settings.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
-  protected readonly icons = {
-    Check,
-    TriangleAlert,
-  };
   protected readonly themeOptions = Object.entries(THEME_MAP);
   protected readonly themeService = inject(ThemeService);
   protected readonly steamGridService = inject(SteamGridService);

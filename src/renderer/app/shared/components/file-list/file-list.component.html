@@ -7,49 +7,49 @@
   <thead>
     <tr>
       @if (selectable()) {
-      <th><!-- Select --></th>
+        <th><!-- Select --></th>
       }
       <th>Path</th>
       <th><!-- Actions --></th>
     </tr>
   </thead>
   <tbody>
-    @for(path of values(); track path) {
-    <tr>
-      @if (selectable()) {
-      <td>
-        <input
-          type="radio"
-          class="radio"
-          [name]="radioName"
-          (change)="handleSelect($index)"
-        />
-      </td>
-      }
-      <td class="w-full">
-        <file-input
-          [value]="path"
-          [controls]="inputControls"
-          (valueChange)="handleChange($index, $event)"
-        />
-      </td>
-      <td class="whitespace-nowrap">
-        <file-input-controls
-          #inputControls
-          reorder="true"
-          removable="true"
-          (reorderUp)="handleReorderUp($index)"
-          (reorderDown)="handleReorderDown($index)"
-          (remove)="handleRemove($index)"
-        />
-      </td>
-    </tr>
+    @for (path of values(); track path) {
+      <tr>
+        @if (selectable()) {
+          <td>
+            <input
+              type="radio"
+              class="radio"
+              [name]="radioName"
+              (change)="handleSelect($index)"
+            />
+          </td>
+        }
+        <td class="w-full">
+          <file-input
+            [value]="path"
+            [controls]="inputControls"
+            (valueChange)="handleChange($index, $event)"
+          />
+        </td>
+        <td class="whitespace-nowrap">
+          <file-input-controls
+            #inputControls
+            reorder="true"
+            removable="true"
+            (reorderUp)="handleReorderUp($index)"
+            (reorderDown)="handleReorderDown($index)"
+            (remove)="handleRemove($index)"
+          />
+        </td>
+      </tr>
     }
   </tbody>
   <tfoot>
     <tr>
       @if (selectable()) {
-      <td><!-- empty --></td>
+        <td><!-- empty --></td>
       }
       <td>
         <!-- empty -->
@@ -61,7 +61,7 @@
           (click)="handleAdd()"
           data-tip="Add file"
         >
-          <lucide-icon [img]="icons.Plus" />
+          <svg lucidePlus></svg>
         </button>
       </td>
     </tr>

@@ -1,17 +1,8 @@
 import type { OutputEmitterRef, Signal } from '@angular/core';
-import { ArrowDown, ArrowUp, File, Folder, Plus, Trash } from 'lucide-angular';
 
 export abstract class ListComponentBase<T = string> {
   public abstract readonly valueChange: OutputEmitterRef<T[]>;
   public abstract readonly values: Signal<T[]>;
-  protected readonly icons = {
-    File,
-    Folder,
-    Trash,
-    ArrowUp,
-    ArrowDown,
-    Plus,
-  };
 
   handleRemove(index: number): void {
     const newValues = [...this.values()];

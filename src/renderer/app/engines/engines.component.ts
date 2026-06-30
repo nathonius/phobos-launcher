@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { LucideAngularModule, Plus, Trash } from 'lucide-angular';
+import { LucidePlus, LucideTrash } from '@lucide/angular';
 import { v4 as uuid } from 'uuid';
 import { NgClass } from '@angular/common';
 import type { Engine } from '../../../shared/config';
@@ -23,7 +23,8 @@ type DisplayEngine = Engine & {
   imports: [
     FormSectionComponent,
     FileInputComponent,
-    LucideAngularModule,
+    LucidePlus,
+    LucideTrash,
     NgClass,
   ],
   templateUrl: './engines.component.html',
@@ -33,10 +34,6 @@ type DisplayEngine = Engine & {
 export class EnginesComponent {
   public readonly engines = signal<Engine[]>([]);
   public readonly displayEngines = signal<DisplayEngine[]>([]);
-  public readonly icons = {
-    Plus,
-    Trash,
-  };
   private readonly navbarService = inject(NavbarService);
   constructor() {
     this.navbarService.setCallbacks({});
