@@ -8,7 +8,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucidePlus } from '@lucide/angular';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 import { TagComponent } from '../tag/tag.component';
 import type { SelectOption } from '../select-list/select-list.component';
@@ -20,7 +20,7 @@ import type {
 
 @Component({
   selector: 'tag-list',
-  imports: [ReactiveFormsModule, TagComponent, LucideAngularModule],
+  imports: [ReactiveFormsModule, TagComponent, LucidePlus],
   templateUrl: './tag-list.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,7 +42,7 @@ export class TagListComponent extends ListComponentBase<string> {
       const allOptions = this.options();
       const values = this.values();
       return values.map(
-        (v) => allOptions.find((o) => o.value === v)?.label ?? v
+        (v) => allOptions.find((o) => o.value === v)?.label ?? v,
       );
     }
   });

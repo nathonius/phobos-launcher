@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LucideAngularModule } from 'lucide-angular';
+import { LucidePlus } from '@lucide/angular';
 import { FileInputComponent } from '../file-input/file-input.component';
 import { ListComponentBase } from '../../classes/ListComponentBase';
 import { FileInputControlsComponent } from '../file-input-controls/file-input-controls.component';
@@ -20,10 +20,10 @@ let radioNumber = 0;
 @Component({
   selector: 'file-list',
   imports: [
-    LucideAngularModule,
     FileInputComponent,
     ReactiveFormsModule,
     FileInputControlsComponent,
+    LucidePlus,
   ],
   templateUrl: './file-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +72,7 @@ export class FileListComponent extends ListComponentBase<string> {
     await handleDragEvent(
       event,
       this.getShortestPath(),
-      this.handleAdd.bind(this)
+      this.handleAdd.bind(this),
     );
     this.dragging.set(false);
   }

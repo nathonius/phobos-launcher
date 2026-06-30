@@ -10,78 +10,78 @@
     </thead>
     <tbody>
       @for (engine of displayEngines(); track engine.id) {
-      <tr>
-        <td class="w-[20%]">
-          <input
-            type="text"
-            class="input input-bordered w-full"
-            placeholder="Engine"
-            [value]="engine.name"
-            (change)="handleNameChange($any($event.target).value, engine.id)"
-          />
-        </td>
-        <td class="w-[20%]">
-          <select
-            class="select w-full"
-            [value]="engine.style"
-            (change)="handleStyleChange($any($event.target).value, engine.id)"
-          >
-            <option value="zdoom">ZDoom/GZDoom/UZDoom/Zandronum</option>
-            <option value="prboom">prboom/dsda-doom</option>
-          </select>
-        </td>
-        <td class="w-[35%]">
-          <div
-            class="input w-full"
-            [ngClass]="{ 'input-error': !engine.fileExists }"
-          >
-            <file-input
-              class="grow"
-              directory="false"
-              reorder="false"
-              removable="false"
-              placeholder="Path"
-              includeControls="true"
-              [value]="engine.path"
-              (valueChange)="handlePathChange($event, engine.id)"
+        <tr>
+          <td class="w-[20%]">
+            <input
+              type="text"
+              class="input input-bordered w-full"
+              placeholder="Engine"
+              [value]="engine.name"
+              (change)="handleNameChange($any($event.target).value, engine.id)"
             />
-          </div>
-          @if (!engine.fileExists) {
-          <span class="text-error"
-            >Could not locate engine, please check path.</span
-          >
-          }
-        </td>
-        <td class="w-[20%]">
-          <div class="input w-full">
-            <file-input
-              class="grow"
-              directory="false"
-              reorder="false"
-              removable="true"
-              placeholder="Config file"
-              includeControls="true"
-              [value]="engine.config"
-              (valueChange)="handleConfigChange($event, engine.id)"
-            />
-          </div>
-        </td>
-        <td class="w-[5%]">
-          <button
-            type="button"
-            class="btn btn-ghost"
-            (click)="handleDelete(engine.id)"
-          >
-            <lucide-icon [img]="icons.Trash" />
-          </button>
-        </td>
-      </tr>
+          </td>
+          <td class="w-[20%]">
+            <select
+              class="select w-full"
+              [value]="engine.style"
+              (change)="handleStyleChange($any($event.target).value, engine.id)"
+            >
+              <option value="zdoom">ZDoom/GZDoom/UZDoom/Zandronum</option>
+              <option value="prboom">prboom/dsda-doom</option>
+            </select>
+          </td>
+          <td class="w-[35%]">
+            <div
+              class="input w-full"
+              [ngClass]="{ 'input-error': !engine.fileExists }"
+            >
+              <file-input
+                class="grow"
+                directory="false"
+                reorder="false"
+                removable="false"
+                placeholder="Path"
+                includeControls="true"
+                [value]="engine.path"
+                (valueChange)="handlePathChange($event, engine.id)"
+              />
+            </div>
+            @if (!engine.fileExists) {
+              <span class="text-error"
+                >Could not locate engine, please check path.</span
+              >
+            }
+          </td>
+          <td class="w-[20%]">
+            <div class="input w-full">
+              <file-input
+                class="grow"
+                directory="false"
+                reorder="false"
+                removable="true"
+                placeholder="Config file"
+                includeControls="true"
+                [value]="engine.config"
+                (valueChange)="handleConfigChange($event, engine.id)"
+              />
+            </div>
+          </td>
+          <td class="w-[5%]">
+            <button
+              type="button"
+              class="btn btn-ghost"
+              (click)="handleDelete(engine.id)"
+            >
+              <svg lucideTrash></svg>
+            </button>
+          </td>
+        </tr>
       }
     </tbody>
   </table>
   <div class="flex justify-end">
     <button type="button" class="btn btn-primary" (click)="handleNewEngine()">
-      <lucide-icon [img]="icons.Plus" />
+      <svg lucidePlus></svg>
     </button>
   </div>
 </form-section>

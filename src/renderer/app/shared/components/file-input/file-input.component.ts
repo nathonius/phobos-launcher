@@ -17,15 +17,7 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
-import {
-  LucideAngularModule,
-  File as FileIcon,
-  Folder,
-  Trash,
-  ArrowUp,
-  ArrowDown,
-  Globe,
-} from 'lucide-angular';
+
 import type { FormValueControl } from '@angular/forms/signals';
 import { NgClass } from '@angular/common';
 import { Api } from '../../../api/api';
@@ -34,7 +26,7 @@ import { handleDragEvent } from '../../functions/getFilePath';
 
 @Component({
   selector: 'file-input',
-  imports: [LucideAngularModule, FileInputControlsComponent, NgClass],
+  imports: [FileInputControlsComponent, NgClass],
   templateUrl: './file-input.component.html',
   providers: [
     {
@@ -64,19 +56,11 @@ export class FileInputComponent
   public readonly getShortestPath = input(false, {
     transform: booleanAttribute,
   });
-  public readonly valueChange = output<string>();
+  public readonly onValueChange = output<string>();
   public readonly reorderUp = output();
   public readonly reorderDown = output();
   public readonly webClick = output();
   protected readonly _placeholder = computed(() => this.placeholder() ?? '');
-  protected readonly icons = {
-    FileIcon,
-    Folder,
-    Trash,
-    ArrowUp,
-    ArrowDown,
-    Globe,
-  };
   protected readonly textInput =
     viewChild<ElementRef<HTMLInputElement>>('textInput');
   protected readonly filePath = signal<string>('');
@@ -113,7 +97,7 @@ export class FileInputComponent
     });
     effect(() => {
       const path = this.filePath();
-      this.valueChange.emit(path);
+      this.onValueChange.emit(path);
       this.onChange(path);
     });
   }
@@ -174,7 +158,7 @@ export class FileInputComponent
       await handleDragEvent(
         event,
         this.getShortestPath(),
-        this.writeValue.bind(this)
+        this.writeValue.bind(this),
       );
       this.dragging.set(false);
     }

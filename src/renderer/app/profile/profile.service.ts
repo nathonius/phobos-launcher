@@ -1,5 +1,11 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Wrench, Play, Trash, Check, Star } from 'lucide-angular';
+import {
+  LucideWrench,
+  LucidePlay,
+  LucideTrash,
+  LucideCheck,
+  LucideStar,
+} from '@lucide/angular';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import type { Profile } from '../../../shared/config';
@@ -24,10 +30,10 @@ export class ProfileService {
     return profiles.map((p) => {
       const statuses: ProfileItem['statuses'] = [];
       if (p.complete) {
-        statuses.push({ name: 'Complete', icon: Check });
+        statuses.push({ name: 'Complete', icon: LucideCheck });
       }
       if (p.rating) {
-        statuses.push({ name: `${p.rating} stars`, icon: Star });
+        statuses.push({ name: `${p.rating} stars`, icon: LucideStar });
       }
       return {
         ...p,
@@ -37,17 +43,17 @@ export class ProfileService {
           {
             name: 'edit',
             label: 'Edit',
-            icon: Wrench,
+            icon: LucideWrench,
           },
           {
             name: 'launch',
             label: 'Launch',
-            icon: Play,
+            icon: LucidePlay,
           },
           {
             name: 'delete',
             label: 'Delete',
-            icon: Trash,
+            icon: LucideTrash,
           },
         ],
         statuses,
@@ -138,8 +144,8 @@ export class ProfileService {
     const params = new URLSearchParams({ path });
     const result = await lastValueFrom(
       this.httpClient.get<string | null>(
-        `phobos-data://save-to-app-data?${params.toString()}`
-      )
+        `phobos-data://save-to-app-data?${params.toString()}`,
+      ),
     );
     return result;
   }

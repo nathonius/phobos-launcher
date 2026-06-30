@@ -5,7 +5,12 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { LucideAngularModule, Search, SortAsc, SortDesc } from 'lucide-angular';
+import {
+  LucideSearch,
+  LucideArrowUpNarrowWide,
+  LucideArrowDownWideNarrow,
+  LucideDynamicIcon,
+} from '@lucide/angular';
 import { FormsModule } from '@angular/forms';
 import type {
   ProfileItemEvent,
@@ -22,11 +27,7 @@ import { ViewService } from '../../shared/services/view.service';
 import { HomeViewState } from '../../shared/constants';
 
 export type ProfileSort =
-  | 'alphabetical'
-  | 'date_added'
-  | 'date_modified'
-  | 'last_played'
-  | 'rating';
+  'alphabetical' | 'date_added' | 'date_modified' | 'last_played' | 'rating';
 export const VALID_SORT_ARRAY: ProfileSort[] = [
   'alphabetical',
   'date_added',
@@ -37,7 +38,12 @@ export const VALID_SORT_ARRAY: ProfileSort[] = [
 
 @Component({
   selector: 'profile-list',
-  imports: [LucideAngularModule, FormsModule, ProfileItemGridComponent],
+  imports: [
+    FormsModule,
+    ProfileItemGridComponent,
+    LucideDynamicIcon,
+    LucideSearch,
+  ],
   templateUrl: './profile-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -48,14 +54,20 @@ export class ProfileListComponent {
   protected readonly searchQuery = signal<string>('');
   protected readonly sort = signal<null | ProfileSort>(null);
   protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
+  protected readonly sortIcon = computed(() =>
+    this.sortDirection() === 'asc'
+      ? LucideArrowUpNarrowWide
+      : LucideArrowDownWideNarrow,
+  );
   protected readonly categoryName = computed(
-    () => this.categoryService.selectedCategory()?.name ?? 'All'
+    () => this.categoryService.selectedCategory()?.name ?? 'All',
   );
   protected readonly profileItems = computed(() => {
     const allItems = this.profileService.displayProfiles();
     const selectedCategory = this.categoryService.selectedCategory();
     const sort = this.sort();
     const sortDirection = this.sortDirection() === 'asc' ? 1 : -1;
+
     const query = this.searchQuery();
     let filtered: ProfileItem[];
     if (selectedCategory === undefined || selectedCategory.id === 'all') {
@@ -63,20 +75,20 @@ export class ProfileListComponent {
     } else {
       filtered = allItems.filter((p) =>
         ((p as unknown as Profile).categories ?? []).includes(
-          selectedCategory.id
-        )
+          selectedCategory.id,
+        ),
       );
     }
     if (query) {
       filtered = filtered.filter(
         (profile) =>
           profile.name.toLowerCase().includes(query) ||
-          (profile.tags ?? []).some((t) => t.toLowerCase().includes(query))
+          (profile.tags ?? []).some((t) => t.toLowerCase().includes(query)),
       );
     }
     if (sort === 'alphabetical') {
       return toSorted(filtered, (a, b) =>
-        a.name > b.name ? sortDirection : sortDirection * -1
+        a.name > b.name ? sortDirection : sortDirection * -1,
       );
     } else if (sort === 'last_played') {
       return toSorted(
@@ -84,7 +96,7 @@ export class ProfileListComponent {
         (a, b) =>
           (new Date(a.lastPlayed ?? 0).valueOf() -
             new Date(b.lastPlayed ?? 0).valueOf()) *
-          sortDirection
+          sortDirection,
       );
     } else if (sort === 'date_added') {
       return toSorted(
@@ -92,7 +104,7 @@ export class ProfileListComponent {
         (a, b) =>
           (new Date(a.created ?? 0).valueOf() -
             new Date(b.created ?? 0).valueOf()) *
-          sortDirection
+          sortDirection,
       );
     } else if (sort === 'date_modified') {
       return toSorted(
@@ -100,7 +112,7 @@ export class ProfileListComponent {
         (a, b) =>
           (new Date(a.modified ?? 0).valueOf() -
             new Date(b.modified ?? 0).valueOf()) *
-          sortDirection
+          sortDirection,
       );
     } else if (sort === 'rating') {
       return toSorted(filtered, (a, b) => {
@@ -117,11 +129,6 @@ export class ProfileListComponent {
       return filtered;
     }
   });
-  protected readonly icons = {
-    Search,
-    SortAsc,
-    SortDesc,
-  };
   protected readonly profileService = inject(ProfileService);
   protected readonly categoryService = inject(CategoryService);
   private readonly viewService = inject(ViewService);

@@ -4,7 +4,7 @@
   </h2>
   <div class="flex gap-2 items-center">
     <label for="profile-search" class="input min-w-2xs">
-      <lucide-angular [img]="icons.Search" />
+      <svg lucideSearch></svg>
       <input
         id="profile-search"
         type="text"
@@ -35,16 +35,20 @@
           : handleSortDirectionChange('asc')
       "
     >
-      <lucide-icon
-        [img]="sortDirection() === 'asc' ? icons.SortAsc : icons.SortDesc"
-      />
+      <svg [lucideIcon]="sortIcon()"></svg>
     </button>
   </div>
 </div>
 @if (profileService.loadingProfiles()) {
-<div class="loading loading-ring loading-lg"></div>
-} @else { @let items = profileItems(); @if (items.length > 0) {
-<profile-item-grid [items]="profileItems()" (action)="handleAction($event)" />
+  <div class="loading loading-ring loading-lg"></div>
 } @else {
-<p>No profiles.</p>
-} }
+  @let items = profileItems();
+  @if (items.length > 0) {
+    <profile-item-grid
+      [items]="profileItems()"
+      (action)="handleAction($event)"
+    />
+  } @else {
+    <p>No profiles.</p>
+  }
+}

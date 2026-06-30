@@ -1,15 +1,15 @@
-import type { LucideIconData } from 'lucide-angular/icons/types';
+import type { LucideIcon } from '@lucide/angular';
 import type { Profile } from '../../../../shared/config';
 
 export interface ProfileItemAction {
   label: string;
   name: string;
-  icon: LucideIconData;
+  icon: LucideIcon;
 }
 
 export type ProfileItem = Profile & {
   actions: ProfileItemAction[];
-  statuses: { name: string; icon: LucideIconData }[];
+  statuses: { name: string; icon: LucideIcon }[];
 };
 
 export interface ProfileItemEvent {

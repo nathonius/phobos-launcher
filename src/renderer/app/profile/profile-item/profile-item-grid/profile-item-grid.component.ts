@@ -10,10 +10,10 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { LucideAngularModule } from 'lucide-angular';
 import { NgClass, NgStyle } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {} from '@angular/cdk/observers';
+import { LucideDynamicIcon } from '@lucide/angular';
 import { FitTextDirective } from '../../../shared/directives/fit-text.directive';
 import type { ProfileItem, ProfileItemEvent } from '../profile-item.interface';
 import { BACKGROUND_TEXTURES } from '../../../shared/images/background-textures/background-textures';
@@ -26,12 +26,12 @@ const ITEM_MAX_HEIGHT = 200;
 @Component({
   selector: 'profile-item-grid',
   imports: [
-    LucideAngularModule,
     FitTextDirective,
     NgStyle,
     ScrollingModule,
     GamepadListenerDirective,
     NgClass,
+    LucideDynamicIcon,
   ],
   templateUrl: './profile-item-grid.component.html',
   styleUrl: './profile-item-grid.component.css',
@@ -46,11 +46,11 @@ export class ProfileItemGridComponent implements OnInit {
   protected readonly backgrounds = Object.fromEntries(
     Object.entries(BACKGROUND_TEXTURES).map(([k, v]) => {
       return [k, `url(${v})`];
-    })
+    }),
   );
   protected readonly itemsPerRow = signal<number>(1);
   protected readonly itemSize = computed(() =>
-    Math.floor(ITEM_MAX_HEIGHT / this.itemsPerRow())
+    Math.floor(ITEM_MAX_HEIGHT / this.itemsPerRow()),
   );
   protected readonly activeItem = linkedSignal<ProfileItem | null>(() => {
     this.items();

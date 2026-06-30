@@ -38,7 +38,7 @@
       <select id="theme-select" class="select" [field]="settingsForm.theme">
         <option [value]="null">Default</option>
         @for (theme of themeOptions; track theme[0]) {
-        <option [value]="theme[0]">{{ theme[1] }}</option>
+          <option [value]="theme[0]">{{ theme[1] }}</option>
         }
       </select>
       <label class="label">
@@ -94,20 +94,25 @@
           class="btn"
           [ngClass]="{
             'btn-warning': status !== 'CLEARED',
-            'btn-success': status === 'CLEARED'
+            'btn-success': status === 'CLEARED',
           }"
           (click)="handleClearDataDir()"
         >
           Clear temp data
         </button>
-        @if (clearDataStatus(); as status) { @switch (status) { @case
-        ('CLEARING') {
-        <span class="loading loading-spinner loading-sm"></span>
-        } @case ('CLEARED') {
-        <lucide-angular [img]="icons.Check" />
-        } @case ('ERROR') {
-        <lucide-angular [img]="icons.TriangleAlert" />
-        } } }
+        @if (clearDataStatus(); as status) {
+          @switch (status) {
+            @case ("CLEARING") {
+              <span class="loading loading-spinner loading-sm"></span>
+            }
+            @case ("CLEARED") {
+              <svg lucideCheck />
+            }
+            @case ("ERROR") {
+              <svg lucideTriangleAlert />
+            }
+          }
+        }
       </div>
     </fieldset>
 
@@ -154,5 +159,5 @@
   </form>
 </form-section>
 @if (settingsForm.gamepadEnabled().value() === true) {
-<gamepad-tester />
+  <gamepad-tester />
 }

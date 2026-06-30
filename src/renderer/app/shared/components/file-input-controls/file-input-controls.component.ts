@@ -6,18 +6,24 @@ import {
   output,
 } from '@angular/core';
 import {
-  ArrowDown,
-  ArrowUp,
-  File as FileIcon,
-  Folder,
-  Globe,
-  LucideAngularModule,
-  Trash,
-} from 'lucide-angular';
+  LucideArrowDown,
+  LucideArrowUp,
+  LucideFile,
+  LucideFolder,
+  LucideGlobe,
+  LucideTrash,
+} from '@lucide/angular';
 
 @Component({
   selector: 'file-input-controls',
-  imports: [LucideAngularModule],
+  imports: [
+    LucideArrowDown,
+    LucideArrowUp,
+    LucideFile,
+    LucideFolder,
+    LucideGlobe,
+    LucideTrash,
+  ],
   templateUrl: './file-input-controls.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,13 +41,4 @@ export class FileInputControlsComponent {
   public readonly reorderDown = output();
   public readonly reorderUp = output();
   public readonly webClick = output();
-
-  protected readonly icons = {
-    FileIcon,
-    Folder,
-    Globe,
-    ArrowUp,
-    ArrowDown,
-    Trash,
-  };
 }

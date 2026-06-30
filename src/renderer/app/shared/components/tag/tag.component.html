@@ -20,11 +20,12 @@
     'btn-outline': _variant === 'outline',
     'btn-dash': _variant === 'dash',
     'btn-active': _variant === 'active',
-    'btn-disabled': _variant === 'disabled'
+    'btn-disabled': _variant === 'disabled',
   }"
   (click)="remove.emit()"
 >
-  {{ label() }}@if (removable()) {
-  <lucide-icon class="w-4 h-4" [img]="RemoveIcon" />
+  {{ label() }}
+  @if (removable()) {
+    <svg class="w-4 h-4" lucideX></svg>
   }
 </button>
