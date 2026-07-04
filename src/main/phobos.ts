@@ -50,7 +50,10 @@ export class Phobos {
 
     // Enable fetch for custom url schemes
     protocol.registerSchemesAsPrivileged([
-      { scheme: UserDataService.scheme, privileges: { supportFetchAPI: true } },
+      {
+        scheme: UserDataService.scheme,
+        privileges: { supportFetchAPI: true, secure: true, corsEnabled: true },
+      },
     ]);
 
     // Attach API/IPC handlers, create window
