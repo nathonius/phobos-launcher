@@ -40,7 +40,7 @@ export const THEME_MAP: Record<AppTheme, string> = {
   wireframe: 'Wireframe',
 };
 
-export const DEFAULT_THEME: AppTheme = 'synthwave';
+export const DEFAULT_THEME: AppTheme = 'business';
 
 @Injectable({
   providedIn: 'root',

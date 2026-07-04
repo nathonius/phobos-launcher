@@ -13,7 +13,7 @@
           type="checkbox"
           id="useDataDirs"
           class="checkbox"
-          [field]="settingsForm.useDataDirs"
+          [formField]="settingsForm.useDataDirs"
         />
         Automatically use the shortest path to a given file from a data
         directory, if possible.
@@ -35,7 +35,7 @@
         </button>
       </div>
       <label class="fieldset-label" for="theme-select">Theme</label>
-      <select id="theme-select" class="select" [field]="settingsForm.theme">
+      <select id="theme-select" class="select" [formField]="settingsForm.theme">
         <option [value]="null">Default</option>
         @for (theme of themeOptions; track theme[0]) {
           <option [value]="theme[0]">{{ theme[1] }}</option>
@@ -46,7 +46,7 @@
           type="checkbox"
           id="gamepadEnabled"
           class="checkbox"
-          [field]="settingsForm.gamepadEnabled"
+          [formField]="settingsForm.gamepadEnabled"
         />
         Gamepad support (experimental)
       </label>
@@ -60,7 +60,7 @@
         id="steamgriddb-api-input"
         class="input"
         type="text"
-        [field]="settingsForm.steamGridApiKey"
+        [formField]="settingsForm.steamGridApiKey"
       />
       <label class="fieldset-label" for="deutex-path-input">
         DeuTex path
@@ -68,7 +68,7 @@
       <file-input
         class="input"
         inputId="deutex-path-input"
-        [field]="settingsForm.deutexPath"
+        [formField]="settingsForm.deutexPath"
         file="true"
         directory="false"
       />
@@ -78,7 +78,7 @@
       <file-input
         class="input"
         inputId="temp-data-path-input"
-        [field]="settingsForm.tempDataPath"
+        [formField]="settingsForm.tempDataPath"
         file="false"
         directory="true"
       />
@@ -126,7 +126,7 @@
           <file-input
             class="grow"
             id="arachnotron-path-input"
-            [field]="settingsForm.importPath"
+            [formField]="settingsForm.importPath"
             file="false"
             directory="true"
             reorder="false"

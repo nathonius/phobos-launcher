@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { basename, isAbsolute, join, relative, resolve } from 'node:path';
 import { copyFile } from 'node:fs/promises';
 import filenamify from 'filenamify';
-import type { Cvar, Profile, UniqueFileRecord } from '../../shared/config';
+import type { Cvar, Profile } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
 import { backupStore, getStore } from '../store/store';
@@ -48,7 +48,7 @@ export class ProfileService extends PhobosApi {
 
     return getStore().update(({ profiles }) => {
       const matchingProfileIndex = profiles.findIndex(
-        (p) => p.id === config.id
+        (p) => p.id === config.id,
       );
       if (matchingProfileIndex !== -1) {
         profiles[matchingProfileIndex] = config;
@@ -89,8 +89,7 @@ export class ProfileService extends PhobosApi {
     // Prepare args
     // TODO: Logic to actually parse these settings should live elsewhere
     const engines = getPhobos().engineService.getEngines();
-    const bases = (getPhobos().settingsService.getSetting('bases') ??
-      []) as UniqueFileRecord[];
+    const bases = getPhobos().baseService.getBases() ?? [];
     const dataDirs = (getPhobos().settingsService.getSetting('dataDirs') ??
       []) as string[];
     const base = bases.find((b) => b.id === profile.base);
@@ -111,7 +110,7 @@ export class ProfileService extends PhobosApi {
       slug: filenamify(profile.name, { replacement: '' }),
     };
     const defaultCvars = (getPhobos().settingsService.getSetting(
-      'defaultCvars'
+      'defaultCvars',
     ) ?? []) as Cvar[];
 
     let cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
@@ -154,7 +153,7 @@ export class ProfileService extends PhobosApi {
     for (const file of profile.files) {
       const newPath = await getPhobos().userDataService.resolveShortestPath(
         file,
-        dataDirs
+        dataDirs,
       );
       if (newPath !== file) {
         anyChanged = true;
@@ -180,7 +179,7 @@ export class ProfileService extends PhobosApi {
     for (const file of profile.files) {
       const newPath = await getPhobos().userDataService.resolveFilePath(
         file,
-        dataDirs
+        dataDirs,
       );
       if (newPath !== file) {
         anyChanged = true;
@@ -223,12 +222,12 @@ export class ProfileService extends PhobosApi {
 
   private async getProfileFiles(
     profile: Profile | undefined,
-    dataDirs: string[]
+    dataDirs: string[],
   ): Promise<string[]> {
     const filePaths: string[] = [];
     for (const file of profile?.files ?? []) {
       filePaths.push(
-        await getPhobos().userDataService.resolveFilePath(file, dataDirs)
+        await getPhobos().userDataService.resolveFilePath(file, dataDirs),
       );
     }
     return filePaths.flatMap((f) => ['-file', f]) ?? [];

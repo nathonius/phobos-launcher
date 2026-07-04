@@ -56,6 +56,9 @@ interface SettingsData {
   templateUrl: './settings.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block h-full overflow-auto',
+  },
 })
 export class SettingsComponent {
   protected readonly themeOptions = Object.entries(THEME_MAP);

@@ -6,14 +6,19 @@ import { JSONFilePreset } from 'lowdb/node';
 
 import type { PhobosStore } from '../../shared/config';
 import { DEFAULT_THEME } from '../../renderer/app/shared/services/theme.service';
+import {
+  DEFAULT_BASES,
+  DEFAULT_CATEGORIES,
+  DEFAULT_PROFILES,
+} from './defaults';
 
 export type PhobosDb = Low<PhobosStore>;
 
 export const STORE_DEFAULT_VALUE: PhobosStore = {
-  categories: [],
+  categories: DEFAULT_CATEGORIES,
   engines: [],
-  profiles: [],
-  bases: [],
+  profiles: DEFAULT_PROFILES,
+  bases: DEFAULT_BASES,
   settings: {
     defaultCvars: [],
     deutexPath: '',

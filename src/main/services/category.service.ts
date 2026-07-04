@@ -21,7 +21,7 @@ export class CategoryService extends PhobosApi {
   saveCategory(config: Category) {
     return getStore().update(({ categories }) => {
       const matchingCategoryIndex = categories.findIndex(
-        (p) => p.id === config.id
+        (p) => p.id === config.id,
       );
       if (matchingCategoryIndex !== -1) {
         categories[matchingCategoryIndex] = config;
