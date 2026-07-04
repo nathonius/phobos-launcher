@@ -6,6 +6,7 @@ export const ALL_CHANNELS = [
   'engine.delete',
   'engine.getEngines',
   'engine.save',
+  'fileSystem.readDirectory',
   'fileSystem.getBase64Image',
   'fileSystem.getPathForFile',
   'fileSystem.getShortestPathForFile',

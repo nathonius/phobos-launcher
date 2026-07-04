@@ -34,7 +34,7 @@ export const Api = {
     window.api['settings.get'](key) as Promise<PhobosSettings[K]>,
   'settings.set': <K extends keyof PhobosSettings>(
     key: K | string,
-    value: PhobosSettings[K]
+    value: PhobosSettings[K],
   ) => window.api['settings.set'](key, value as JSONValue) as Promise<void>,
   'settings.patch': (value: Partial<PhobosSettings>): Promise<PhobosSettings> =>
     window.api['settings.patch'](value),
@@ -67,15 +67,22 @@ export const Api = {
     window.api['profile.updateAllProfilesPaths'](),
   'profile.absolutizeAllProfilesPaths': () =>
     window.api['profile.absolutizeAllProfilesPaths'](),
+  'fileSystem.readDirectory': (
+    path: string,
+    read: { files: boolean; dirs: boolean; recursive: boolean },
+  ) =>
+    window.api['fileSystem.readDirectory'](path, read) as Promise<
+      { path: string; name: string }[]
+    >,
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),
   'fileSystem.getShortestPathForFile': (originalPath: string) =>
     window.api['fileSystem.getShortestPathForFile'](
-      originalPath
+      originalPath,
     ) as Promise<string>,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     window.api['fileSystem.showOpenDialog'](
-      config
+      config,
     ) as Promise<Electron.OpenDialogReturnValue>,
   'fileSystem.getBase64Image': (path: string) =>
     window.api['fileSystem.getBase64Image'](path) as Promise<string>,
@@ -89,13 +96,13 @@ export const Api = {
     game: SGDBGame,
     categories: SGDBImageCategory[],
     dimensions?: Partial<SGDBDimensionOptions>,
-    limits?: Partial<SGDBLimitOptions>
+    limits?: Partial<SGDBLimitOptions>,
   ) =>
     window.api['sgdb.getImages'](
       game,
       categories,
       dimensions,
-      limits
+      limits,
     ) as Promise<SGDBImage[]>,
   'sgdb.downloadImage': (image: SGDBImage) =>
     window.api['sgdb.downloadImage'](image) as Promise<string>,

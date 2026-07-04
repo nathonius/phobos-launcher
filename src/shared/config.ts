@@ -9,6 +9,11 @@ export interface FileRecord {
   path: string;
 }
 
+export interface SearchDir {
+  path: string;
+  type: 'wad' | 'mod';
+}
+
 export interface UniqueFileRecord extends FileRecord {
   /**
    * Unique identifier to store when linking from another entity
@@ -79,10 +84,7 @@ export type AppTheme =
   | 'silk';
 
 export type ProfileSort =
-  | 'alphabetical'
-  | 'date_added'
-  | 'last_played'
-  | 'rating';
+  'alphabetical' | 'date_added' | 'last_played' | 'rating';
 
 export type SortDirection = 'asc' | 'desc';
 
@@ -101,6 +103,7 @@ export interface PhobosSettings {
   gamepadEnabled: boolean;
   dataDirs: string[];
   useDataDirs: boolean;
+  searchDirs: SearchDir[];
 }
 
 export interface PhobosStore {

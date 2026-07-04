@@ -48,6 +48,10 @@ export const clientApi = {
     ipcRenderer.invoke('profile.updateAllProfilesPaths'),
   'profile.absolutizeAllProfilesPaths': () =>
     ipcRenderer.invoke('profile.absolutizeAllProfilesPaths'),
+  'fileSystem.readDirectory': (
+    path: string,
+    read: { files: boolean; dirs: boolean; recursive: boolean },
+  ) => ipcRenderer.invoke('fileSystem.readDirectory', path, read),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.getShortestPathForFile': (originalPath: string) =>
     ipcRenderer.invoke('fileSystem.getShortestPathForFile', originalPath),
@@ -63,7 +67,7 @@ export const clientApi = {
     game: SGDBGame,
     categories: SGDBImageCategory[],
     dimensions?: Partial<SGDBDimensionOptions>,
-    limits?: Partial<SGDBLimitOptions>
+    limits?: Partial<SGDBLimitOptions>,
   ) =>
     ipcRenderer.invoke('sgdb.getImages', game, categories, dimensions, limits),
   'sgdb.downloadImage': (image: SGDBImage) =>
@@ -91,5 +95,5 @@ export type ClientApi = typeof clientApi;
 
 contextBridge.exposeInMainWorld('api', clientApi);
 contextBridge.exposeInMainWorld('openConfig', () =>
-  ipcRenderer.invoke('settings.openConfig')
+  ipcRenderer.invoke('settings.openConfig'),
 );

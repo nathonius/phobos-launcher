@@ -1,0 +1,59 @@
+<ul
+  ngTree
+  #tree="ngTree"
+  [multi]="true"
+  [(value)]="selectedNodes"
+  class="basic-tree"
+>
+  <ng-template
+    [ngTemplateOutlet]="treeNodes"
+    [ngTemplateOutletContext]="{ nodes: nodes(), parent: tree }"
+  />
+</ul>
+<ng-template #treeNodes let-nodes="nodes" let-parent="parent">
+  @for (node of nodes; track node.value) {
+    <li
+      ngTreeItem
+      [parent]="parent"
+      [value]="node.value"
+      [label]="node.label"
+      [disabled]="node.children"
+      [(expanded)]="node.expanded"
+      #treeItem="ngTreeItem"
+    >
+      @if (node.children) {
+        <button class="btn btn-sm" (click)="node.expanded = !node.expanded">
+          <svg lucideChevronRight></svg>
+        </button>
+      }
+      <span aria-hidden="true" translate="no">
+        @if (node.children) {
+          <svg lucideFolder></svg>
+        } @else {
+          <svg lucideFile></svg>
+        }
+      </span>
+      {{ node.label }}
+      <input
+        class="checkbox"
+        type="checkbox"
+        [checked]="nodeIsSelected(node)"
+        (click)="toggleNodeSelection($event, node)"
+      />
+    </li>
+    @if (node.children) {
+      <ul role="group">
+        <ng-template
+          ngTreeItemGroup
+          [ownedBy]="treeItem"
+          #group="ngTreeItemGroup"
+        >
+          <ng-template
+            [ngTemplateOutlet]="treeNodes"
+            [ngTemplateOutletContext]="{ nodes: node.children, parent: group }"
+          />
+        </ng-template>
+      </ul>
+    }
+  }
+</ng-template>

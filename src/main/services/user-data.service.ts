@@ -1,4 +1,11 @@
-import { readFile, writeFile, stat, mkdir, access } from 'node:fs/promises';
+import {
+  readFile,
+  writeFile,
+  stat,
+  mkdir,
+  access,
+  readdir,
+} from 'node:fs/promises';
 import {
   resolve,
   extname,
@@ -59,7 +66,7 @@ export class UserDataService extends PhobosApi {
               ).arrayBuffer();
               const { buffer, ...compressed } = await this.createCompressed(
                 imageBuffer,
-                filePath
+                filePath,
               );
               const compressedImageConfig: CompressedImage = {
                 ...compressed,
@@ -116,7 +123,7 @@ export class UserDataService extends PhobosApi {
           }
 
           const imageResponse = await net.fetch(
-            pathToFileURL(absolutePath).href
+            pathToFileURL(absolutePath).href,
           );
 
           const buffer: ArrayBuffer | Buffer<ArrayBufferLike> =
@@ -132,20 +139,19 @@ export class UserDataService extends PhobosApi {
 
   public wadDataDir(): string {
     const userTempDir = getPhobos().settingsService.getSetting(
-      'tempDataPath'
+      'tempDataPath',
     ) as string | null;
     const dataPath = userTempDir ?? this.dataPath;
     return join(dataPath, 'extracted-graphics');
   }
 
   async getOrCreateCompressed(
-    path: string
+    path: string,
   ): Promise<ArrayBuffer | Buffer<ArrayBufferLike>> {
     const store = getStore();
     const fileStats = await stat(path);
     const maybeCompressed = store.data.internal['processed-image'][path] as
-      | CompressedImage
-      | undefined;
+      CompressedImage | undefined;
     let compressedExists = false;
     if (maybeCompressed?.compressedPath) {
       compressedExists = Boolean(await stat(maybeCompressed.compressedPath));
@@ -163,7 +169,7 @@ export class UserDataService extends PhobosApi {
     const { buffer, ...compressed } = await this.createCompressed(
       imageBuffer,
       path,
-      fileStats.mtimeMs
+      fileStats.mtimeMs,
     );
     await store.update(({ internal }) => {
       internal['processed-image'][path] = compressed;
@@ -174,7 +180,7 @@ export class UserDataService extends PhobosApi {
   public async createCompressed(
     imageBuffer: ArrayBuffer,
     originalPath: string,
-    modifiedMs: number = 0
+    modifiedMs: number = 0,
   ): Promise<
     CompressedImage & { buffer: ArrayBuffer | Buffer<ArrayBufferLike> }
   > {
@@ -191,7 +197,7 @@ export class UserDataService extends PhobosApi {
     const compressedPath = join(
       this.dataPath,
       'processed-images',
-      `${hash}_${basename(originalPath)}`
+      `${hash}_${basename(originalPath)}`,
     );
     const buffer = await compressed.getBuffer('image/png');
     // Write buffer
@@ -214,6 +220,22 @@ export class UserDataService extends PhobosApi {
     return readFile(resolve(this.dataPath, path));
   }
 
+  @ipcHandler('fileSystem.readDirectory')
+  async readDirectory(
+    path: string,
+    read: { files: boolean; dirs: boolean; recursive: boolean },
+  ) {
+    const { files, dirs, recursive } = read;
+    const dir = await readdir(path, { withFileTypes: true, recursive });
+    const result = dir
+      .filter((d) => (files && d.isFile()) || (dirs && d.isDirectory()))
+      .map((d) => ({ path: join(d.parentPath, d.name), name: d.name }));
+    result.sort((a, b) =>
+      a.path.toLowerCase() > b.path.toLowerCase() ? 1 : -1,
+    );
+    return result;
+  }
+
   @ipcHandler('fileSystem.getBase64Image')
   async getBase64Image(path: string) {
     // TODO: This is probably super unreliable
@@ -233,7 +255,7 @@ export class UserDataService extends PhobosApi {
   @ipcHandler('fileSystem.getShortestPathForFile')
   async getPathForFile(originalPath: string): Promise<string> {
     const useDataDirs = (getPhobos().settingsService.getSetting(
-      'useDataDirs'
+      'useDataDirs',
     ) ?? true) as boolean;
     const dataDirs = (getPhobos().settingsService.getSetting('dataDirs') ??
       []) as string[];
@@ -278,7 +300,7 @@ export class UserDataService extends PhobosApi {
 
   async resolveShortestPath(
     originalPath: string,
-    dataDirs: string[]
+    dataDirs: string[],
   ): Promise<string> {
     const absolutePath = await this.resolveFilePath(originalPath, dataDirs);
     for (const dataDir of dataDirs) {
@@ -292,7 +314,7 @@ export class UserDataService extends PhobosApi {
 
   async resolveFilePath(
     originalPath: string,
-    dataDirs: string[]
+    dataDirs: string[],
   ): Promise<string> {
     if (isAbsolute(originalPath) && (await fileExists(originalPath))) {
       return originalPath;

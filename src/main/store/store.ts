@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { writeFile } from 'node:fs/promises';
-import type { Low } from 'lowdb/lib';
+import type { Low } from 'lowdb';
 import { app, shell } from 'electron';
 import { JSONFilePreset } from 'lowdb/node';
 
@@ -27,6 +27,7 @@ export const STORE_DEFAULT_VALUE: PhobosStore = {
     gamepadEnabled: false,
     dataDirs: [],
     useDataDirs: true,
+    searchDirs: [],
   },
   internal: {
     'processed-image': {},
@@ -68,7 +69,7 @@ export async function backupStore(path?: string): Promise<string> {
   const timestamp = new Date().valueOf();
   const defaultPath = join(
     app.getPath('userData'),
-    `config-backup-${timestamp}.json`
+    `config-backup-${timestamp}.json`,
   );
   const backupPath = path ?? defaultPath;
   const store = getStore();
