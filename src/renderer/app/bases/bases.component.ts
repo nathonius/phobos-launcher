@@ -43,7 +43,7 @@ export class BasesComponent {
     });
   }
 
-  async handleChange(value: UniqueFileRecord[]) {
+  async handleChange(value: DisplayBase[]) {
     await Api['bases.save'](value);
     this.baseWads.set(value);
   }

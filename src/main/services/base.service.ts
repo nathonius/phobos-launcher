@@ -4,9 +4,9 @@ import { getStore } from '../store/store';
 
 export class BaseService extends PhobosApi {
   @ipcHandler('bases.save')
-  saveBase(configs: Base[]) {
-    return getStore().update(({ bases }) => {
-      bases = configs;
+  saveBases(configs: Base[]) {
+    return getStore().update((data) => {
+      data.bases = [...configs];
     });
   }
 
