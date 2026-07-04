@@ -1,4 +1,7 @@
 export const ALL_CHANNELS = [
+  'bases.delete',
+  'bases.getAll',
+  'bases.save',
   'category.delete',
   'category.getByName',
   'category.getCategories',

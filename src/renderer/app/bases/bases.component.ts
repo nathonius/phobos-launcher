@@ -29,7 +29,7 @@ export class BasesComponent {
   constructor() {
     this.navbarService.setCallbacks({});
     effect(async () => {
-      const bases = (await Api['settings.get']('bases')) ?? [];
+      const bases = (await Api['bases.getAll']()) ?? [];
       this.baseWads.set(bases);
     });
     effect(async () => {
@@ -44,7 +44,7 @@ export class BasesComponent {
   }
 
   async handleChange(value: UniqueFileRecord[]) {
-    await Api['settings.set']('bases', value);
+    await Api['bases.save'](value);
     this.baseWads.set(value);
   }
 

@@ -79,10 +79,7 @@ export type AppTheme =
   | 'silk';
 
 export type ProfileSort =
-  | 'alphabetical'
-  | 'date_added'
-  | 'last_played'
-  | 'rating';
+  'alphabetical' | 'date_added' | 'last_played' | 'rating';
 
 export type SortDirection = 'asc' | 'desc';
 
@@ -97,7 +94,6 @@ export interface PhobosSettings {
     sortDirection: SortDirection;
   };
   // TODO: Move bases to top level
-  bases: Base[];
   gamepadEnabled: boolean;
   dataDirs: string[];
   useDataDirs: boolean;
@@ -109,6 +105,7 @@ export interface PhobosStore {
   categories: Category[];
   engines: Engine[];
   profiles: Profile[];
+  bases: Base[];
   internal: {
     'processed-image': Record<string, CompressedImage>;
     migrations: Record<string, boolean | undefined>;

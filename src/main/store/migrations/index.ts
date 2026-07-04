@@ -1,5 +1,6 @@
 import type { PhobosDb } from '../store';
 import { addEngineStyle } from './add-engine-style';
+import { basesToRoot } from './bases-to-root';
 import type { Migration } from './migration';
 import { moveProfileImages } from './move-profile-images';
 import { fixProcessedImagesKeys } from './processed-images-keys';
@@ -8,13 +9,14 @@ const migrations: Migration[] = [
   fixProcessedImagesKeys,
   addEngineStyle,
   moveProfileImages,
+  basesToRoot,
 ];
 
 export async function executeMigrations(store: PhobosDb, userDataPath: string) {
   // Ensure the migrations object is actually defined
   if (!store.data.internal.migrations) {
     console.log(
-      `Initializing migrations object on the store. You probably shouldn't see this.`
+      `Initializing migrations object on the store. You probably shouldn't see this.`,
     );
     store.data.internal.migrations = {};
     await store.write();

@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { type LogEntry } from 'winston';
 import type { Channel } from './shared/public-api';
 import type {
+  Base,
   Category,
   Engine,
   PhobosSettings,
@@ -17,6 +18,9 @@ import type {
 } from './shared/lib/SGDB';
 
 export const clientApi = {
+  'bases.getAll': () => ipcRenderer.invoke('bases.getAll'),
+  'bases.save': (configs: Base[]) => ipcRenderer.invoke('bases.save', configs),
+  'bases.delete': (id: string) => ipcRenderer.invoke('bases.delete', id),
   'settings.getAll': () => ipcRenderer.invoke('settings.getAll'),
   'settings.get': (key: string) => ipcRenderer.invoke('settings.get', key),
   'settings.set': (key: string, value: JSONValue) =>
@@ -63,7 +67,7 @@ export const clientApi = {
     game: SGDBGame,
     categories: SGDBImageCategory[],
     dimensions?: Partial<SGDBDimensionOptions>,
-    limits?: Partial<SGDBLimitOptions>
+    limits?: Partial<SGDBLimitOptions>,
   ) =>
     ipcRenderer.invoke('sgdb.getImages', game, categories, dimensions, limits),
   'sgdb.downloadImage': (image: SGDBImage) =>
@@ -91,5 +95,5 @@ export type ClientApi = typeof clientApi;
 
 contextBridge.exposeInMainWorld('api', clientApi);
 contextBridge.exposeInMainWorld('openConfig', () =>
-  ipcRenderer.invoke('settings.openConfig')
+  ipcRenderer.invoke('settings.openConfig'),
 );

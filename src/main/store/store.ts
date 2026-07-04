@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { writeFile } from 'node:fs/promises';
-import type { Low } from 'lowdb/lib';
+import type { Low } from 'lowdb';
 import { app, shell } from 'electron';
 import { JSONFilePreset } from 'lowdb/node';
 
@@ -13,8 +13,8 @@ export const STORE_DEFAULT_VALUE: PhobosStore = {
   categories: [],
   engines: [],
   profiles: [],
+  bases: [],
   settings: {
-    bases: [],
     defaultCvars: [],
     deutexPath: '',
     home: {
@@ -61,6 +61,34 @@ export async function initStore(path?: string): Promise<PhobosDb> {
   const db = await storePromise;
   store = db;
   await store.read();
+
+  // Make sure all keys of the store exist
+  await store.update((data) => {
+    // Root
+    for (const _key of Object.keys(STORE_DEFAULT_VALUE)) {
+      const key = _key as keyof PhobosStore;
+      if (data[key] === undefined) {
+        data[key] = STORE_DEFAULT_VALUE[key] as any;
+      }
+    }
+
+    // Internal
+    for (const _key of Object.keys(STORE_DEFAULT_VALUE.internal)) {
+      const key = _key as keyof PhobosStore['internal'];
+      if (data.internal[key] === undefined) {
+        data.internal[key] = STORE_DEFAULT_VALUE.internal[key] as any;
+      }
+    }
+
+    // Settings
+    for (const _key of Object.keys(STORE_DEFAULT_VALUE.settings)) {
+      const key = _key as keyof PhobosStore['settings'];
+      if (data.settings[key] === undefined) {
+        (data as any).settings[key] = STORE_DEFAULT_VALUE.settings[key] as any;
+      }
+    }
+  });
+
   return storePromise;
 }
 
@@ -68,7 +96,7 @@ export async function backupStore(path?: string): Promise<string> {
   const timestamp = new Date().valueOf();
   const defaultPath = join(
     app.getPath('userData'),
-    `config-backup-${timestamp}.json`
+    `config-backup-${timestamp}.json`,
   );
   const backupPath = path ?? defaultPath;
   const store = getStore();

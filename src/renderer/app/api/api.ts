@@ -1,5 +1,6 @@
 import type { LogEntry } from 'winston';
 import type {
+  Base,
   Category,
   Engine,
   PhobosSettings,
@@ -28,13 +29,18 @@ declare global {
  * A wrapper around the window api to type the responses
  */
 export const Api = {
+  'bases.getAll': () => window.api['bases.getAll']() as Promise<Base[]>,
+  'bases.delete': (id: string) =>
+    window.api['bases.delete'](id) as Promise<void>,
+  'bases.save': (configs: Base[]) =>
+    window.api['bases.save'](configs) as Promise<void>,
   'settings.getAll': () =>
     window.api['settings.getAll']() as Promise<PhobosSettings>,
   'settings.get': <K extends keyof PhobosSettings>(key: K | string) =>
     window.api['settings.get'](key) as Promise<PhobosSettings[K]>,
   'settings.set': <K extends keyof PhobosSettings>(
     key: K | string,
-    value: PhobosSettings[K]
+    value: PhobosSettings[K],
   ) => window.api['settings.set'](key, value as JSONValue) as Promise<void>,
   'settings.patch': (value: Partial<PhobosSettings>): Promise<PhobosSettings> =>
     window.api['settings.patch'](value),
@@ -71,11 +77,11 @@ export const Api = {
     window.api['fileSystem.getPathForFile'](file),
   'fileSystem.getShortestPathForFile': (originalPath: string) =>
     window.api['fileSystem.getShortestPathForFile'](
-      originalPath
+      originalPath,
     ) as Promise<string>,
   'fileSystem.showOpenDialog': (config: Electron.OpenDialogOptions) =>
     window.api['fileSystem.showOpenDialog'](
-      config
+      config,
     ) as Promise<Electron.OpenDialogReturnValue>,
   'fileSystem.getBase64Image': (path: string) =>
     window.api['fileSystem.getBase64Image'](path) as Promise<string>,
@@ -89,13 +95,13 @@ export const Api = {
     game: SGDBGame,
     categories: SGDBImageCategory[],
     dimensions?: Partial<SGDBDimensionOptions>,
-    limits?: Partial<SGDBLimitOptions>
+    limits?: Partial<SGDBLimitOptions>,
   ) =>
     window.api['sgdb.getImages'](
       game,
       categories,
       dimensions,
-      limits
+      limits,
     ) as Promise<SGDBImage[]>,
   'sgdb.downloadImage': (image: SGDBImage) =>
     window.api['sgdb.downloadImage'](image) as Promise<string>,

@@ -15,11 +15,13 @@ import { WadService } from './services/wad.service';
 import { getStore, initStore } from './store/store';
 import { executeMigrations } from './store/migrations';
 import { IpcLogger } from './logger';
+import { BaseService } from './services/base.service';
 
 export class Phobos {
   public ipcLogger!: IpcLogger;
   public userDataService!: UserDataService;
   public profileService!: ProfileService;
+  public baseService!: BaseService;
   public categoryService!: CategoryService;
   public settingsService!: SettingsService;
   public steamGridService!: SGDBService;
@@ -33,7 +35,7 @@ export class Phobos {
 
   constructor(
     private readonly basePath: string,
-    private readonly serve = false
+    private readonly serve = false,
   ) {
     initStore();
   }
@@ -60,6 +62,7 @@ export class Phobos {
       // Init services
       this.ipcLogger = new IpcLogger();
       this.profileService = new ProfileService();
+      this.baseService = new BaseService();
       this.categoryService = new CategoryService();
       this.settingsService = new SettingsService();
       this.engineService = new EngineService();
@@ -111,7 +114,7 @@ export class Phobos {
       this.window.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     } else {
       this.window.loadFile(
-        join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+        join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
       );
     }
 
