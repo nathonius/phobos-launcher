@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import {
+  LucideCheck,
   LucideCog,
   LucideDynamicIcon,
   LucideHouse,
@@ -41,6 +42,7 @@ import { ViewService } from './shared/services/view.service';
     LucideWrench,
     LucideRocket,
     LucideRotateCcw,
+    LucideCheck,
     LucideDynamicIcon,
   ],
   host: {

@@ -21,7 +21,7 @@
           <select id="engine-select" formControlName="engine">
             <option [ngValue]="''" disabled>Select engine</option>
             @for (option of engineOptions(); track option.id) {
-            <option [ngValue]="option.id">{{ option.name }}</option>
+              <option [ngValue]="option.id">{{ option.name }}</option>
             }
           </select>
         </label>
@@ -30,7 +30,7 @@
           <select id="base-select" formControlName="base">
             <option [ngValue]="''" disabled>Select base</option>
             @for (option of baseOptions(); track option.id) {
-            <option [ngValue]="option.id">{{ option.name }}</option>
+              <option [ngValue]="option.id">{{ option.name }}</option>
             }
           </select>
         </label>
@@ -46,21 +46,21 @@
             removable="true"
             [web]="steamGridService.apiKey() !== null"
             (webClick)="openSgdbDialog()"
-            (valueChange)="handleIconChange($event)"
+            (onValueChange)="handleIconChange($event)"
             (remove)="setIcon('')"
           />
         </label>
         <img class="h-full max-w-60" [src]="profileIcon()" />
         @if (!profileForm.controls.icon.value) {
-        <label for="background-select" class="select w-full">
-          <span class="label">Background</span>
-          <select id="background-select" formControlName="background">
-            <option [ngValue]="''" disabled>Select background</option>
-            @for (option of backgroundOptions; track option.key) {
-            <option [ngValue]="option.key">{{ option.name }}</option>
-            }
-          </select>
-        </label>
+          <label for="background-select" class="select w-full">
+            <span class="label">Background</span>
+            <select id="background-select" formControlName="background">
+              <option [ngValue]="''" disabled>Select background</option>
+              @for (option of backgroundOptions; track option.key) {
+                <option [ngValue]="option.key">{{ option.name }}</option>
+              }
+            </select>
+          </label>
         }
       </div>
     </form-section>
@@ -133,7 +133,8 @@
   </form>
   <div class="drawer-side p-4">
     @if (selectedResource(); as wadPath) {
-    <wad-info [wadPath]="wadPath" (saveImage)="saveWadImage($event)" />}
+      <wad-info [wadPath]="wadPath" (saveImage)="saveWadImage($event)" />
+    }
   </div>
 </div>
 <sgdb-dialog (imageSelected)="steamGridSelectGrid($event)" />

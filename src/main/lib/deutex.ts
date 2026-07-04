@@ -2,18 +2,15 @@ import { resolve as resolvePath } from 'node:path';
 import { spawn } from 'node:child_process';
 import { dirname } from '@angular/compiler-cli';
 import { getPhobos } from '../../main';
-import type { UniqueFileRecord } from '../../shared/config';
 
 export async function deutexExtract(wadPath: string) {
   const deutexPath = getPhobos().settingsService.getSetting('deutexPath') as
-    | string
-    | null;
+    string | null;
   if (!deutexPath) {
     console.error('DeuTex path not set.');
     return;
   }
-  const bases = (getPhobos().settingsService.getSetting('bases') ??
-    []) as UniqueFileRecord[];
+  const bases = getPhobos().baseService.getBases() ?? [];
   const doom2 = bases.find((b) => b.path.toLowerCase().endsWith('doom2.wad'));
   if (!doom2) {
     console.error('Could not find doom 2 wad for deutex extraction.');
@@ -21,7 +18,7 @@ export async function deutexExtract(wadPath: string) {
   }
 
   const wadDataDir = resolvePath(
-    await getPhobos().userDataService.makeWadDataDir(wadPath)
+    await getPhobos().userDataService.makeWadDataDir(wadPath),
   );
   const args = [
     '-doom2',

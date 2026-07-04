@@ -101,14 +101,14 @@ export class ProfileComponent implements OnInit {
   protected readonly categoryOptions = computed(() =>
     this.categoryService
       .allCategories()
-      .map((c) => ({ label: c.name, value: c.id }))
+      .map((c) => ({ label: c.name, value: c.id })),
   );
   protected readonly engineOptions = signal<Engine[]>([]);
   protected readonly baseOptions = signal<UniqueFileRecord[]>([]);
   protected readonly sgdbDialog = viewChild(SgdbDialogComponent);
   protected readonly allParentProfileOptions = signal<Profile[]>([]);
   protected readonly parentProfileOptions = computed(() =>
-    this.allParentProfileOptions().map((p) => ({ value: p.id, label: p.name }))
+    this.allParentProfileOptions().map((p) => ({ value: p.id, label: p.name })),
   );
   protected readonly selectedResource = signal<string>('');
   private readonly categoryService = inject(CategoryService);
@@ -117,9 +117,9 @@ export class ProfileComponent implements OnInit {
     effect(async () => {
       const currentProfile = this.profile();
       const engines = await Api['engine.getEngines']();
-      const bases = await Api['settings.get']('bases');
+      const bases = await Api['bases.getAll']();
       const profiles = (await Api['profile.getProfiles']()).filter(
-        (p) => p.id !== currentProfile?.id
+        (p) => p.id !== currentProfile?.id,
       );
       this.engineOptions.set(engines);
       this.baseOptions.set(bases ?? []);
@@ -188,7 +188,7 @@ export class ProfileComponent implements OnInit {
   protected handleFormControlChange<K extends keyof ProfileForm['controls']>(
     value: ProfileForm['controls'][K]['value'],
     control: keyof ProfileForm['controls'],
-    save = false
+    save = false,
   ): void {
     if (value === null) {
       return;

@@ -43,7 +43,7 @@
                 placeholder="Path"
                 includeControls="true"
                 [value]="engine.path"
-                (valueChange)="handlePathChange($event, engine.id)"
+                (onValueChange)="handlePathChange($event, engine.id)"
               />
             </div>
             @if (!engine.fileExists) {
@@ -62,7 +62,7 @@
                 placeholder="Config file"
                 includeControls="true"
                 [value]="engine.config"
-                (valueChange)="handleConfigChange($event, engine.id)"
+                (onValueChange)="handleConfigChange($event, engine.id)"
               />
             </div>
           </td>
