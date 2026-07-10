@@ -40,10 +40,15 @@ export class CategoryService {
   public async getCategoryIcon(category: Category | string) {
     // Special handling for 'all' profile
     if (typeof category !== 'string' && category.id === 'all') {
-      return Promise.resolve('assets/phobos-full-transparent-200.png');
+      return Promise.resolve('__assets/phobos-full-transparent-200.png');
     }
     const path = typeof category === 'string' ? category : category.icon;
     if (path) {
+      // Serve from assets if requested
+      if (path.startsWith('__assets/')) {
+        return Promise.resolve(path);
+      }
+      // Get the file from the local filesystem
       return await Api['fileSystem.getBase64Image'](path);
     }
     return Promise.resolve('');

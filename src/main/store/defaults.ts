@@ -1,6 +1,22 @@
 import type { Base, Category, Profile } from '../../shared/config';
 
-export const DEFAULT_CATEGORIES: Category[] = [];
+export const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: '2e39fb9d-00cd-4b96-9791-516748d20db6',
+    name: 'Doom',
+    icon: '__assets/category-doom.png',
+  },
+  {
+    id: '4af02df2-d02d-4260-bace-e37c79f4777f',
+    name: 'Hexen/Heretic',
+    icon: '__assets/category-hexen.png',
+  },
+  {
+    id: 'd44a4a75-8ff8-4490-9ef0-6596b38670d1',
+    name: 'Total Conversions',
+    icon: '__assets/category-total-conversions.png',
+  },
+];
 
 export const DEFAULT_BASES: Base[] = [
   { id: 'da3195dc-08ed-404e-ab50-8bd2db6fe652', name: 'Doom', path: '' },
