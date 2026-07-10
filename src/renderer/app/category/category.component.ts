@@ -7,8 +7,8 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { v4 as uuid } from 'uuid';
+import { form, FormField } from '@angular/forms/signals';
 import type { Category } from '../../../shared/config';
 import { FormSectionComponent } from '../shared/components/form-section/form-section.component';
 import { FileInputComponent } from '../shared/components/file-input/file-input.component';
@@ -19,17 +19,23 @@ import { CategoryService } from './category.service';
 
 @Component({
   selector: 'category',
-  imports: [ReactiveFormsModule, FormSectionComponent, FileInputComponent],
+  imports: [FormField, FormSectionComponent, FileInputComponent],
   templateUrl: './category.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryComponent implements OnInit {
   public readonly category = input<Category | null>();
-  protected readonly categoryForm = new FormGroup({
-    name: new FormControl<string>('', { nonNullable: true }),
-    icon: new FormControl<string>('', { nonNullable: true }),
+  public readonly categoryModel = signal<{
+    name: string;
+    icon: string;
+    label: string;
+  }>({
+    icon: '',
+    label: '',
+    name: '',
   });
+  public readonly categoryForm = form(this.categoryModel);
   protected readonly categoryIcon = signal<string>('');
   private readonly categoryService = inject(CategoryService);
   private readonly navbarService = inject(NavbarService);
@@ -39,16 +45,18 @@ export class CategoryComponent implements OnInit {
     effect(() => {
       const category = this.category();
       if (category) {
-        this.categoryForm.reset({
+        this.categoryForm().reset({
           name: category.name,
           icon: category.icon,
+          label: category.label ?? '',
         });
       } else {
-        this.categoryForm.reset({ name: '', icon: '' });
+        this.categoryForm().reset({ name: '', icon: '', label: '' });
       }
     });
-    this.categoryForm.controls.icon.valueChanges.subscribe((v) => {
-      this.handleIconChange(v);
+    effect(() => {
+      const icon = this.categoryForm.icon().value();
+      this.handleIconChange(icon);
     });
   }
 
@@ -87,11 +95,12 @@ export class CategoryComponent implements OnInit {
     if (!categoryId) {
       categoryId = uuid();
     }
-    const { name, icon } = this.categoryForm.value;
+    const { name, icon, label } = this.categoryForm().value();
     return {
       id: categoryId,
-      name: name!,
-      icon: icon!,
+      name,
+      icon,
+      label,
     };
   }
 }

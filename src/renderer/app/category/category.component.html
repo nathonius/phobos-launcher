@@ -1,16 +1,27 @@
-<form class="flex flex-wrap gap-2" [formGroup]="categoryForm">
+<form class="flex flex-wrap gap-2">
   <form-section>
     <div class="flex flex-wrap justify-between gap-2">
-      <label>Name</label>
+      <label for="category-name">Name</label>
       <input
+        id="category-name"
         class="input grow"
         type="text"
         placeholder="Category name"
-        formControlName="name"
+        [formField]="categoryForm.name"
+      />
+    </div>
+    <div class="flex flex-wrap justify-between gap-2">
+      <label for="category-label">Label</label>
+      <input
+        class="input grow"
+        type="text"
+        id="category-label"
+        placeholder="Alt label"
+        [formField]="categoryForm.label"
       />
     </div>
     <file-input
-      formControlName="icon"
+      [formField]="categoryForm.icon"
       label="Icon"
       droppable="true"
       directory="false"

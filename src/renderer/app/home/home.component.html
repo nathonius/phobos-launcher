@@ -13,7 +13,11 @@
           [attr.data-tip]="category.name"
           (click)="handleSelectCategory(category)"
         >
-          <img class="block w-full h-full" [src]="category.img" />
+          @if (category.img) {
+            <img class="block w-full h-full" [src]="category.img" />
+          } @else {
+            {{ category.label }}
+          }
         </button>
       }
       <button

@@ -32,6 +32,7 @@ export interface Category {
   id: string;
   name: string;
   icon: string;
+  label?: string;
 }
 
 export interface CompressedImage {
@@ -135,4 +136,5 @@ export interface Profile {
   complete: boolean;
   rating: number | null;
   background: string;
+  extraArgs?: string;
 }

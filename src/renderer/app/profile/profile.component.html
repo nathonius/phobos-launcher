@@ -50,6 +50,15 @@
             (remove)="setIcon('')"
           />
         </label>
+        <label for="extra-args" class="input w-full">
+          <span class="label">Extra Args</span>
+          <input
+            type="text"
+            id="extra-args"
+            placeholder="+map E1M8"
+            formControlName="extraArgs"
+          />
+        </label>
         <img class="h-full max-w-60" [src]="profileIcon()" />
         @if (!profileForm.controls.icon.value) {
           <label for="background-select" class="select w-full">

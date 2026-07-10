@@ -7,6 +7,7 @@ import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
 import { backupStore, getStore } from '../store/store';
 import { simpleHash } from '../util';
+import { logger } from '../logger';
 
 export interface FsError extends Error {
   code: string;
@@ -94,6 +95,7 @@ export class ProfileService extends PhobosApi {
       []) as string[];
     const base = bases.find((b) => b.id === profile.base);
     const engine = engines.find((e) => e.id === profile.engine);
+    const extraArgs = (profile.extraArgs ?? '').split(' ');
     if (!base || !engine) {
       // TODO: Handle this error condition
       return;
@@ -127,12 +129,10 @@ export class ProfileService extends PhobosApi {
       cvars = [];
     }
 
-    const _process = spawn(engine.path, [
-      ...configArg,
-      ...baseArg,
-      ...files,
-      ...cvars,
-    ]);
+    const args = [...configArg, ...baseArg, ...files, ...cvars, ...extraArgs];
+    logger.info(`Launching with ${engine.path} with args`, args);
+
+    const _process = spawn(engine.path, args);
   }
 
   /**
