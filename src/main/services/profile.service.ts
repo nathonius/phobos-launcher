@@ -132,7 +132,7 @@ export class ProfileService extends PhobosApi {
     const args = [...configArg, ...baseArg, ...files, ...cvars, ...extraArgs];
     logger.info(`Launching with ${engine.path} with args`, args);
 
-    const _process = spawn(engine.path, args);
+    const _process = spawn(engine.path, args, { detached: true });
   }
 
   /**
