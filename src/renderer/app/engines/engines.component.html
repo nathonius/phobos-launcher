@@ -52,7 +52,7 @@
               >
             }
           </td>
-          <td class="w-[20%]">
+          <td class="w-[15%]">
             <div class="input w-full">
               <file-input
                 class="grow"
@@ -83,5 +83,18 @@
     <button type="button" class="btn btn-primary" (click)="handleNewEngine()">
       <svg lucidePlus></svg>
     </button>
+  </div>
+  <div class="select">
+    <label class="label" for="default-engine">Default Engine</label>
+    <select
+      id="default-engine"
+      [value]="defaultEngine()"
+      (change)="handleDefaultChange($any($event.target).value)"
+    >
+      <option value="" disabled>Select engine</option>
+      @for (engine of engines(); track engine.id) {
+        <option [value]="engine.id">{{ engine.name }}</option>
+      }
+    </select>
   </div>
 </form-section>

@@ -1,7 +1,9 @@
 import { spawn } from 'node:child_process';
 import { basename, isAbsolute, join, relative, resolve } from 'node:path';
-import { copyFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import filenamify from 'filenamify';
+import { v4 } from 'uuid';
+import unzipper from 'unzipper';
 import type { Cvar, Profile } from '../../shared/config';
 import { getPhobos } from '../../main';
 import { ipcHandler, PhobosApi } from '../api';
@@ -67,6 +69,84 @@ export class ProfileService extends PhobosApi {
         profiles.splice(profileIndex, 1);
       }
     });
+  }
+
+  @ipcHandler('profile.newProfileFromArchive')
+  async newProfileFromArchive(archivePath: string) {
+    // Get defaults
+    const defaultBase = getPhobos().settingsService.getSetting(
+      'defaultBase',
+    ) as string;
+    const defaultEngine = getPhobos().settingsService.getSetting(
+      'defaultEngine',
+    ) as string;
+
+    // Set up the profile
+    const profile: Profile = {
+      background: '',
+      base: defaultBase ?? '',
+      categories: [],
+      complete: false,
+      created: new Date().toISOString(),
+      cvars: [],
+      engine: defaultEngine ?? '',
+      files: [],
+      icon: '',
+      id: v4(),
+      lastPlayed: null,
+      modified: new Date().toISOString(),
+      name: '',
+      parents: [],
+      rating: null,
+      tags: [],
+      description: '',
+      extraArgs: '',
+    };
+
+    // Create directory for profile files
+    const profilePath = join(
+      getPhobos().userDataService.dataPath,
+      'profiles',
+      profile.id,
+    );
+    await mkdir(profilePath, { recursive: true });
+
+    // Extract to dir
+    const archive = await unzipper.Open.file(archivePath);
+    const files = archive.files.map((f) => f.path);
+    await archive.extract({ path: profilePath });
+
+    // Find wads/pk3s
+    const gameFiles = files.filter(
+      (path) =>
+        path.toLowerCase().endsWith('.wad') ||
+        path.toLowerCase().endsWith('.pk3'),
+    );
+
+    // TODO: Parse a text file for metadata on the wad
+    const textFile = files.find((f) => f.toLowerCase().endsWith('.txt'));
+    if (textFile) {
+      logger.info(`Parsing text file ${textFile}`);
+      const contents = await readFile(join(profilePath, textFile), {
+        encoding: 'utf-8',
+      });
+      const titleRegex = /[Tt]itle\s*:\s*(?<title>.+)$/m;
+      const match = contents.match(titleRegex);
+      if (match && match[1]) {
+        profile.name = match[1].trim();
+      }
+    }
+
+    if (gameFiles.length > 0) {
+      profile.files = gameFiles.map((path) => join(profilePath, path));
+      if (!profile.name) {
+        profile.name = basename(profile.files[0]);
+      }
+    }
+
+    await this.saveProfile(profile);
+
+    return profile.id;
   }
 
   @ipcHandler('profile.launchCustom')

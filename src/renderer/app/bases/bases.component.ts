@@ -25,12 +25,19 @@ type DisplayBase = UniqueFileRecord & {
 export class BasesComponent {
   public readonly baseWads = signal<UniqueFileRecord[]>([]);
   public readonly displayBases = signal<DisplayBase[]>([]);
+  public readonly defaultBase = signal<string>('');
   private readonly navbarService = inject(NavbarService);
   constructor() {
     this.navbarService.setCallbacks({});
     effect(async () => {
       const bases = (await Api['bases.getAll']()) ?? [];
       this.baseWads.set(bases);
+    });
+    effect(async () => {
+      const defaultBase = await Api['settings.get']('defaultBase');
+      if (defaultBase) {
+        this.defaultBase.set(defaultBase);
+      }
     });
     effect(async () => {
       const displayBases: DisplayBase[] = [];
@@ -46,6 +53,11 @@ export class BasesComponent {
   async handleChange(value: DisplayBase[]) {
     await Api['bases.save'](value);
     this.baseWads.set(value);
+  }
+
+  async handleDefaultChange(value: string) {
+    this.defaultBase.set(value);
+    await Api['settings.set']('defaultBase', value);
   }
 
   rowHasError(base: DisplayBase) {

@@ -52,6 +52,8 @@ export const clientApi = {
     ipcRenderer.invoke('profile.updateAllProfilesPaths'),
   'profile.absolutizeAllProfilesPaths': () =>
     ipcRenderer.invoke('profile.absolutizeAllProfilesPaths'),
+  'profile.newProfileFromArchive': (path: string) =>
+    ipcRenderer.invoke('profile.newProfileFromArchive', path),
   'fileSystem.getPathForFile': webUtils.getPathForFile,
   'fileSystem.getShortestPathForFile': (originalPath: string) =>
     ipcRenderer.invoke('fileSystem.getShortestPathForFile', originalPath),

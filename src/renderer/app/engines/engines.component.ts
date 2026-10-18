@@ -34,6 +34,7 @@ type DisplayEngine = Engine & {
 export class EnginesComponent {
   public readonly engines = signal<Engine[]>([]);
   public readonly displayEngines = signal<DisplayEngine[]>([]);
+  public readonly defaultEngine = signal<string>('');
   private readonly navbarService = inject(NavbarService);
   constructor() {
     this.navbarService.setCallbacks({});
@@ -49,6 +50,12 @@ export class EnginesComponent {
         displayEngines.push({ ...engine, fileExists });
       }
       this.displayEngines.set(displayEngines);
+    });
+    effect(async () => {
+      const defaultEngine = await Api['settings.get']('defaultEngine');
+      if (defaultEngine) {
+        this.defaultEngine.set(defaultEngine);
+      }
     });
   }
 
@@ -99,6 +106,11 @@ export class EnginesComponent {
       engine.style = style;
       this.handleChange(engine);
     }
+  }
+
+  async handleDefaultChange(value: string) {
+    this.defaultEngine.set(value);
+    await Api['settings.set']('defaultEngine', value);
   }
 
   async handleChange(value: Engine) {

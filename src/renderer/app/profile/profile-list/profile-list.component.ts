@@ -25,6 +25,7 @@ import type { Profile } from '../../../../shared/config';
 import { Api } from '../../api/api';
 import { ViewService } from '../../shared/services/view.service';
 import { HomeViewState } from '../../shared/constants';
+import { handleDragEvent } from '../../shared/functions/getFilePath';
 
 export type ProfileSort =
   'alphabetical' | 'date_added' | 'date_modified' | 'last_played' | 'rating';
@@ -51,6 +52,8 @@ export const VALID_SORT_ARRAY: ProfileSort[] = [
   },
 })
 export class ProfileListComponent {
+  public readonly dragging = signal<boolean>(false);
+  private dragTimeout: number | undefined;
   protected readonly searchQuery = signal<string>('');
   protected readonly sort = signal<null | ProfileSort>(null);
   protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
@@ -171,5 +174,32 @@ export class ProfileListComponent {
     } else if (event.action === 'launch' && profile) {
       this.profileService.launch(profile);
     }
+  }
+
+  async handleArchive(path: string) {
+    const profileId = await Api['profile.newProfileFromArchive'](path);
+    const profiles = await this.profileService.getAllProfiles();
+    const profile = profiles.find((p) => p.id === profileId);
+    this.profileService.selectedProfile.set(profile);
+    this.viewService.homeState.set(HomeViewState.ProfileEdit);
+  }
+
+  handleDragOver(event: DragEvent) {
+    event.preventDefault();
+    window.clearTimeout(this.dragTimeout);
+    this.dragging.set(true);
+  }
+
+  handleDragOut() {
+    // Do this on a timeout to help prevent flickering
+    window.clearTimeout(this.dragTimeout);
+    this.dragTimeout = window.setTimeout(() => {
+      this.dragging.set(false);
+    }, 100);
+  }
+
+  async handleDrop(event: DragEvent) {
+    await handleDragEvent(event, false, this.handleArchive.bind(this));
+    this.dragging.set(false);
   }
 }

@@ -10,4 +10,17 @@
     [values]="displayBases()"
     (valueChange)="handleChange($event)"
   />
+  <div class="select">
+    <label class="label" for="default-base">Default Base</label>
+    <select
+      id="default-base"
+      [value]="defaultBase()"
+      (change)="handleDefaultChange($any($event.target).value)"
+    >
+      <option value="" disabled>Select base</option>
+      @for (base of displayBases(); track base.id) {
+        <option [value]="base.id">{{ base.name }}</option>
+      }
+    </select>
+  </div>
 </form-section>

@@ -73,6 +73,8 @@ export const Api = {
     window.api['profile.updateAllProfilesPaths'](),
   'profile.absolutizeAllProfilesPaths': () =>
     window.api['profile.absolutizeAllProfilesPaths'](),
+  'profile.newProfileFromArchive': (path: string) =>
+    window.api['profile.newProfileFromArchive'](path) as Promise<string>,
   'fileSystem.getPathForFile': (file: File) =>
     window.api['fileSystem.getPathForFile'](file),
   'fileSystem.getShortestPathForFile': (originalPath: string) =>

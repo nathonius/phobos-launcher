@@ -27,6 +27,7 @@ export const ALL_CHANNELS = [
   'profile.updateAllPaths',
   'profile.updateAllProfilesPaths',
   'profile.absolutizeAllProfilesPaths',
+  'profile.newProfileFromArchive',
   'settings.get',
   'settings.getAll',
   'settings.openConfig',

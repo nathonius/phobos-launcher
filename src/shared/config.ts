@@ -94,10 +94,11 @@ export interface PhobosSettings {
     sort: ProfileSort;
     sortDirection: SortDirection;
   };
-  // TODO: Move bases to top level
   gamepadEnabled: boolean;
   dataDirs: string[];
   useDataDirs: boolean;
+  defaultEngine: string;
+  defaultBase: string;
 }
 
 export interface PhobosStore {
