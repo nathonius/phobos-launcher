@@ -59,18 +59,26 @@
             formControlName="extraArgs"
           />
         </label>
-        <img class="h-full max-w-60" [src]="profileIcon()" />
-        @if (!profileForm.controls.icon.value) {
-          <label for="background-select" class="select w-full">
-            <span class="label">Background</span>
-            <select id="background-select" formControlName="background">
-              <option [ngValue]="''" disabled>Select background</option>
-              @for (option of backgroundOptions; track option.key) {
-                <option [ngValue]="option.key">{{ option.name }}</option>
-              }
-            </select>
-          </label>
-        }
+        <div class="flex gap-4">
+          <textarea
+            class="textarea grow"
+            id="description"
+            placeholder="Description"
+            formControlName="description"
+          ></textarea>
+          <img class="h-full max-w-60" [src]="profileIcon()" />
+          @if (!profileForm.controls.icon.value) {
+            <label for="background-select" class="select w-full">
+              <span class="label">Background</span>
+              <select id="background-select" formControlName="background">
+                <option [ngValue]="''" disabled>Select background</option>
+                @for (option of backgroundOptions; track option.key) {
+                  <option [ngValue]="option.key">{{ option.name }}</option>
+                }
+              </select>
+            </label>
+          }
+        </div>
       </div>
     </form-section>
     <form-section label="Profile Resources">

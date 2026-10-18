@@ -53,6 +53,7 @@ type ProfileForm = FormGroup<{
   background: FormControl<string>;
   rating: FormControl<number | null>;
   extraArgs: FormControl<string>;
+  description: FormControl<string>;
 }>;
 
 @Component({
@@ -98,6 +99,7 @@ export class ProfileComponent implements OnInit {
     background: new FormControl<string>('', { nonNullable: true }),
     rating: new FormControl<number | null>(null),
     extraArgs: new FormControl<string>('', { nonNullable: true }),
+    description: new FormControl<string>('', { nonNullable: true }),
   });
   protected readonly profileIcon = signal<string>('');
   protected readonly categoryOptions = computed(() =>
@@ -144,6 +146,7 @@ export class ProfileComponent implements OnInit {
           background: profile.background,
           rating: profile.rating ?? null,
           extraArgs: profile.extraArgs ?? '',
+          description: profile.description ?? '',
         });
       } else {
         this.profileForm.reset({
@@ -159,6 +162,7 @@ export class ProfileComponent implements OnInit {
           background: '',
           rating: null,
           extraArgs: '',
+          description: '',
         });
       }
     });
@@ -265,6 +269,7 @@ export class ProfileComponent implements OnInit {
       background,
       rating,
       extraArgs,
+      description,
     } = this.profileForm.value;
     return {
       id: profileId,
@@ -284,6 +289,7 @@ export class ProfileComponent implements OnInit {
       background: background ?? '',
       rating: rating ?? null,
       extraArgs,
+      description,
     };
   }
 }

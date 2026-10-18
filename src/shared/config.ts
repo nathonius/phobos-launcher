@@ -136,5 +136,6 @@ export interface Profile {
   complete: boolean;
   rating: number | null;
   background: string;
+  description?: string;
   extraArgs?: string;
 }
