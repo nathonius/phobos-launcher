@@ -175,7 +175,9 @@ export class ProfileService extends PhobosApi {
       []) as string[];
     const base = bases.find((b) => b.id === profile.base);
     const engine = engines.find((e) => e.id === profile.engine);
-    const extraArgs = (profile.extraArgs ?? '').split(' ');
+    const extraArgs = (profile.extraArgs ?? '')
+      .split(' ')
+      .filter((arg) => Boolean(arg));
     if (!base || !engine) {
       // TODO: Handle this error condition
       return;
@@ -194,6 +196,7 @@ export class ProfileService extends PhobosApi {
     const defaultCvars = (getPhobos().settingsService.getSetting(
       'defaultCvars',
     ) ?? []) as Cvar[];
+    logger.debug(`Got ${defaultCvars.length} default cvars`);
 
     let cvars: string[] = this.prepareCvars(defaultCvars, cvarCtx);
     for (const parentId of profile.parents) {
@@ -211,6 +214,7 @@ export class ProfileService extends PhobosApi {
 
     const args = [...configArg, ...baseArg, ...files, ...cvars, ...extraArgs];
     logger.info(`Launching with ${engine.path} with args`, args);
+    logger.info(`${engine.path} ${args.join(' ')}`);
 
     const _process = spawn(engine.path, args, { detached: true });
   }
